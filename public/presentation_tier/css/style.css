@@ -1,0 +1,197 @@
+
+/* halaman verifikasi */
+.verify-container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border: 3px solid #007BFF;
+}
+
+.verify-title {
+    text-align: center;
+    color: #007BFF;
+    margin-bottom: 20px;
+}
+
+.verify-message-error {
+    color: red;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.verify-message-success {
+    color: green;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.verify-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.verify-button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.verify-button:hover {
+    background: #0056b3;
+}
+
+.verify-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.verify-footer a {
+    color: #007BFF;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.verify-footer a:hover {
+    text-decoration: underline;
+}
+
+/* halaman registrasi */
+.register-container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border: 3px solid #007BFF;
+}
+
+.register-title {
+    text-align: center;
+    color: #007BFF;
+    margin-bottom: 20px;
+}
+
+.register-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.register-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+.register-button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.register-button:hover {
+    background: #0056b3;
+}
+
+.register-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.register-footer a {
+    color: #007BFF;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.register-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* halaman login css */
+.login-container {
+    max-width: 380px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    border: 3px solid #007BFF;
+}
+
+.login-title {
+    text-align: center;
+    color: #007BFF;
+    margin-bottom: 20px;
+}
+
+.login-message-error {
+    color: red;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.login-message-success {
+    color: green;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.login-button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.login-button:hover {
+    background: #0056b3;
+}
+
+.login-footer {
+    text-align: right;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.login-footer a {
+    color: #FFD700;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,96 @@
+/* Container Utama */
+.notif-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.notif-header h1 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+/* Daftar Notifikasi */
+.notif-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Kartu Notifikasi Utama */
+.notif-item {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #fff;
+    transition: background 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.notif-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Ikon di sebelah kiri */
+.notif-icon i {
+    font-size: 2rem;
+    color: #00d9ff; /* Warna biru cerah untuk ikon */
+}
+
+/* Konten teks di tengah */
+.notif-content {
+    flex-grow: 1;
+}
+
+.notif-content .message {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.notif-content .time {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Area aksi di sebelah kanan */
+.notif-action {
+    margin-left: auto;
+}
+
+/* Tombol Unduh */
+.btn-download {
+    background-color: #00d9ff; /* Warna biru yang sama dengan ikon */
+    color: #0e1a35;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.7);
+}
+
+/* Pesan jika tidak ada notifikasi */
+.no-notif {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    color: #ccc;
+}

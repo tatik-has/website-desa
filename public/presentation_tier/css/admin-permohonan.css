@@ -1,0 +1,319 @@
+/* ===============================
+   STYLE HALAMAN PERMOHONAN SURAT ADMIN
+   (Sudah digabung & disesuaikan agar tidak konflik dengan admin.css)
+================================ */
+
+/* Area utama konten */
+.main-content {
+    flex-grow: 1;
+    margin-left: 260px; /* sejajar dengan sidebar */
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f4f7fa; /* latar belakang lembut */
+    padding: 30px 40px;
+}
+
+/* Kotak tabel utama */
+.table-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.table-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.table-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+}
+
+td {
+    color: #334155;
+}
+
+/* Status badge */
+.status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+    font-weight: 500;
+}
+
+.status-diproses {
+    background-color: #facc15;
+    color: #1e293b;
+}
+
+.status-selesai {
+    background-color: #22c55e;
+}
+
+.status-ditolak {
+    background-color: #ef4444;
+}
+
+/* Tombol aksi */
+.action-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.action-buttons form {
+    display: inline-block;
+}
+
+.action-buttons .btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-proses {
+    background-color: #3b82f6;
+}
+
+.btn-selesai {
+    background-color: #22c55e;
+}
+
+.btn-tolak {
+    background-color: #ef4444;
+}
+
+.action-buttons .btn:hover {
+    opacity: 0.9;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 25px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.close-btn {
+    color: #9ca3af;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.close-btn:hover {
+    color: #ef4444;
+}
+
+.modal-body textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.modal-footer {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.modal-footer .btn-submit-tolak {
+    background-color: #ef4444;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ===============================
+   STYLE BARU UNTUK CUSTOM FILE UPLOAD
+================================ */
+
+/* Sembunyikan input file asli */
+.file-input {
+    display: none;
+}
+
+/* Area utama untuk drop file */
+.file-upload-area {
+    margin-bottom: 20px;
+}
+
+/* Style untuk area dropzone */
+.file-drop-zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #a5b4fc; /* Warna border sesuai tema biru */
+    border-radius: 10px;
+    padding: 30px;
+    cursor: pointer;
+    background-color: #eef2ff; /* Warna latar sangat terang */
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+/* Efek hover saat mouse di atas dropzone */
+.file-drop-zone:hover {
+    background-color: #e0e7ff;
+    border-color: #818cf8;
+}
+
+/* Ikon upload */
+.file-icon {
+    font-size: 40px;
+    color: #4f46e5; /* Warna ikon biru tua */
+    margin-bottom: 15px;
+}
+
+/* Teks instruksi */
+.file-instructions {
+    font-size: 15px;
+    color: #4338ca; /* Warna teks biru tua */
+    font-weight: 500;
+}
+
+/* Tampilan nama file yang dipilih */
+.file-name-display {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Tombol submit di modal 'Selesai' */
+.btn-submit-selesai {
+    background-color: #22c55e; /* Warna hijau 'selesai' */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+.btn-submit-selesai:hover {
+    background-color: #16a34a;
+}
+
+/* public/presentation_tier/css/admin-permohonan.css */
+
+/* === CSS UNTUK TAMPILAN TAB === */
+.tab-buttons {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px; /* Agar border bawah menimpa border container */
+    transition: all 0.2s ease-in-out;
+}
+
+.tab-btn:hover {
+    color: #007bff;
+}
+
+.tab-btn.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.5s;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.table-container h3, .main-container h3 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: #333;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

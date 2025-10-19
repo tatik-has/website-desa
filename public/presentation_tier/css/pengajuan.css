@@ -1,0 +1,145 @@
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0e7490 0%, #0891b2 50%, #06b6d4 100%);
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 80px;
+    z-index: 10;
+}
+
+.navbar-left img {
+    height: 70px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.navbar-right a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar-right a:hover {
+    color: #67e8f9;
+}
+
+.navbar-right .bell-icon {
+    font-size: 22px;
+}
+
+/* --- STYLE UNTUK HALAMAN PENGAJUAN --- */
+.pengajuan-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* ubah dari center jadi flex-start agar lebih ke atas */
+    align-items: center;
+    min-height: 100vh;
+    padding: 130px 40px 40px; /* dari 120px jadi 80px agar naik sedikit */
+}
+
+
+/* Judul */
+.pengajuan-title {
+    font-size: 38px;
+    font-weight: 600;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+/* Grid Kartu */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom sejajar */
+    gap: 35px;
+    width: 100%;
+    max-width: 900px;
+    justify-items: center;
+}
+
+/* Kartu Surat */
+.surat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #06b6d4;
+    width: 240px;          /* dari 280px → diperkecil */
+    height: 180px;         /* dari 220px → diperkecil */
+    padding: 16px;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: #0d4553;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.surat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+
+.surat-card img {
+    width: 55px;          /* dari 70px → sedikit lebih kecil */
+    height: auto;
+    margin-bottom: 16px;
+}
+
+.surat-card span {
+    font-size: 16px;      /* sedikit lebih kecil */
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* Responsif Tablet */
+@media (max-width: 960px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pengajuan-title {
+        font-size: 30px;
+    }
+}
+
+/* Responsif HP */
+@media (max-width: 640px) {
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+
+    .surat-card {
+        width: 100%;
+        max-width: 260px;
+        height: 170px;
+    }
+}

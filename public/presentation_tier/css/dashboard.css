@@ -1,0 +1,182 @@
+/* css halaman dashboard */
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Reset dan Body Style */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #0e7490 0%, #0891b2 50%, #06b6d4 100%);
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 80px;
+    z-index: 10;
+}
+
+.navbar-left img {
+    height: 70px;
+    width: auto;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.navbar-right a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar-right a:hover {
+    color: #67e8f9;
+}
+
+.navbar-right .bell-icon {
+    font-size: 22px;
+}
+
+/* Hero Section */
+.hero-container {
+    /* --- PERUBAHAN UTAMA DI SINI --- */
+    position: absolute; /* Mengubah posisi agar bisa memenuhi layar */
+    top: 0;             /* Menempel ke bagian atas viewport */
+    left: 0;            /* Menempel ke bagian kiri viewport */
+    width: 100%;        /* Memastikan lebarnya 100% dari layar */
+
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 80px;
+}
+
+
+.hero-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hero-text {
+    flex: 1;
+}
+
+.hero-subtitle {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+
+.hero-title {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+}
+
+.hero-action {
+    margin-left: 40px;
+}
+
+.hero-button {
+    display: inline-block;
+    background: #06b6d4;
+    color: #fff;
+    border: none;
+    padding: 18px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+}
+
+.hero-button:hover {
+    background: #22d3ee;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(6, 182, 212, 0.5);
+}
+
+.hero-tagline {
+    position: absolute;
+    bottom: 60px;
+    left: 80px;
+    font-size: 17px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .navbar, .hero-container {
+        padding: 24px 40px;
+    }
+    .hero-tagline {
+        left: 40px;
+        bottom: 40px;
+    }
+    .hero-title {
+        font-size: 56px;
+    }
+    .hero-subtitle {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-container {
+        position: static; /* Kembalikan ke normal di mobile */
+        padding: 120px 24px 60px;
+        min-height: auto;
+        align-items: flex-start;
+    }
+    .hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    .hero-text {
+        margin-bottom: 40px;
+    }
+    .hero-action {
+        margin-left: 0;
+    }
+    .hero-tagline {
+        position: static;
+        margin-top: 60px;
+    }
+    .navbar {
+        padding: 20px 24px;
+    }
+    .hero-title {
+        font-size: 48px;
+    }
+    .hero-subtitle {
+        font-size: 18px;
+    }
+}
