@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('permohonan_ktm', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             // Data Diri Pemohon
             $table->string('nik', 16)->unique();
             $table->string('nama');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->string('nomor_telp', 15);
+            $table->string('nomor_telp', 13);
             $table->text('alamat_lengkap');
 
             // Data Pendukung & Keperluan

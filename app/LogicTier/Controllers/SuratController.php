@@ -39,14 +39,18 @@ class SuratController extends BaseController
      */
     public function ajukan($jenis): RedirectResponse
     {
+        $user = Auth::user();
+
         Surat::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
+            'nama_pemohon' => $user->name, // ✅ ambil nama dari user, bukan email
             'jenis_surat' => $jenis,
             'keterangan' => 'Permohonan sedang diproses',
         ]);
 
         return redirect('/dashboard')->with('success', 'Surat berhasil diajukan!');
     }
+
 
     /**
      * Menampilkan riwayat semua permohonan user.

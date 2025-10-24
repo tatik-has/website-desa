@@ -6,41 +6,53 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Database\Eloquent\Model; // Tambahkan import Model
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class SuratDiajukan implements ShouldBroadcast
-
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Data yang akan dikirim bersama notifikasi.
-     * Properti harus public agar bisa diakses oleh JavaScript di frontend.
-     */
-    public $namaPemohon;
+    public $permohonan;
     public $jenisSurat;
     public $message;
 
-    /**
-     * Buat instance event baru.
-     */
-    public function __construct($namaPemohon, $jenisSurat)
+    public function __construct(Model $permohonan, $jenisSurat)
     {
-        $this->namaPemohon = $namaPemohon;
+        $this->permohonan = $permohonan;
         $this->jenisSurat = $jenisSurat;
-        $this->message = "Permohonan {$this->jenisSurat} baru dari {$this->namaPemohon} telah masuk.";
+        $this->message = "Permohonan {$this->jenisSurat} baru dari {$this->permohonan->nama} telah masuk.";
     }
 
-    /**
-     * Tentukan di channel mana event ini akan disiarkan.
-     */
     public function broadcastOn(): array
     {
-        // Siarkan ke channel privat bernama 'admin-channel'.
-        // Hanya admin yang bisa mendengarkan channel ini.
+        return [new PrivateChannel('admin-channel')];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'SuratDiajukan'; // 👈 nama yang akan didengar oleh Echo
+    }
+
+    public function broadcastWith(): array
+    {
         return [
-            new PrivateChannel('admin-channel'),
+            'permohonan_id' => $this->permohonan->id,
+            'jenis_surat' => $this->jenisSurat,
+            'nama_pemohon' => $this->permohonan->nama,
+            'url_detail' => "/admin/permohonan/{$this->getPermohonanType()}/{$this->permohonan->id}",
+            'message' => $this->message,
         ];
+    }
+
+    private function getPermohonanType(): string
+    {
+        return match(get_class($this->permohonan)) {
+            \App\DataTier\Models\PermohonanDomisili::class => 'domisili',
+            \App\DataTier\Models\PermohonanKTM::class => 'ktm',
+            \App\DataTier\Models\PermohonanSKU::class => 'sku',
+            default => 'unknown'
+        };
     }
 }

@@ -15,7 +15,7 @@ class AdminAuthController extends BaseController
      */
     public function showLogin()
     {
-        return view('presentation_tier.admin.login_admin');
+        return view('presentation_tier.admin.dashboard.blade');
     }
 
     /**
@@ -32,12 +32,15 @@ class AdminAuthController extends BaseController
 
         if ($admin && Hash::check($request->password, $admin->password)) {
             Auth::guard('admin')->login($admin);
+            $request->session()->regenerate(); // <--- ini penting
+
             return redirect()->intended('/admin/dashboard');
         }
 
         return back()->withInput()->withErrors([
             'email' => 'Email atau password salah.',
         ]);
+
     }
 
     /**

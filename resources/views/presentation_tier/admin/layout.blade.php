@@ -1,6 +1,7 @@
 {{-- File: resources/views/presentation_tier/admin/layout.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,10 +17,11 @@
     {{-- Slot untuk CSS tambahan per halaman --}}
     @stack('styles')
 </head>
+
 <body>
     <div class="admin-container">
         {{-- =============================================== --}}
-        {{-- == BAGIAN SIDEBAR YANG AKAN SELALU SAMA      == --}}
+        {{-- == BAGIAN SIDEBAR YANG AKAN SELALU SAMA == --}}
         {{-- =============================================== --}}
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -46,7 +48,7 @@
         </aside>
 
         {{-- =============================================== --}}
-        {{-- == BAGIAN KONTEN UTAMA                       == --}}
+        {{-- == BAGIAN KONTEN UTAMA == --}}
         {{-- =============================================== --}}
         <main class="main-content">
             {{-- Bagian Top Bar --}}
@@ -79,91 +81,98 @@
         </main>
     </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {{-- Tambahkan jQuery jika belum ada --}}
-<script src="{{ asset('js/app.js') }}"></script> {{-- Pastikan file ini di-load --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {{-- Tambahkan jQuery jika belum ada --}}
+    <script src="{{ asset('js/app.js') }}"></script> {{-- Pastikan file ini di-load --}}
 
-@auth('admin') {{-- Pastikan script hanya berjalan untuk admin --}}
-<script>
-    $(document).ready(function() {
-        const bell = $('#notification-bell');
-        const countBadge = $('#notification-count');
-        const dropdown = $('#notification-dropdown');
-        const list = $('#notification-list');
+    @auth('admin') {{-- Pastikan script hanya berjalan untuk admin --}}
+        <script>
+            $(document).ready(function () {
+                const bell = $('#notification-bell');
+                const countBadge = $('#notification-count');
+                const dropdown = $('#notification-dropdown');
+                const list = $('#notification-list');
 
-        function fetchNotifications() {
-            $.ajax({
-                url: '{{ route("admin.notifications.unread") }}',
-                method: 'GET',
-                success: function(response) {
-                    // Update counter
-                    if (response.count > 0) {
-                        countBadge.text(response.count).show();
-                    } else {
-                        countBadge.hide();
-                    }
+                function fetchNotifications() {
+                    $.ajax({
+                        url: '{{ route("admin.notifications.unread") }}',
+                        method: 'GET',
+                        success: function (response) {
+                            // ... (bagian countBadge biarkan) ...
 
-                    // Update dropdown list
-                    list.empty();
-                    if (response.notifications.length > 0) {
-                        response.notifications.forEach(function(notif) {
-                            let jenisSurat = notif.data.jenis_surat.toLowerCase();
-                            let permohonanId = notif.data.permohonan_id;
-                            let url = '{{ url("/admin") }}/' + jenisSurat + '/' + permohonanId;
+                            // Update dropdown list
+                            list.empty();
+                            if (response.notifications.length > 0) {
+                                response.notifications.forEach(function (notif) {
+                                    // === PERBAIKAN DI BAWAH INI ===
 
-                            let item = `
-                                <a href="${url}" class="notification-item">
-                                    <div class="message">${notif.data.pesan}</div>
-                                    <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
-                                </a>
-                            `;
-                            list.append(item);
-                        });
-                    } else {
-                        list.html('<p style="text-align: center; padding: 20px; color: #888;">Tidak ada notifikasi baru.</p>');
-                    }
+                                    // Ambil kunci rute (domisili, ktm, sku) dari data notifikasi
+                                    let typeKey = notif.data.jenis_surat_key; // <-- UBAH BARIS INI
+                                    let permohonanId = notif.data.permohonan_id;
+
+                                    // Buat URL yang benar sesuai dengan rute di web.php
+                                    let url = '{{ url("/admin") }}/' + typeKey + '/' + permohonanId; // <-- UBAH BARIS INI
+
+                                    let item = `
+                                        <a href="${url}" class="notification-item">
+                                        <div class="message">${notif.data.pesan}</div>
+                                        <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
+                                        </a> `;
+                                    // === AKHIR PERBAIKAN ===
+                                    list.append(item);
+                                });
+                            } else {
+                                list.html('<p style="text-align: center; padding: 20px; color: #888;">Tidak ada notifikasi baru.</p>');
+                            }
+                        }
+                    });
                 }
-            });
-        }
-        
-        // Klik lonceng untuk tampil/sembunyi dropdown
-        bell.on('click', function(e) {
-            e.stopPropagation();
-            dropdown.toggle();
 
-            // Tandai notifikasi sudah dibaca
-            if (dropdown.is(':visible') && parseInt(countBadge.text()) > 0) {
-                $.ajax({
-                    url: '{{ route("admin.notifications.markAsRead") }}',
-                    method: 'POST',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function() {
-                        countBadge.text('0').hide();
+                // Klik lonceng untuk tampil/sembunyi dropdown
+                bell.on('click', function (e) {
+                    e.stopPropagation();
+                    dropdown.toggle();
+
+                    // Tandai notifikasi sudah dibaca
+                    if (dropdown.is(':visible') && parseInt(countBadge.text()) > 0) {
+                        $.ajax({
+                            url: '{{ route("admin.notifications.markAsRead") }}',
+                            method: 'POST',
+                            data: { _token: '{{ csrf_token() }}' },
+                            success: function () {
+                                countBadge.text('0').hide();
+                            }
+                        });
                     }
                 });
-            }
-        });
 
-        // Sembunyikan dropdown saat klik di luar area
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.notification-wrapper').length) {
-                dropdown.hide();
-            }
-        });
+                // Sembunyikan dropdown saat klik di luar area
+                $(document).on('click', function (e) {
+                    if (!$(e.target).closest('.notification-wrapper').length) {
+                        dropdown.hide();
+                    }
+                });
 
-        // Ambil notifikasi saat halaman pertama dimuat
-        fetchNotifications();
-
-        // Laravel Echo real-time listener
-        window.Echo.private('admin-channel')
-            .listen('SuratDiajukan', (e) => {
-                console.log('Event diterima:', e);
+                // Ambil notifikasi saat halaman pertama dimuat
                 fetchNotifications();
-            });
-    });
-</script>
-@endauth
 
-{{-- Slot untuk script tambahan dari halaman lain --}}
-@stack('scripts')
+                // Laravel Echo real-time listener
+                window.Echo.private('admin-channel')
+                    .listen('SuratDiajukan', (e) => {
+                        console.log('Event diterima:', e);
+                        fetchNotifications();
+
+                        // Tambah notifikasi popup kecil (opsional)
+                        const toast = $('<div class="toast-notification"></div>')
+                            .text(e.message)
+                            .appendTo('body');
+                        setTimeout(() => toast.fadeOut(500, () => toast.remove()), 4000);
+                    });
+            });
+        </script>
+    @endauth
+
+    {{-- Slot untuk script tambahan dari halaman lain --}}
+    @stack('scripts')
 </body>
+
 </html>

@@ -12,7 +12,7 @@ use App\LogicTier\Controllers\AdminController;
 use App\LogicTier\Controllers\NotificationController;
 use App\LogicTier\Controllers\SKTMController;
 use App\LogicTier\Controllers\SKUController;
-use App\LogicTier\Controllers\Admin\NotificationController as AdminNotificationController; // <-- TAMBAHKAN INI
+
 
 // ---------------- DEFAULT REDIRECT ----------------
 Route::get('/', function () {
@@ -84,7 +84,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/ktm/{permohonanKTM}', [AdminController::class, 'showKtmDetail'])->name('admin.ktm.show');
     Route::get('/admin/sku/{permohonanSKU}', [AdminController::class, 'showSkuDetail'])->name('admin.sku.show');
 
-    // Rute Notifikasi Admin
-    Route::get('/admin/notifications/unread', [AdminNotificationController::class, 'getUnread'])->name('admin.notifications.unread');
-    Route::post('/admin/notifications/mark-as-read', [AdminNotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+    // Rute Notifikasi Admin (Gunakan Controller yang sama dengan User)
+    Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])->name('admin.notifications.unread'); // <-- UBAH CLASS DI SINI
+    Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead'); // <-- UBAH CLASS DI SINI
 });

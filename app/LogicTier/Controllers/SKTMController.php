@@ -68,7 +68,7 @@ class SKTMController extends BaseController
 
         // PICU EVENT
         event(new SuratDiajukan(
-            $permohonan->nama,
+            $permohonan,
             'SKTM'
         ));
 

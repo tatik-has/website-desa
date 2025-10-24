@@ -35,7 +35,7 @@ class AdminController extends BaseController
     public function updateStatusPermohonan(Request $request, string $type, int $id)
     {
         $request->validate([
-            'status' => 'required|in:diproses,selesai,ditolak,Diproses,Selesai,Ditolak',
+            'status' => 'required|in:Diproses,Selesai,Ditolak',
             'keterangan_penolakan' => 'required_if:status,ditolak,Ditolak|string|nullable',
             'surat_jadi' => 'required_if:status,selesai,Selesai|file|mimes:pdf|max:2048',
         ]);

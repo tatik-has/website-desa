@@ -1,4 +1,5 @@
 <?php
+// File: app/LogicTier/Events/StatusDiperbarui.php
 
 namespace App\LogicTier\Events;
 
@@ -8,25 +9,29 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Eloquent\Model; // <-- TAMBAHKAN INI
 
 class StatusDiperbarui implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Data yang akan dikirim ke user.
-     */
     public $userId;
     public $message;
+    public Model $permohonan; // <-- TAMBAHKAN INI
 
     /**
      * Buat instance event baru.
+     * Ubah parameter untuk menerima Model
      */
-    public function __construct($userId, $status, $keterangan)
+    public function __construct(Model $permohonan) // <-- UBAH PARAMETER INI
     {
-        $this->userId = $userId;
+        $this->permohonan = $permohonan; // <-- TAMBAHKAN INI
+        $this->userId = $permohonan->user_id; // <-- UBAH INI
 
         // Membuat pesan notifikasi yang lebih informatif
+        $status = $permohonan->status; // Ambil dari model
+        $keterangan = $permohonan->keterangan_penolakan; // Ambil dari model
+
         if ($status === 'Ditolak') {
             $this->message = "Permohonan Anda DITOLAK. Alasan: {$keterangan}";
         } elseif ($status === 'Selesai') {
@@ -41,9 +46,6 @@ class StatusDiperbarui implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        // Siarkan ke channel privat yang spesifik untuk user tertentu.
-        // Contoh: 'user.1', 'user.42', dst. Ini memastikan hanya user yang
-        // bersangkutan yang menerima notifikasi ini.
         return [
             new PrivateChannel('user.' . $this->userId),
         ];

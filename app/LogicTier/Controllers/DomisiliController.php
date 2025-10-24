@@ -60,7 +60,7 @@ class DomisiliController extends BaseController
 
         // 4. PICU EVENT SETELAH DATA BERHASIL DIBUAT
         event(new SuratDiajukan(
-            $permohonan->nama,
+            $permohonan,
             'Keterangan Domisili'
         ));
 
