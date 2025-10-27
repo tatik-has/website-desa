@@ -9,6 +9,13 @@ use App\DataTier\Models\PermohonanKTM;
 use App\LogicTier\Events\SuratDiajukan;
 use Illuminate\Support\Facades\Auth;
 
+// === TAMBAHAN UNTUK NOTIFIKASI ===
+use App\DataTier\Models\Admin;
+use App\Notifications\PengajuanMasukNotification;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
+// === AKHIR TAMBAHAN ===
+
 class SKTMController extends BaseController
 {
     public function create()
@@ -54,6 +61,7 @@ class SKTMController extends BaseController
         $dataToStore = array_merge(
             [
                 'user_id' => Auth::id(),
+                'status' => 'Diproses',
             ],
             // === BAGIAN YANG DIPERBAIKI ===
             $request->only([
@@ -71,6 +79,24 @@ class SKTMController extends BaseController
             $permohonan,
             'SKTM'
         ));
+
+        // === TAMBAHAN KODE NOTIFIKASI ADMIN ===
+        try {
+            // 1. Ambil semua admin
+            $admins = Admin::all();
+
+            if ($admins->isNotEmpty()) {
+                // 2. Kirim notifikasi menggunakan file notifikasi Anda
+                Notification::send(
+                    $admins, 
+                    new PengajuanMasukNotification($permohonan) // Gunakan notifikasi Anda
+                );
+            }
+        } catch (\Exception $e) {
+            // Jika gagal, catat di log tapi jangan gagalkan pengajuan
+            Log::error('Gagal kirim notifikasi admin: ' . $e->getMessage());
+        }
+        // === AKHIR KODE TAMBAHAN ===
 
         return redirect()
             ->back()

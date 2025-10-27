@@ -38,92 +38,62 @@
             {{-- ============================================ --}}
             {{-- SECTION: DATA PEMOHON (SEMUA JENIS SURAT) --}}
             {{-- ============================================ --}}
+
             <h4 class="section-title">📋 Data Pemohon</h4>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <div class="info-item-modern">
-                        <label>Nama Lengkap</label>
-                        <p>{{ $permohonan->nama ?? '-' }}</p>
-                    </div>
-                    <div class="info-item-modern">
-                        <label>NIK</label>
-                        <p>{{ $permohonan->nik ?? '-' }}</p>
-                    </div>
-
-                    {{-- Jenis Kelamin (untuk SKTM dan Domisili) --}}
-                    @if(isset($permohonan->jenis_kelamin))
-                        <div class="info-item-modern">
-                            <label>Jenis Kelamin</label>
-                            <p>{{ $permohonan->jenis_kelamin }}</p>
-                        </div>
-                    @endif
-
-                    {{-- Nomor Telepon --}}
-                    @if(isset($permohonan->nomor_telp))
-                        <div class="info-item-modern">
-                            <label>Nomor Telepon / WhatsApp</label>
-                            <p>{{ $permohonan->nomor_telp }}</p>
-                        </div>
-                    @endif
+            <div class="info-grid">
+                <div class="info-item-modern">
+                    <label>Nama Lengkap</label>
+                    <p>{{ $permohonan->nama ?? '-' }}</p>
+                </div>
+                <div class="info-item-modern">
+                    <label>NIK</label>
+                    <p>{{ $permohonan->nik ?? '-' }}</p>
                 </div>
 
-                <div class="col-md-6">
-                    {{-- Tanggal Pengajuan --}}
+                {{-- Jenis Kelamin (untuk SKTM dan Domisili) --}}
+                @if(isset($permohonan->jenis_kelamin))
                     <div class="info-item-modern">
-                        <label>Tanggal Pengajuan</label>
-                        <p>{{ \Carbon\Carbon::parse($permohonan->created_at)->format('d-m-Y H:i') }} WIB</p>
+                        <label>Jenis Kelamin</label>
+                        <p>{{ $permohonan->jenis_kelamin }}</p>
                     </div>
+                @endif
 
-                    {{-- Status --}}
+                {{-- Nomor Telepon --}}
+                @if(isset($permohonan->nomor_telp))
                     <div class="info-item-modern">
-                        <label>Status Permohonan</label>
-                        <p>
-                            <span class="status-badge 
-                                @if($permohonan->status == 'Diproses') status-diproses
-                                @elseif($permohonan->status == 'Selesai') status-selesai
-                                @elseif($permohonan->status == 'Ditolak') status-ditolak
-                                @else status-default @endif">
-                                <span class="status-dot"></span>
-                                {{ $permohonan->status }}
-                            </span>
-                        </p>
+                        <label>Nomor Telepon / WhatsApp</label>
+                        <p>{{ $permohonan->nomor_telp }}</p>
                     </div>
+                @endif
 
-                    {{-- RT/RW untuk Domisili --}}
-                    @if(isset($permohonan->rt_domisili) && isset($permohonan->rw_domisili))
-                        <div class="info-item-modern">
-                            <label>RT / RW Domisili</label>
-                            <p>RT {{ $permohonan->rt_domisili }} / RW {{ $permohonan->rw_domisili }}</p>
-                        </div>
-                    @endif
+                {{-- Tanggal Pengajuan --}}
+                <div class="info-item-modern">
+                    <label>Tanggal Pengajuan</label>
+                    <p>{{ \Carbon\Carbon::parse($permohonan->created_at)->format('d-m-Y H:i') }} WIB</p>
                 </div>
-            </div>
 
-            {{-- Alamat (full width) --}}
-            <div class="row mb-3">
-                <div class="col-12">
-                    @if(isset($permohonan->alamat_lengkap))
-                        {{-- SKTM --}}
-                        <div class="info-item-modern">
-                            <label>Alamat Lengkap (sesuai KK)</label>
-                            <p>{{ $permohonan->alamat_lengkap }}</p>
-                        </div>
-                    @elseif(isset($permohonan->alamat_ktp))
-                        {{-- SKU atau Domisili --}}
-                        <div class="info-item-modern">
-                            <label>Alamat Sesuai KTP</label>
-                            <p>{{ $permohonan->alamat_ktp }}</p>
-                        </div>
-                    @endif
-
-                    @if(isset($permohonan->alamat_domisili))
-                        {{-- Khusus Domisili --}}
-                        <div class="info-item-modern">
-                            <label>Alamat Domisili Sekarang</label>
-                            <p>{{ $permohonan->alamat_domisili }}</p>
-                        </div>
-                    @endif
+                {{-- Status --}}
+                <div class="info-item-modern">
+                    <label>Status Permohonan</label>
+                    <p>
+                        <span class="status-badge 
+                            @if($permohonan->status == 'Diproses') status-diproses
+                            @elseif($permohonan->status == 'Selesai') status-selesai
+                            @elseif($permohonan->status == 'Ditolak') status-ditolak
+                            @else status-default @endif">
+                            <span class="status-dot"></span>
+                            {{ $permohonan->status }}
+                        </span>
+                    </p>
                 </div>
+
+                {{-- RT/RW untuk Domisili --}}
+                @if(isset($permohonan->rt_domisili) && isset($permohonan->rw_domisili))
+                    <div class="info-item-modern">
+                        <label>RT / RW Domisili</label>
+                        <p>RT {{ $permohonan->rt_domisili }} / RW {{ $permohonan->rw_domisili }}</p>
+                    </div>
+                @endif
             </div>
 
             {{-- ============================================ --}}

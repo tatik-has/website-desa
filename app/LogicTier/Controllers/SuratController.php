@@ -15,6 +15,16 @@ use App\DataTier\Models\PermohonanDomisili;
 use App\DataTier\Models\PermohonanKTM;
 use App\DataTier\Models\PermohonanSKU;
 
+// === TAMBAHAN UNTUK NOTIFIKASI ===
+// Pastikan path ke Model Admin Anda sudah benar
+use App\DataTier\Models\Admin; 
+// Pastikan Anda sudah membuat file Notifikasi ini
+use App\LogicTier\Notifications\SuratBaruNotification; 
+use Illuminate\Support\Facades\Notification; // Import fasad Notifikasi
+use Illuminate\Support\Facades\Log; // Untuk mencatat error jika notifikasi gagal
+// === AKHIR TAMBAHAN ===
+
+
 class SuratController extends BaseController
 {
     /**
@@ -41,12 +51,28 @@ class SuratController extends BaseController
     {
         $user = Auth::user();
 
-        Surat::create([
+        // Buat surat terlebih dahulu agar kita bisa mendapatkan ID-nya
+        $surat = Surat::create([
             'user_id' => $user->id,
-            'nama_pemohon' => $user->name, // ✅ ambil nama dari user, bukan email
+            'nama_pemohon' => $user->name,
             'jenis_surat' => $jenis,
             'keterangan' => 'Permohonan sedang diproses',
         ]);
+
+        // === TAMBAHAN UNTUK NOTIFIKASI ADMIN ===
+        try {
+            $admins = Admin::all();
+
+            if ($admins->isNotEmpty()) {
+                // Kita kirim objek $surat dan $user agar data notifikasi bisa lengkap
+                // File SuratBaruNotification akan kita buat di langkah selanjutnya
+                Notification::send($admins, new SuratBaruNotification($surat, $user));
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Gagal mengirim notifikasi admin: ' . $e->getMessage());
+        }
+        // === AKHIR TAMBAHAN ===
 
         return redirect('/dashboard')->with('success', 'Surat berhasil diajukan!');
     }

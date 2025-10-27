@@ -32,6 +32,7 @@ class PermohonanSKU extends Model
         'keterangan_penolakan',
         'path_surat_jadi',
     ];
+    
 
     public function user()
     {

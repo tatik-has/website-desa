@@ -93,7 +93,7 @@ class AdminController extends BaseController
         return view('presentation_tier.admin.semua-permohonan', compact('domisili', 'ktm', 'sku'));
     }
 
-    // === ✅ TAMBAHAN: METHOD UNIVERSAL DETAIL SURAT ===
+    // === TAMBAHAN: METHOD UNIVERSAL DETAIL SURAT ===
     public function showDetailSurat($jenis, $id)
     {
         $modelClass = match ($jenis) {
@@ -117,8 +117,7 @@ class AdminController extends BaseController
         ]);
     }
 
-    // === versi lama tetap dipertahankan agar tidak error ===
-    // === GANTI METHOD INI ===
+    
 public function showDomisiliDetail($id)
 {
     $permohonan = PermohonanDomisili::with('user')->findOrFail($id);

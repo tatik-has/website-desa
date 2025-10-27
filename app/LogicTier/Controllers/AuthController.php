@@ -59,7 +59,7 @@ class AuthController extends BaseController
     }
 
     // ==========================
-    // 🔐 LOGIN
+    // LOGIN
     // ==========================
     public function showLogin()
     {
@@ -79,7 +79,7 @@ class AuthController extends BaseController
             Auth::guard('admin')->login($admin);
             $request->session()->regenerate();
 
-            // ✅ Nama admin diambil dari kolom 'nama' tabel admins
+            // Nama admin diambil dari kolom 'nama' tabel admins
             session(['user_name' => $admin->nama, 'user_role' => 'admin']);
 
             return redirect()->intended('/admin/dashboard')->with('success', 'Selamat datang, ' . $admin->nama . '!');
@@ -96,7 +96,7 @@ class AuthController extends BaseController
             Auth::guard('web')->login($user);
             $request->session()->regenerate();
 
-            // ✅ Nama user diambil dari kolom 'name' tabel users
+            // Nama user diambil dari kolom 'name' tabel users
             session(['user_name' => $user->name, 'user_role' => 'user']);
 
             return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');

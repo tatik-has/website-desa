@@ -12,9 +12,23 @@
                 <h1>Surat Keterangan Usaha (SKU)</h1>
             </div>
 
+            <!-- pemberitahuan eror -->
+            @if ($errors->any())
+                <div class="alert alert-danger"
+                    style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    <strong>Terdapat kesalahan pada input Anda:</strong>
+                    <ul style="list-style-type: disc; margin-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+
             <form action="{{ route('sku.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                
+
                 {{-- Bagian Data Pemohon (sudah benar) --}}
                 <h3 class="form-section-title">Data Pemohon (Pemilik Usaha)</h3>
                 <div class="form-group">
@@ -27,7 +41,8 @@
                 </div>
                 <div class="form-group">
                     <label for="alamat_ktp">Alamat Sesuai KTP</label>
-                    <input type="text" id="alamat_ktp" name="alamat_ktp" placeholder="Masukkan Alamat Lengkap Sesuai KTP" required>
+                    <input type="text" id="alamat_ktp" name="alamat_ktp" placeholder="Masukkan Alamat Lengkap Sesuai KTP"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="nomor_telp">Nomor Telp/Whatsapp Aktif</label>
@@ -38,15 +53,18 @@
                 <h3 class="form-section-title">Data Usaha</h3>
                 <div class="form-group">
                     <label for="nama_usaha">Nama Usaha</label>
-                    <input type="text" id="nama_usaha" name="nama_usaha" placeholder="Contoh: Warung Berkah, Jaya Laundry" required>
+                    <input type="text" id="nama_usaha" name="nama_usaha" placeholder="Contoh: Warung Berkah, Jaya Laundry"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="jenis_usaha">Jenis Usaha</label>
-                    <input type="text" id="jenis_usaha" name="jenis_usaha" placeholder="Contoh: Toko Kelontong, Jasa Jahit, Katering" required>
+                    <input type="text" id="jenis_usaha" name="jenis_usaha"
+                        placeholder="Contoh: Toko Kelontong, Jasa Jahit, Katering" required>
                 </div>
                 <div class="form-group">
                     <label for="alamat_usaha">Alamat Lengkap Tempat Usaha</label>
-                    <textarea id="alamat_usaha" name="alamat_usaha" rows="3" placeholder="Masukkan alamat lengkap lokasi usaha Anda" required></textarea>
+                    <textarea id="alamat_usaha" name="alamat_usaha" rows="3"
+                        placeholder="Masukkan alamat lengkap lokasi usaha Anda" required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="lama_usaha">Lama Usaha Berdiri</label>
@@ -105,7 +123,7 @@
         document.querySelectorAll('.file-input').forEach(input => {
             const wrapper = input.closest('.file-upload-wrapper');
             const display = wrapper.querySelector('.file-name-display');
-            
+
             input.addEventListener('change', (e) => {
                 const fileName = e.target.files[0] ? e.target.files[0].name : 'No File Chosen';
                 display.textContent = fileName;

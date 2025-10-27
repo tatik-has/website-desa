@@ -27,6 +27,7 @@ class PermohonanDomisili extends Model
         'keterangan_penolakan',
         'path_surat_jadi',
     ];
+    
     public function user()
     {
         return $this->belongsTo(\App\DataTier\Models\User::class, 'user_id');

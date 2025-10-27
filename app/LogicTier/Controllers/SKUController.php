@@ -8,11 +8,18 @@ use App\DataTier\Models\PermohonanSKU;
 use Illuminate\Support\Facades\Auth;
 use App\LogicTier\Events\SuratDiajukan; // Import event
 
+// === TAMBAHAN UNTUK NOTIFIKASI ===
+use App\DataTier\Models\Admin;
+use App\Notifications\PengajuanMasukNotification;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
+// === AKHIR TAMBAHAN ===
+
 class SKUController extends BaseController
 {
     public function create()
     {
-        return view('presentation_tier.auth.usaha'); 
+        return view('presentation_tier.auth.usaha');
     }
 
     public function store(Request $request)
@@ -50,13 +57,22 @@ class SKUController extends BaseController
         }
 
         $dataToStore = $request->only([
-            'nik', 'nama', 'alamat_ktp', 'nomor_telp', 'nama_usaha', 
-            'jenis_usaha', 'alamat_usaha', 'lama_usaha'
+            'nik',
+            'nama',
+            'alamat_ktp',
+            'nomor_telp',
+            'nama_usaha',
+            'jenis_usaha',
+            'alamat_usaha',
+            'lama_usaha'
         ]);
 
         // Simpan ke database dan ambil hasilnya
         $permohonan = PermohonanSKU::create(array_merge(
-            ['user_id' => Auth::id()],
+            [
+                'user_id' => Auth::id(),
+                'status' => 'Diproses',
+            ],
             $dataToStore,
             $dokumenPaths
         ));
@@ -66,6 +82,24 @@ class SKUController extends BaseController
             $permohonan,
             'SKU'
         ));
+
+        // === TAMBAHAN KODE NOTIFIKASI ADMIN ===
+        try {
+            // 1. Ambil semua admin
+            $admins = Admin::all();
+
+            if ($admins->isNotEmpty()) {
+                // 2. Kirim notifikasi menggunakan file notifikasi Anda
+                Notification::send(
+                    $admins,
+                    new PengajuanMasukNotification($permohonan) // Gunakan notifikasi Anda
+                );
+            }
+        } catch (\Exception $e) {
+            // Jika gagal, catat di log tapi jangan gagalkan pengajuan
+            Log::error('Gagal kirim notifikasi admin: ' . $e->getMessage());
+        }
+        // === AKHIR KODE TAMBAHAN ===
 
         return redirect()->back()->with('success', 'Permohonan SKU Anda telah berhasil dikirim!');
     }

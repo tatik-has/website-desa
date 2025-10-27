@@ -15,6 +15,20 @@
                 <h1>Surat Keterangan Tidak Mampu (SKTM)</h1>
             </div>
 
+            <!-- pemberitahuan eror -->
+            @if ($errors->any())
+                <div class="alert alert-danger"
+                    style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    <strong>Terdapat kesalahan pada input Anda:</strong>
+                    <ul style="list-style-type: disc; margin-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+
             {{-- Pesan sukses/error --}}
             @if(session('success'))
                 <div class="alert alert-success">
@@ -33,13 +47,15 @@
 
                 <div class="form-group">
                     <label for="nik">NIK</label>
-                    <input type="number" id="nik" name="nik" placeholder="Masukkan 16 digit NIK Anda" value="{{ old('nik') }}" required>
+                    <input type="number" id="nik" name="nik" placeholder="Masukkan 16 digit NIK Anda"
+                        value="{{ old('nik') }}" required>
                     @error('nik') <span class="error-message">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="nama">Nama Lengkap (sesuai KTP)</label>
-                    <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Lengkap Anda" value="{{ old('nama') }}" required>
+                    <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Lengkap Anda"
+                        value="{{ old('nama') }}" required>
                     @error('nama') <span class="error-message">{{ $message }}</span> @enderror
                 </div>
 
@@ -49,22 +65,27 @@
                         <div class="select-wrapper">
                             <select id="jenis-kelamin" name="jenis_kelamin" required>
                                 <option value="" disabled selected>Pilih Jenis Kelamin</option>
-                                <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                                <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>
+                                    Laki-laki</option>
+                                <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>
+                                    Perempuan</option>
                             </select>
                         </div>
                         @error('jenis_kelamin') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label for="nomor-telp">Nomor Telp/Whatsapp Aktif</label>
-                        <input type="number" id="nomor-telp" name="nomor_telp" placeholder="Contoh: 081234567890" value="{{ old('nomor_telp') }}" required>
+                        <input type="number" id="nomor-telp" name="nomor_telp" placeholder="Contoh: 081234567890"
+                            value="{{ old('nomor_telp') }}" required>
                         @error('nomor_telp') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="alamat-lengkap">Alamat Lengkap (sesuai KK)</label>
-                    <textarea id="alamat-lengkap" name="alamat_lengkap" rows="3" placeholder="Masukkan alamat lengkap sesuai Kartu Keluarga" required>{{ old('alamat_lengkap') }}</textarea>
+                    <textarea id="alamat-lengkap" name="alamat_lengkap" rows="3"
+                        placeholder="Masukkan alamat lengkap sesuai Kartu Keluarga"
+                        required>{{ old('alamat_lengkap') }}</textarea>
                     @error('alamat_lengkap') <span class="error-message">{{ $message }}</span> @enderror
                 </div>
 
@@ -72,19 +93,23 @@
 
                 <div class="form-group">
                     <label for="keperluan">Keperluan Pembuatan SKTM</label>
-                    <textarea id="keperluan" name="keperluan" rows="3" placeholder="Contoh: Pengajuan Beasiswa KIP Kuliah, Keringanan Biaya Rumah Sakit, dll." required>{{ old('keperluan') }}</textarea>
+                    <textarea id="keperluan" name="keperluan" rows="3"
+                        placeholder="Contoh: Pengajuan Beasiswa KIP Kuliah, Keringanan Biaya Rumah Sakit, dll."
+                        required>{{ old('keperluan') }}</textarea>
                     @error('keperluan') <span class="error-message">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="penghasilan">Penghasilan Rata-rata / Bulan (Rp)</label>
-                        <input type="number" id="penghasilan" name="penghasilan" placeholder="Contoh: 800000" value="{{ old('penghasilan') }}" required>
+                        <input type="number" id="penghasilan" name="penghasilan" placeholder="Contoh: 800000"
+                            value="{{ old('penghasilan') }}" required>
                         @error('penghasilan') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label for="jumlah-tanggungan">Jumlah Anggota Keluarga yg Ditanggung</label>
-                        <input type="number" id="jumlah-tanggungan" name="jumlah_tanggungan" placeholder="Contoh: 4" value="{{ old('jumlah_tanggungan') }}" required>
+                        <input type="number" id="jumlah-tanggungan" name="jumlah_tanggungan" placeholder="Contoh: 4"
+                            value="{{ old('jumlah_tanggungan') }}" required>
                         @error('jumlah_tanggungan') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                 </div>
@@ -117,7 +142,8 @@
                     <div class="form-group">
                         <label for="surat-pengantar">Surat Pengantar RT/RW</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="surat-pengantar" name="surat_pengantar_rt_rw" class="file-input" accept=".jpg,.jpeg,.png" required>
+                            <input type="file" id="surat-pengantar" name="surat_pengantar_rt_rw" class="file-input"
+                                accept=".jpg,.jpeg,.png" required>
                             <button type="button" class="file-choose-btn">Pilih File</button>
                             <span class="file-name-display">Belum ada file</span>
                         </div>
@@ -126,7 +152,8 @@
                     <div class="form-group">
                         <label for="foto-rumah">Foto Rumah Tampak Depan</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="foto-rumah" name="foto_rumah" class="file-input" accept=".jpg,.jpeg,.png" required>
+                            <input type="file" id="foto-rumah" name="foto_rumah" class="file-input" accept=".jpg,.jpeg,.png"
+                                required>
                             <button type="button" class="file-choose-btn">Pilih File</button>
                             <span class="file-name-display">Belum ada file</span>
                         </div>
@@ -136,7 +163,9 @@
 
                 <div class="form-group declaration">
                     <input type="checkbox" id="declaration" name="declaration" required>
-                    <label for="declaration">Saya menyatakan bahwa seluruh data dan dokumen yang saya kirimkan adalah benar dan dapat dipertanggungjawabkan. Jika ditemukan ketidaksesuaian, saya bersedia menerima sanksi sesuai hukum yang berlaku.</label>
+                    <label for="declaration">Saya menyatakan bahwa seluruh data dan dokumen yang saya kirimkan adalah benar
+                        dan dapat dipertanggungjawabkan. Jika ditemukan ketidaksesuaian, saya bersedia menerima sanksi
+                        sesuai hukum yang berlaku.</label>
                     @error('declaration') <br><span class="error-message">{{ $message }}</span> @enderror
                 </div>
 

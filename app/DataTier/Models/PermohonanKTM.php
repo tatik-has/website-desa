@@ -35,6 +35,7 @@ class PermohonanKtm extends Model
         'keterangan_penolakan',
         'path_surat_jadi',
     ];
+    
 
     /**
      * Mendefinisikan relasi ke model User.
