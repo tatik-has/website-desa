@@ -13,7 +13,6 @@ use App\LogicTier\Controllers\NotificationController;
 use App\LogicTier\Controllers\SKTMController;
 use App\LogicTier\Controllers\SKUController;
 
-
 // ---------------- DEFAULT REDIRECT ----------------
 Route::get('/', function () {
     return redirect('/login');
@@ -57,7 +56,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengajuan/sku', [SKUController::class, 'create'])->name('sku.create');
     Route::post('/pengajuan/sku', [SKUController::class, 'store'])->name('sku.store');
 
+    // ---------------- RIWAYAT PENGAJUAN ----------------
     Route::get('/riwayat-surat', [SuratController::class, 'history'])->name('surat.history');
+
     // ---------------- NOTIFIKASI ----------------
     Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifications.index');
 });
@@ -76,15 +77,23 @@ Route::middleware('auth:admin')->group(function () {
     // Dashboard Admin
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-    // Data permohonan surat
+    // Data permohonan surat (semua jenis)
     Route::get('/admin/surat', [AdminController::class, 'showPermohonanSurat'])->name('admin.surat.index');
-    Route::post('/admin/surat/{type}/{id}/update-status', [AdminController::class, 'updateStatusPermohonan'])->name('admin.surat.updateStatus');
+    Route::post('/admin/surat/{type}/{id}/update-status', [AdminController::class, 'updateStatusPermohonan'])
+        ->name('admin.surat.updateStatus');
 
-    Route::get('/admin/domisili/{permohonanDomisili}', [AdminController::class, 'showDomisiliDetail'])->name('admin.domisili.show');
-    Route::get('/admin/ktm/{permohonanKTM}', [AdminController::class, 'showKtmDetail'])->name('admin.ktm.show');
-    Route::get('/admin/sku/{permohonanSKU}', [AdminController::class, 'showSkuDetail'])->name('admin.sku.show');
+    // === DETAIL SETIAP JENIS SURAT ===
+    Route::get('/admin/domisili/{id}', [AdminController::class, 'showDomisiliDetail'])->name('admin.domisili.show');
+    Route::get('/admin/sku/{id}', [AdminController::class, 'showSkuDetail'])->name('admin.sku.show');
+    Route::get('/admin/ktm/{id}', [AdminController::class, 'showKtmDetail'])->name('admin.ktm.show');
+    Route::get('/admin/sktm/{id}', [AdminController::class, 'showSktmDetail'])->name('admin.sktm.show'); // ✅ tambahan
 
-    // Rute Notifikasi Admin (Gunakan Controller yang sama dengan User)
-    Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])->name('admin.notifications.unread'); // <-- UBAH CLASS DI SINI
-    Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead'); // <-- UBAH CLASS DI SINI
+    // === SEMUA PERMOHONAN (gabungan) ===
+    Route::get('/admin/semua-permohonan', [AdminController::class, 'semuaPermohonan'])->name('admin.semuaPermohonan');
+
+    // === NOTIFIKASI ADMIN ===
+    Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])
+        ->name('admin.notifications.unread');
+    Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])
+        ->name('admin.notifications.markAsRead');
 });

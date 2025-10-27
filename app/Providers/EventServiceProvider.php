@@ -1,5 +1,4 @@
 <?php
-// File: app/Providers/EventServiceProvider.php
 
 namespace App\Providers;
 
@@ -10,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 use App\LogicTier\Events\SuratDiajukan;
 use App\Listeners\KirimNotifikasiKeAdmin;
 use App\LogicTier\Events\StatusDiperbarui;
-use App\Listeners\KirimNotifikasiKeUser; // <-- Ini file baru dari Langkah 3
+use App\Listeners\KirimNotifikasiStatus; // Ganti nama sesuai file listener kamu
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
 
         // 3. Daftarkan Event "StatusDiperbarui"
         StatusDiperbarui::class => [
-            KirimNotifikasiKeUser::class, // <-- Ini file baru dari Langkah 3
+            KirimNotifikasiStatus::class, // Sesuaikan nama listener
         ],
     ];
 

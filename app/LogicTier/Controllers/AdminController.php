@@ -10,7 +10,7 @@ use App\DataTier\Models\PermohonanKTM;
 use App\DataTier\Models\PermohonanSKU;
 use App\DataTier\Models\User;
 use App\Notifications\SuratSelesaiNotification;
-use App\LogicTier\Events\StatusDiperbarui; // Import event baru
+use App\LogicTier\Events\StatusDiperbarui;
 
 class AdminController extends BaseController
 {
@@ -40,7 +40,7 @@ class AdminController extends BaseController
             'surat_jadi' => 'required_if:status,selesai,Selesai|file|mimes:pdf|max:2048',
         ]);
 
-        $modelClass = match($type) {
+        $modelClass = match ($type) {
             'domisili' => PermohonanDomisili::class,
             'ktm' => PermohonanKTM::class,
             'sku' => PermohonanSKU::class,
@@ -70,16 +70,10 @@ class AdminController extends BaseController
 
         $permohonan->save();
 
-        // 🔔 PICU EVENT SETELAH STATUS BERHASIL DIUPDATE
         if ($permohonan->user_id) {
-            event(new StatusDiperbarui(
-                $permohonan->user_id,
-                $permohonan->status,
-                $permohonan->keterangan_penolakan ?? ''
-            ));
+            event(new StatusDiperbarui($permohonan));
         }
 
-        // 🔔 Kirim notifikasi jika status selesai
         if ($permohonan->status == 'Selesai' && $permohonan->user_id) {
             $user = User::find($permohonan->user_id);
             if ($user) {
@@ -90,27 +84,71 @@ class AdminController extends BaseController
         return redirect()->route('admin.surat.index')->with('success', 'Status permohonan berhasil diperbarui!');
     }
 
-    public function showDomisiliDetail(PermohonanDomisili $permohonanDomisili)
+    public function semuaPermohonan()
     {
+        $domisili = PermohonanDomisili::with('user')->latest()->get();
+        $ktm = PermohonanKTM::with('user')->latest()->get();
+        $sku = PermohonanSKU::with('user')->latest()->get();
+
+        return view('presentation_tier.admin.semua-permohonan', compact('domisili', 'ktm', 'sku'));
+    }
+
+    // === ✅ TAMBAHAN: METHOD UNIVERSAL DETAIL SURAT ===
+    public function showDetailSurat($jenis, $id)
+    {
+        $modelClass = match ($jenis) {
+            'domisili' => PermohonanDomisili::class,
+            'ktm' => PermohonanKTM::class,
+            'sku' => PermohonanSKU::class,
+            default => abort(404, 'Jenis surat tidak ditemukan.')
+        };
+
+        $permohonan = $modelClass::with('user')->findOrFail($id);
+
+        $jenisSurat = match ($jenis) {
+            'domisili' => 'Keterangan Domisili',
+            'ktm' => 'Keterangan Tidak Mampu',
+            'sku' => 'Keterangan Usaha (SKU)',
+        };
+
         return view('presentation_tier.admin.detail-surat', [
-            'permohonan' => $permohonanDomisili,
-            'jenis_surat' => 'Keterangan Domisili'
+            'permohonan' => $permohonan,
+            'jenis_surat' => $jenisSurat,
         ]);
     }
 
-    public function showKtmDetail(PermohonanKTM $permohonanKTM)
-    {
-        return view('presentation_tier.admin.detail-surat', [
-            'permohonan' => $permohonanKTM,
-            'jenis_surat' => 'Permohonan KTM'
-        ]);
-    }
+    // === versi lama tetap dipertahankan agar tidak error ===
+    // === GANTI METHOD INI ===
+public function showDomisiliDetail($id)
+{
+    $permohonan = PermohonanDomisili::with('user')->findOrFail($id);
+    
+    return view('presentation_tier.admin.detail-surat', [
+        'permohonan' => $permohonan,
+        'jenis_surat' => 'Domisili',
+        'title' => 'Keterangan Domisili'
+    ]);
+}
 
-    public function showSkuDetail(PermohonanSKU $permohonanSKU)
-    {
-        return view('presentation_tier.admin.detail-surat', [
-            'permohonan' => $permohonanSKU,
-            'jenis_surat' => 'Keterangan Usaha (SKU)'
-        ]);
-    }
+public function showKtmDetail($id)
+{
+    $permohonan = PermohonanKTM::with('user')->findOrFail($id);
+    
+    return view('presentation_tier.admin.detail-surat', [
+        'permohonan' => $permohonan,
+        'jenis_surat' => 'SKTM',
+        'title' => 'Keterangan Tidak Mampu (SKTM)'
+    ]);
+}
+
+public function showSkuDetail($id)
+{
+    $permohonan = PermohonanSKU::with('user')->findOrFail($id);
+    
+    return view('presentation_tier.admin.detail-surat', [
+        'permohonan' => $permohonan,
+        'jenis_surat' => 'SKU',
+        'title' => 'Keterangan Usaha (SKU)'
+    ]);
+}
 }

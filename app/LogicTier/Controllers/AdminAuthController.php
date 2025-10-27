@@ -15,7 +15,7 @@ class AdminAuthController extends BaseController
      */
     public function showLogin()
     {
-        return view('presentation_tier.admin.dashboard.blade');
+        return view('presentation_tier.admin.dashboard');
     }
 
     /**
