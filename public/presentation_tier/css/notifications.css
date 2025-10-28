@@ -1,16 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Saran: Agar efek 'backdrop-filter: blur(10px)' berfungsi, 
+   pastikan <body> Anda memiliki background-image. Contoh:
+*/
+/*
+body {
+    background-image: linear-gradient(to top right, #3a1c71, #d76d77, #ffaf7b);
+    background-size: cover;
+    min-height: 100vh;
+}
+*/
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /* Container Utama */
 .notif-container {
     max-width: 800px;
     margin: 40px auto;
-    padding: 20px;
+    padding: 30px;
     font-family: 'Poppins', sans-serif;
+    /* Menambahkan sedikit efek kaca pada container utamanya */
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .notif-header h1 {
     color: #fff;
     text-align: center;
     margin-bottom: 30px;
-    font-size: 2rem;
+    font-size: 2.25rem;
+    font-weight: 700;
+    /* Menambahkan shadow agar teks lebih "pop" */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Daftar Notifikasi */
@@ -29,19 +56,39 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    color: #fff;
-    transition: background 0.3s ease;
+    color: #f0f0f0; /* Sedikit diredupkan agar tidak terlalu silau */
     backdrop-filter: blur(10px);
+    /* Menambahkan shadow untuk efek terangkat */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    /* Memperhalus transisi untuk hover */
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .notif-item:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
+    /* Efek "terangkat" saat di-hover */
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Ikon di sebelah kiri */
+/* Ikon di sebelah kiri (Dibuat lebih menonjol) */
+.notif-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 217, 255, 0.1); /* Background glow sesuai warna ikon */
+    border-radius: 50%; /* Membuatnya bulat */
+    border: 1px solid rgba(0, 217, 255, 0.5);
+}
+
 .notif-icon i {
-    font-size: 2rem;
-    color: #00d9ff; /* Warna biru cerah untuk ikon */
+    font-size: 1.75rem; /* Disesuaikan agar pas di lingkaran */
+    color: #00d9ff;
+    /* Efek neon/glow pada ikon */
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.7);
 }
 
 /* Konten teks di tengah */
@@ -52,50 +99,36 @@
 .notif-content .message {
     margin: 0;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600; /* Ditebalkan agar lebih jelas */
+    line-height: 1.4;
 }
 
 .notif-content .time {
-    font-size: 0.8rem;
-    color: #ccc;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7); /* Dibuat lebih transparan */
     margin-top: 5px;
     display: block;
-}
-
-/* Area aksi di sebelah kanan */
-.notif-action {
-    margin-left: auto;
-}
-
-/* Tombol Unduh */
-.btn-download {
-    background-color: #00d9ff; /* Warna biru yang sama dengan ikon */
-    color: #0e1a35;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-}
-
-.btn-download:hover {
-    background-color: #fff;
-    box-shadow: 0 0 15px rgba(0, 217, 255, 0.7);
 }
 
 /* Pesan jika tidak ada notifikasi */
 .no-notif {
     background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     padding: 30px;
     text-align: center;
-    color: #ccc;
+    color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
+
+
+/* =======================================================
+  BAGIAN YANG DISESUAIKAN ADA DI BAWAH INI
+======================================================= */
+
 /* ==============================
-   TAMBAHAN UNTUK TOMBOL HAPUS
+    TAMBAHAN UNTUK TOMBOL HAPUS
 ============================== */
 
 .btn-delete {
@@ -133,6 +166,7 @@
     gap: 10px;
 }
 
+/* === PERUBAHAN 1: Tombol Unduh disamakan === */
 .notif-action .btn-download {
     background-color: #198754;
     color: #fff;
@@ -141,9 +175,42 @@
     font-size: 14px;
     text-decoration: none;
     transition: all 0.2s ease-in-out;
+
+    /* PROPERTI TAMBAHAN: Agar sama besar dengan tombol Hapus */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; 
 }
 
 .notif-action .btn-download:hover {
     background-color: #157347;
     transform: scale(1.05);
+}
+
+/* === PERUBAHAN 2: Tombol Hapus Semua dipindahkan === */
+.btn-delete-all {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    /* PROPERTI TAMBAHAN: Untuk pindah ke kanan dan memberi jarak */
+    margin-left: auto;
+    margin-bottom: 20px;
+}
+
+.btn-delete-all:hover {
+    background-color: #b91c1c;
+}
+
+.btn-delete-all i {
+    font-size: 0.875rem;
 }

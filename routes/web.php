@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
 
     // ---------------- NOTIFIKASI ----------------
     Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::delete('/notifikasi', [NotificationController::class, 'destroyAll'])->name('notifications.deleteAll');
+    Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])->name('notifications.delete');
 });
 
 // ============================================================

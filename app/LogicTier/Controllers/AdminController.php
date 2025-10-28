@@ -70,9 +70,9 @@ class AdminController extends BaseController
 
         $permohonan->save();
 
-        if ($permohonan->user_id) {
-            event(new StatusDiperbarui($permohonan));
-        }
+        // if ($permohonan->user_id) {
+        //     event(new StatusDiperbarui($permohonan));
+        // }
 
         if ($permohonan->status == 'Selesai' && $permohonan->user_id) {
             $user = User::find($permohonan->user_id);

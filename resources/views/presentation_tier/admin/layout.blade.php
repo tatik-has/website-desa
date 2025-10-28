@@ -72,7 +72,10 @@
 
                 <form action="{{ route('admin.logout') }}" method="POST" style="margin: 0;">
                     @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
+                    <button type="submit" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </button>
                 </form>
             </div>
 
@@ -113,10 +116,10 @@
                                     let url = '{{ url("/admin") }}/' + typeKey + '/' + permohonanId; // <-- UBAH BARIS INI
 
                                     let item = `
-                                        <a href="${url}" class="notification-item">
-                                        <div class="message">${notif.data.pesan}</div>
-                                        <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
-                                        </a> `;
+                                            <a href="${url}" class="notification-item">
+                                            <div class="message">${notif.data.pesan}</div>
+                                            <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
+                                            </a> `;
                                     // === AKHIR PERBAIKAN ===
                                     list.append(item);
                                 });
