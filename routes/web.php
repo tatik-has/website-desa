@@ -63,6 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifications.index');
     Route::delete('/notifikasi', [NotificationController::class, 'destroyAll'])->name('notifications.deleteAll');
     Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])->name('notifications.delete');
+
+    Route::get('/faq', function () {return view('presentation_tier.faq.faq');})->name('faq');
 });
 
 // ============================================================
@@ -88,7 +90,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/domisili/{id}', [AdminController::class, 'showDomisiliDetail'])->name('admin.domisili.show');
     Route::get('/admin/sku/{id}', [AdminController::class, 'showSkuDetail'])->name('admin.sku.show');
     Route::get('/admin/ktm/{id}', [AdminController::class, 'showKtmDetail'])->name('admin.ktm.show');
-    Route::get('/admin/sktm/{id}', [AdminController::class, 'showSktmDetail'])->name('admin.sktm.show'); // ✅ tambahan
+    Route::get('/admin/sktm/{id}', [AdminController::class, 'showSktmDetail'])->name('admin.sktm.show'); // tambahan
 
     // === SEMUA PERMOHONAN (gabungan) ===
     Route::get('/admin/semua-permohonan', [AdminController::class, 'semuaPermohonan'])->name('admin.semuaPermohonan');
@@ -98,4 +100,8 @@ Route::middleware('auth:admin')->group(function () {
         ->name('admin.notifications.unread');
     Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])
         ->name('admin.notifications.markAsRead');
+
+    // === Laporan ===
+    Route::get('/admin/laporan', [\App\LogicTier\Controllers\AdminController::class, 'showLaporan'])
+        ->name('admin.laporan');
 });

@@ -40,6 +40,13 @@
                     <i class="fa-solid fa-file-alt"></i>
                     <span>Laporan</span>
                 </a>
+                @if(Auth::guard('admin')->user()->role == 'superadmin')
+                    <a href="{{ url('/admin/manajemen-admin') }}"
+                        class="{{ request()->is('admin/manajemen-admin*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-users-cog"></i>
+                        <span>Manajemen Admin</span>
+                    </a>
+                @endif
                 <a href="{{ url('/admin/profile') }}" class="{{ request()->is('admin/profile') ? 'active' : '' }}">
                     <i class="fa-solid fa-user"></i>
                     <span>Profile</span>
@@ -116,10 +123,10 @@
                                     let url = '{{ url("/admin") }}/' + typeKey + '/' + permohonanId; // <-- UBAH BARIS INI
 
                                     let item = `
-                                            <a href="${url}" class="notification-item">
-                                            <div class="message">${notif.data.pesan}</div>
-                                            <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
-                                            </a> `;
+                                                <a href="${url}" class="notification-item">
+                                                <div class="message">${notif.data.pesan}</div>
+                                                <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
+                                                </a> `;
                                     // === AKHIR PERBAIKAN ===
                                     list.append(item);
                                 });

@@ -11,14 +11,36 @@ use App\DataTier\Models\PermohonanSKU;
 use App\DataTier\Models\User;
 use App\Notifications\SuratSelesaiNotification;
 use App\LogicTier\Events\StatusDiperbarui;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Response;
 
 class AdminController extends BaseController
 {
     public function index()
     {
-        return view('presentation_tier.admin.dashboard');
-    }
+        // 1. Menghitung total permohonan yang masih 'Diproses'
+        $totalDiproses = PermohonanDomisili::where('status', 'Diproses')->count()
+            + PermohonanKTM::where('status', 'Diproses')->count()
+            + PermohonanSKU::where('status', 'Diproses')->count();
 
+        // 2. Menghitung total permohonan yang sudah 'Selesai' (Disetujui)
+        $totalSelesai = PermohonanDomisili::where('status', 'Selesai')->count()
+            + PermohonanKTM::where('status', 'Selesai')->count()
+            + PermohonanSKU::where('status', 'Selesai')->count();
+
+        // 3. Menghitung total permohonan yang 'Ditolak'
+        // (Saya asumsikan "Total Laporan" di dashboard Anda merujuk ke "Total Ditolak")
+        $totalDitolak = PermohonanDomisili::where('status', 'Ditolak')->count()
+            + PermohonanKTM::where('status', 'Ditolak')->count()
+            + PermohonanSKU::where('status', 'Ditolak')->count();
+
+        // 4. Kirim data ke view
+        return view('presentation_tier.admin.dashboard', compact(
+            'totalDiproses',
+            'totalSelesai',
+            'totalDitolak'
+        ));
+    }
     public function showPermohonanSurat()
     {
         $domisiliGrouped = PermohonanDomisili::with('user')->latest()->get()->groupBy('status');
@@ -74,7 +96,7 @@ class AdminController extends BaseController
         //     event(new StatusDiperbarui($permohonan));
         // }
 
-        if ($permohonan->status == 'Selesai' && $permohonan->user_id) {
+        if (($permohonan->status == 'Selesai' || $permohonan->status == 'Ditolak') && $permohonan->user_id) {
             $user = User::find($permohonan->user_id);
             if ($user) {
                 $user->notify(new SuratSelesaiNotification($permohonan));
@@ -117,37 +139,107 @@ class AdminController extends BaseController
         ]);
     }
 
-    
-public function showDomisiliDetail($id)
-{
-    $permohonan = PermohonanDomisili::with('user')->findOrFail($id);
-    
-    return view('presentation_tier.admin.detail-surat', [
-        'permohonan' => $permohonan,
-        'jenis_surat' => 'Domisili',
-        'title' => 'Keterangan Domisili'
-    ]);
-}
 
-public function showKtmDetail($id)
-{
-    $permohonan = PermohonanKTM::with('user')->findOrFail($id);
-    
-    return view('presentation_tier.admin.detail-surat', [
-        'permohonan' => $permohonan,
-        'jenis_surat' => 'SKTM',
-        'title' => 'Keterangan Tidak Mampu (SKTM)'
-    ]);
-}
+    public function showDomisiliDetail($id)
+    {
+        $permohonan = PermohonanDomisili::with('user')->findOrFail($id);
 
-public function showSkuDetail($id)
-{
-    $permohonan = PermohonanSKU::with('user')->findOrFail($id);
-    
-    return view('presentation_tier.admin.detail-surat', [
-        'permohonan' => $permohonan,
-        'jenis_surat' => 'SKU',
-        'title' => 'Keterangan Usaha (SKU)'
-    ]);
-}
+        return view('presentation_tier.admin.detail-surat', [
+            'permohonan' => $permohonan,
+            'jenis_surat' => 'Domisili',
+            'title' => 'Keterangan Domisili'
+        ]);
+    }
+
+    public function showKtmDetail($id)
+    {
+        $permohonan = PermohonanKTM::with('user')->findOrFail($id);
+
+        return view('presentation_tier.admin.detail-surat', [
+            'permohonan' => $permohonan,
+            'jenis_surat' => 'SKTM',
+            'title' => 'Keterangan Tidak Mampu (SKTM)'
+        ]);
+    }
+
+    public function showSkuDetail($id)
+    {
+        $permohonan = PermohonanSKU::with('user')->findOrFail($id);
+
+        return view('presentation_tier.admin.detail-surat', [
+            'permohonan' => $permohonan,
+            'jenis_surat' => 'SKU',
+            'title' => 'Keterangan Usaha (SKU)'
+        ]);
+    }
+    public function showLaporan(Request $request)
+    {
+        // Tetapkan tanggal default (misal: 30 hari terakhir)
+        $tanggalMulai = $request->input('tanggal_mulai', Carbon::now()->subDays(30)->toDateString());
+        $tanggalAkhir = $request->input('tanggal_akhir', Carbon::now()->toDateString());
+
+        // Konversi ke Carbon untuk query. Tambahkan jam 23:59:59 ke tanggal akhir
+        // agar data di tanggal akhir ikut terambil.
+        $start = Carbon::parse($tanggalMulai)->startOfDay();
+        $end = Carbon::parse($tanggalAkhir)->endOfDay();
+
+        // 1. Ambil data dari semua model permohonan
+        $domisili = PermohonanDomisili::with('user')
+            ->whereBetween('created_at', [$start, $end])
+            ->get()->map(function ($item) {
+                $item->jenis_surat_label = 'Keterangan Domisili';
+                return $item;
+            });
+
+        $ktm = PermohonanKTM::with('user')
+            ->whereBetween('created_at', [$start, $end])
+            ->get()->map(function ($item) {
+                $item->jenis_surat_label = 'Keterangan Tidak Mampu';
+                return $item;
+            });
+
+        $sku = PermohonanSKU::with('user')
+            ->whereBetween('created_at', [$start, $end])
+            ->get()->map(function ($item) {
+                $item->jenis_surat_label = 'Keterangan Usaha';
+                return $item;
+            });
+
+        // 2. Gabungkan semua data dan urutkan berdasarkan tanggal dibuat (terbaru dulu)
+        $allPermohonan = collect()
+            ->merge($domisili)
+            ->merge($ktm)
+            ->merge($sku)
+            ->sortByDesc('created_at');
+
+        // 3. Cek apakah ini permintaan ekspor Word
+        if ($request->has('export') && $request->export == 'word') {
+
+            // Render view khusus untuk Word
+            $html = view('presentation_tier.admin.laporan-word', compact(
+                'allPermohonan',
+                'tanggalMulai',
+                'tanggalAkhir'
+            ))->render();
+
+            // Buat nama file
+            $fileName = 'Laporan_Surat_' . $tanggalMulai . '_sd_' . $tanggalAkhir . '.doc';
+
+            // Siapkan headers untuk memaksa download file .doc
+            $headers = [
+                'Content-Type' => 'application/vnd.ms-word',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                'Cache-Control' => 'max-age=0',
+            ];
+
+            return Response::make($html, 200, $headers);
+        }
+
+        // 4. Jika bukan ekspor, tampilkan halaman laporan biasa
+        return view('presentation_tier.admin.laporan', compact(
+            'allPermohonan',
+            'tanggalMulai',
+            'tanggalAkhir'
+        ));
+    }
 }

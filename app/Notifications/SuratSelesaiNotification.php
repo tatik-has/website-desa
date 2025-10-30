@@ -29,7 +29,7 @@ class SuratSelesaiNotification extends Notification implements ShouldQueue // Ta
     {
         // === PERUBAHAN ===
         // Tambahkan 'broadcast' agar notifikasi bisa real-time (jika Anda pakai)
-        return ['database', 'broadcast']; 
+        return ['database', 'broadcast'];
     }
 
     // === PERUBAHAN: FUNGSI BARU UNTUK PESAN DINAMIS ===
@@ -43,11 +43,14 @@ class SuratSelesaiNotification extends Notification implements ShouldQueue // Ta
 
         return match ($status) {
             'selesai' => "Selamat! Surat $jenisSurat Anda telah Selesai.",
-            'ditolak' => "Maaf, pengajuan $jenisSurat Anda Ditolak. Cek riwayat untuk detail.",
+            // === PERUBAHAN DI SINI ===
+            'ditolak' => "Maaf, pengajuan $jenisSurat Anda Ditolak. Alasan: " . ($this->permohonan->keterangan_penolakan ?? 'Tidak ada detail.'),
+            // === AKHIR PERUBAHAN ===
             'diproses' => "Surat $jenisSurat Anda sedang Diproses oleh admin.",
             default => "Status $jenisSurat Anda telah diperbarui.",
         };
     }
+
     // === AKHIR PERUBAHAN ===
 
     /**
@@ -88,7 +91,7 @@ class SuratSelesaiNotification extends Notification implements ShouldQueue // Ta
      */
     private function getJenisSuratNama(): string
     {
-         return match(get_class($this->permohonan)) {
+        return match (get_class($this->permohonan)) {
             \App\DataTier\Models\PermohonanDomisili::class => 'Keterangan Domisili',
             \App\DataTier\Models\PermohonanSKU::class => 'Keterangan Usaha (SKU)',
             \App\DataTier\Models\PermohonanKTM::class => 'Keterangan Tidak Mampu (KTM)', // Pastikan nama Model ini benar
