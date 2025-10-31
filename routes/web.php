@@ -104,4 +104,14 @@ Route::middleware('auth:admin')->group(function () {
     // === Laporan ===
     Route::get('/admin/laporan', [\App\LogicTier\Controllers\AdminController::class, 'showLaporan'])
         ->name('admin.laporan');
+    
+    // === MANAJEMEN ADMIN (hanya untuk superadmin) ===
+    Route::prefix('admin/manajemen-admin')->name('admin.manajemen-admin.')->group(function () {
+        Route::get('/', [\App\LogicTier\Controllers\AdminManagementController::class, 'index'])->name('index');
+        Route::get('/create', [\App\LogicTier\Controllers\AdminManagementController::class, 'create'])->name('create');
+        Route::post('/', [\App\LogicTier\Controllers\AdminManagementController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [\App\LogicTier\Controllers\AdminManagementController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\App\LogicTier\Controllers\AdminManagementController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\LogicTier\Controllers\AdminManagementController::class, 'destroy'])->name('destroy');
+    });
 });

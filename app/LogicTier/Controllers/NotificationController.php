@@ -36,16 +36,28 @@ class NotificationController extends BaseController
         // Tampilkan view blade notifikasi dan kirim data notifikasinya
         return view('presentation_tier.notifications.index', compact('notifications'));
     }
+    public function destroyAll()
+    {
+        // Dapatkan user yang sedang login
+        $user = Auth::user();
+
+        // Jika tidak ada user (seharusnya tidak mungkin karena middleware 'auth')
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // Hapus semua notifikasi milik user ini
+        $user->notifications()->delete();
+
+        // Kembalikan ke halaman sebelumnya dengan pesan sukses
+        return redirect()->back()->with('success', 'Semua notifikasi berhasil dihapus.');
+    }
 
     
     // ============================================================
     // METODE UNTUK ADMIN
     // ============================================================
 
-    /**
-     * [API] Ambil notifikasi admin yang belum dibaca.
-     * Dipanggil oleh rute: GET /admin/notifications/unread
-     */
     public function getUnread()
     {
         // PENTING: Menggunakan Auth::guard('admin') untuk mengambil admin

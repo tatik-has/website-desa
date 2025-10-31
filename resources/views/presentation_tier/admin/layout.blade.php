@@ -40,6 +40,8 @@
                     <i class="fa-solid fa-file-alt"></i>
                     <span>Laporan</span>
                 </a>
+                
+                {{-- Menu Manajemen Admin hanya untuk superadmin --}}
                 @if(Auth::guard('admin')->user()->role == 'superadmin')
                     <a href="{{ url('/admin/manajemen-admin') }}"
                         class="{{ request()->is('admin/manajemen-admin*') ? 'active' : '' }}">
@@ -47,10 +49,6 @@
                         <span>Manajemen Admin</span>
                     </a>
                 @endif
-                <a href="{{ url('/admin/profile') }}" class="{{ request()->is('admin/profile') ? 'active' : '' }}">
-                    <i class="fa-solid fa-user"></i>
-                    <span>Profile</span>
-                </a>
             </nav>
         </aside>
 
@@ -60,7 +58,6 @@
         <main class="main-content">
             {{-- Bagian Top Bar --}}
             <div class="top-bar">
-                {{-- ==== START PERUBAHAN ==== --}}
                 <div class="notification-wrapper">
                     <i class="fa-solid fa-bell icon-btn" id="notification-bell">
                         <span class="notification-count" id="notification-count">0</span>
@@ -75,7 +72,6 @@
                         </div>
                     </div>
                 </div>
-                {{-- ==== AKHIR PERUBAHAN ==== --}}
 
                 <form action="{{ route('admin.logout') }}" method="POST" style="margin: 0;">
                     @csrf
@@ -91,10 +87,10 @@
         </main>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {{-- Tambahkan jQuery jika belum ada --}}
-    <script src="{{ asset('js/app.js') }}"></script> {{-- Pastikan file ini di-load --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 
-    @auth('admin') {{-- Pastikan script hanya berjalan untuk admin --}}
+    @auth('admin')
         <script>
             $(document).ready(function () {
                 const bell = $('#notification-bell');
@@ -107,27 +103,30 @@
                         url: '{{ route("admin.notifications.unread") }}',
                         method: 'GET',
                         success: function (response) {
-                            // ... (bagian countBadge biarkan) ...
+                            // Update badge count
+                            if (response.count > 0) {
+                                countBadge.text(response.count).show();
+                            } else {
+                                countBadge.hide();
+                            }
 
                             // Update dropdown list
                             list.empty();
                             if (response.notifications.length > 0) {
                                 response.notifications.forEach(function (notif) {
-                                    // === PERBAIKAN DI BAWAH INI ===
-
                                     // Ambil kunci rute (domisili, ktm, sku) dari data notifikasi
-                                    let typeKey = notif.data.jenis_surat_key; // <-- UBAH BARIS INI
+                                    let typeKey = notif.data.jenis_surat_key;
                                     let permohonanId = notif.data.permohonan_id;
 
                                     // Buat URL yang benar sesuai dengan rute di web.php
-                                    let url = '{{ url("/admin") }}/' + typeKey + '/' + permohonanId; // <-- UBAH BARIS INI
+                                    let url = '{{ url("/admin") }}/' + typeKey + '/' + permohonanId;
 
                                     let item = `
-                                                <a href="${url}" class="notification-item">
-                                                <div class="message">${notif.data.pesan}</div>
-                                                <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
-                                                </a> `;
-                                    // === AKHIR PERBAIKAN ===
+                                        <a href="${url}" class="notification-item">
+                                            <div class="message">${notif.data.pesan}</div>
+                                            <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
+                                        </a>
+                                    `;
                                     list.append(item);
                                 });
                             } else {
@@ -166,17 +165,20 @@
                 fetchNotifications();
 
                 // Laravel Echo real-time listener
-                window.Echo.private('admin-channel')
-                    .listen('SuratDiajukan', (e) => {
-                        console.log('Event diterima:', e);
-                        fetchNotifications();
+                if (typeof window.Echo !== 'undefined') {
+                    window.Echo.private('admin-channel')
+                        .listen('SuratDiajukan', (e) => {
+                            console.log('Event diterima:', e);
+                            fetchNotifications();
 
-                        // Tambah notifikasi popup kecil (opsional)
-                        const toast = $('<div class="toast-notification"></div>')
-                            .text(e.message)
-                            .appendTo('body');
-                        setTimeout(() => toast.fadeOut(500, () => toast.remove()), 4000);
-                    });
+                            // Tambah notifikasi popup kecil (opsional)
+                            const toast = $('<div class="toast-notification"></div>')
+                                .text(e.message)
+                                .appendTo('body')
+                                .css('display', 'block');
+                            setTimeout(() => toast.fadeOut(500, () => toast.remove()), 4000);
+                        });
+                }
             });
         </script>
     @endauth

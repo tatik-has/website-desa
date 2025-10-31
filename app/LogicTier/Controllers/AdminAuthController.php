@@ -15,12 +15,20 @@ class AdminAuthController extends BaseController
      */
     public function showLogin()
     {
-        return view('presentation_tier.admin.dashboard');
-    }
+        // 1. Cek apakah admin SUDAH login
+        if (Auth::guard('admin')->check()) {
+            
+            // 2. Jika sudah, REDIRECT (alihkan) ke route dashboard.
+            // Biarkan AdminController yang mengurus tampilan dashboard.
+            return redirect()->route('admin.dashboard'); 
+            // atau return redirect('/admin/dashboard');
+        }
 
-    /**
-     * Proses login admin
-     */
+        // 3. Jika BELUM login, tampilkan view LOGIN
+        // (Pastikan nama file view-nya benar)
+        return view('presentation_tier.auth.login'); 
+    }
+   
     public function login(Request $request)
     {
         $request->validate([

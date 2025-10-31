@@ -12,10 +12,14 @@ class Admin extends Authenticatable
     protected $table = 'admins';
 
     protected $fillable = [
-        'nama', 'email', 'password',
+        'nama', 'email', 'password', 'role', // Tambahkan role
     ];
 
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    protected $attributes = [
+        'role' => 'admin', // Default role adalah admin biasa
     ];
 }
