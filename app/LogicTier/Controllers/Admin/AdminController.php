@@ -1,6 +1,6 @@
 <?php
 
-namespace App\LogicTier\Controllers;
+namespace App\LogicTier\Controllers\Admin;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -47,7 +47,7 @@ class AdminController extends BaseController
         $ktmGrouped = PermohonanKTM::with('user')->latest()->get()->groupBy('status');
         $skuGrouped = PermohonanSKU::with('user')->latest()->get()->groupBy('status');
 
-        return view('presentation_tier.admin.permohonan-surat', compact(
+        return view('presentation_tier.admin.permohonan.permohonan-surat', compact(
             'domisiliGrouped',
             'ktmGrouped',
             'skuGrouped'
@@ -92,9 +92,6 @@ class AdminController extends BaseController
 
         $permohonan->save();
 
-        // if ($permohonan->user_id) {
-        //     event(new StatusDiperbarui($permohonan));
-        // }
 
         if (($permohonan->status == 'Selesai' || $permohonan->status == 'Ditolak') && $permohonan->user_id) {
             $user = User::find($permohonan->user_id);
@@ -133,7 +130,7 @@ class AdminController extends BaseController
             'sku' => 'Keterangan Usaha (SKU)',
         };
 
-        return view('presentation_tier.admin.detail-surat', [
+        return view('presentation_tier.admin.permohonan.detail-surat', [
             'permohonan' => $permohonan,
             'jenis_surat' => $jenisSurat,
         ]);
@@ -144,7 +141,7 @@ class AdminController extends BaseController
     {
         $permohonan = PermohonanDomisili::with('user')->findOrFail($id);
 
-        return view('presentation_tier.admin.detail-surat', [
+        return view('presentation_tier.admin.permohonan.detail-surat', [
             'permohonan' => $permohonan,
             'jenis_surat' => 'Domisili',
             'title' => 'Keterangan Domisili'
@@ -155,7 +152,7 @@ class AdminController extends BaseController
     {
         $permohonan = PermohonanKTM::with('user')->findOrFail($id);
 
-        return view('presentation_tier.admin.detail-surat', [
+        return view('presentation_tier.admin.permohonan.detail-surat', [
             'permohonan' => $permohonan,
             'jenis_surat' => 'SKTM',
             'title' => 'Keterangan Tidak Mampu (SKTM)'
@@ -166,7 +163,7 @@ class AdminController extends BaseController
     {
         $permohonan = PermohonanSKU::with('user')->findOrFail($id);
 
-        return view('presentation_tier.admin.detail-surat', [
+        return view('presentation_tier.admin.permohonan.detail-surat', [
             'permohonan' => $permohonan,
             'jenis_surat' => 'SKU',
             'title' => 'Keterangan Usaha (SKU)'
@@ -174,12 +171,10 @@ class AdminController extends BaseController
     }
     public function showLaporan(Request $request)
     {
-        // Tetapkan tanggal default (misal: 30 hari terakhir)
         $tanggalMulai = $request->input('tanggal_mulai', Carbon::now()->subDays(30)->toDateString());
         $tanggalAkhir = $request->input('tanggal_akhir', Carbon::now()->toDateString());
 
-        // Konversi ke Carbon untuk query. Tambahkan jam 23:59:59 ke tanggal akhir
-        // agar data di tanggal akhir ikut terambil.
+
         $start = Carbon::parse($tanggalMulai)->startOfDay();
         $end = Carbon::parse($tanggalAkhir)->endOfDay();
 
@@ -216,7 +211,7 @@ class AdminController extends BaseController
         if ($request->has('export') && $request->export == 'word') {
 
             // Render view khusus untuk Word
-            $html = view('presentation_tier.admin.laporan-word', compact(
+            $html = view('presentation_tier.admin.permohonan.laporan-word', compact(
                 'allPermohonan',
                 'tanggalMulai',
                 'tanggalAkhir'
@@ -236,7 +231,7 @@ class AdminController extends BaseController
         }
 
         // 4. Jika bukan ekspor, tampilkan halaman laporan biasa
-        return view('presentation_tier.admin.laporan', compact(
+        return view('presentation_tier.admin.permohonan.laporan', compact(
             'allPermohonan',
             'tanggalMulai',
             'tanggalAkhir'

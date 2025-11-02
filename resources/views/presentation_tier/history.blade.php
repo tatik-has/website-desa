@@ -1,7 +1,7 @@
-@extends('presentation_tier.auth.layout')
+@extends('presentation_tier.masyarakat.layout')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('presentation_tier/css/history.css') }}">
+    <link rel="stylesheet" href="{{ asset('presentation_tier/css/masyarakat/history.css') }}">
 @endpush
 
 @section('content')

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\LogicTier\Controllers; // Gunakan namespace dasar
+namespace App\LogicTier\Controllers\Shared;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -12,10 +12,6 @@ class NotificationController extends BaseController
     // METODE UNTUK USER (MASYARAKAT)
     // ============================================================
 
-    /**
-     * Tampilkan halaman notifikasi untuk user (masyarakat).
-     * Dipanggil oleh rute: GET /notifikasi
-     */
     public function index()
     {
         // Menggunakan Auth::user() untuk mengambil user yang sedang login
@@ -34,7 +30,7 @@ class NotificationController extends BaseController
         $user->unreadNotifications->markAsRead();
 
         // Tampilkan view blade notifikasi dan kirim data notifikasinya
-        return view('presentation_tier.notifications.index', compact('notifications'));
+        return view('presentation_tier.masyarakat.notifications.index', compact('notifications'));
     }
     public function destroyAll()
     {

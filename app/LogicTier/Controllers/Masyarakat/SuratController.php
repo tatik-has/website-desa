@@ -1,6 +1,6 @@
 <?php
 
-namespace App\LogicTier\Controllers;
+namespace App\LogicTier\Controllers\Masyarakat;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -36,12 +36,10 @@ class SuratController extends BaseController
         return view('presentation_tier.dashboard', compact('surats'));
     }
 
-    /**
-     * Menampilkan halaman untuk memilih jenis surat yang ingin diajukan.
-     */
+   
     public function showPengajuanForm()
     {
-        return view('presentation_tier.auth.pengajuan');
+        return view('presentation_tier.masyarakat.permohonan.pengajuan');
     }
 
     /**

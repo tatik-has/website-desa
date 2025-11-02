@@ -1,5 +1,5 @@
 {{-- File: resources/views/presentation_tier/admin/dashboard.blade.php --}}
-@extends('presentation_tier.admin.layout')
+@extends('presentation_tier.admin.partials.layout')
 
 @section('content')
 <div class="dashboard-content">

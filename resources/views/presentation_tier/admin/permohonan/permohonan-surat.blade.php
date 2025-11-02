@@ -1,8 +1,8 @@
-@extends('presentation_tier.admin.layout')
+@extends('presentation_tier.admin.partials.layout')
 
 @push('styles')
     {{-- CSS utama untuk halaman ini, sekarang semua style ada di sini --}}
-    <link rel="stylesheet" href="{{ asset('presentation_tier/css/admin-permohonan.css') }}">
+    <link rel="stylesheet" href="{{ asset('presentation_tier/css/admin/admin-permohonan.css') }}">
 @endpush
 
 @section('content')

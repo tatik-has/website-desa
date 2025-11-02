@@ -1,7 +1,7 @@
-@extends('presentation_tier.auth.layout')
+@extends('presentation_tier.masyarakat.layout')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('presentation_tier/css/notifications.css') }}">
+<link rel="stylesheet" href="{{ asset('presentation_tier/css/shared/notifications.css') }}">
 <main class="notif-container">
     <div class="notif-header">
         <h1>Notifikasi Anda</h1>

@@ -1,7 +1,7 @@
-@extends('presentation_tier.admin.layout')
+@extends('presentation_tier.admin.partials.layout')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('presentation_tier/css/detail-surat.css') }}">
+    <link rel="stylesheet" href="{{ asset('presentation_tier/css/admin/detail-surat.css') }}">
 @endpush
 
 @section('content')
@@ -167,7 +167,7 @@
                 {{-- KTP (semua jenis surat) --}}
                 @if(isset($permohonan->path_ktp) && $permohonan->path_ktp)
                     <div class="document-item">
-                        <div class="document-preview">
+                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_ktp) }}">
                             <img src="{{ Storage::url($permohonan->path_ktp) }}" alt="KTP">
                             <div class="document-overlay">
                                 <a href="{{ Storage::url($permohonan->path_ktp) }}" target="_blank" class="btn-view">
@@ -186,7 +186,7 @@
                 {{-- KK (semua jenis surat) --}}
                 @if(isset($permohonan->path_kk) && $permohonan->path_kk)
                     <div class="document-item">
-                        <div class="document-preview">
+                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_kk) }}">
                             <img src="{{ Storage::url($permohonan->path_kk) }}" alt="KK">
                             <div class="document-overlay">
                                 <a href="{{ Storage::url($permohonan->path_kk) }}" target="_blank" class="btn-view">
@@ -205,7 +205,7 @@
                 {{-- Surat Pengantar RT/RW (SKTM) --}}
                 @if($jenis_surat === 'SKTM' && isset($permohonan->path_surat_pengantar_rt_rw) && $permohonan->path_surat_pengantar_rt_rw)
                     <div class="document-item">
-                        <div class="document-preview">
+                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_surat_pengantar_rt_rw) }}">
                             <img src="{{ Storage::url($permohonan->path_surat_pengantar_rt_rw) }}" alt="Surat Pengantar">
                             <div class="document-overlay">
                                 <a href="{{ Storage::url($permohonan->path_surat_pengantar_rt_rw) }}" target="_blank" class="btn-view">
@@ -224,7 +224,7 @@
                 {{-- Foto Rumah (SKTM) --}}
                 @if($jenis_surat === 'SKTM' && isset($permohonan->path_foto_rumah) && $permohonan->path_foto_rumah)
                     <div class="document-item">
-                        <div class="document-preview">
+                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_foto_rumah) }}">
                             <img src="{{ Storage::url($permohonan->path_foto_rumah) }}" alt="Foto Rumah">
                             <div class="document-overlay">
                                 <a href="{{ Storage::url($permohonan->path_foto_rumah) }}" target="_blank" class="btn-view">
@@ -243,7 +243,7 @@
                 {{-- Surat Pengantar RT/RW (SKU) --}}
                 @if($jenis_surat === 'SKU' && isset($permohonan->path_surat_pengantar) && $permohonan->path_surat_pengantar)
                     <div class="document-item">
-                        <div class="document-preview">
+                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_surat_pengantar) }}">
                             <img src="{{ Storage::url($permohonan->path_surat_pengantar) }}" alt="Surat Pengantar">
                             <div class="document-overlay">
                                 <a href="{{ Storage::url($permohonan->path_surat_pengantar) }}" target="_blank" class="btn-view">
@@ -262,7 +262,7 @@
                 {{-- Foto Usaha (SKU) --}}
                 @if($jenis_surat === 'SKU' && isset($permohonan->path_foto_usaha) && $permohonan->path_foto_usaha)
                     <div class="document-item">
-                        <div class="document-preview">
+                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_foto_usaha) }}">
                             <img src="{{ Storage::url($permohonan->path_foto_usaha) }}" alt="Foto Usaha">
                             <div class="document-overlay">
                                 <a href="{{ Storage::url($permohonan->path_foto_usaha) }}" target="_blank" class="btn-view">
@@ -299,3 +299,51 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Document Preview Script Loaded');
+        
+        // Ambil semua elemen document-preview
+        const documentPreviews = document.querySelectorAll('.document-preview');
+        
+        console.log('Found ' + documentPreviews.length + ' document previews');
+        
+        // Tambahkan event listener untuk setiap preview
+        documentPreviews.forEach(function(preview, index) {
+            const url = preview.getAttribute('data-url');
+            console.log('Preview ' + index + ' URL:', url);
+            
+            // Event untuk klik pada area preview
+            preview.addEventListener('click', function(e) {
+                console.log('Preview clicked:', url);
+                
+                // Cek apakah yang diklik bukan tombol "Lihat"
+                if (!e.target.closest('.btn-view')) {
+                    e.preventDefault();
+                    if (url) {
+                        window.open(url, '_blank');
+                        console.log('Opening URL:', url);
+                    }
+                }
+            });
+            
+            // Tambahkan cursor pointer
+            preview.style.cursor = 'pointer';
+        });
+        
+        // Event listener untuk tombol "Lihat"
+        const btnViews = document.querySelectorAll('.btn-view');
+        console.log('Found ' + btnViews.length + ' view buttons');
+        
+        btnViews.forEach(function(btn, index) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Mencegah event bubbling
+                const url = this.getAttribute('href');
+                console.log('Button ' + index + ' clicked, URL:', url);
+            });
+        });
+    });
+</script>
+@endpush

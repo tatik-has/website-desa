@@ -1,6 +1,6 @@
 <?php
 
-namespace App\LogicTier\Controllers;
+namespace App\LogicTier\Controllers\Admin;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -15,20 +15,19 @@ class AdminAuthController extends BaseController
      */
     public function showLogin()
     {
-        // 1. Cek apakah admin SUDAH login
         if (Auth::guard('admin')->check()) {
-            
-            // 2. Jika sudah, REDIRECT (alihkan) ke route dashboard.
-            // Biarkan AdminController yang mengurus tampilan dashboard.
             return redirect()->route('admin.dashboard'); 
-            // atau return redirect('/admin/dashboard');
         }
 
-        // 3. Jika BELUM login, tampilkan view LOGIN
-        // (Pastikan nama file view-nya benar)
-        return view('presentation_tier.auth.login'); 
+        // =======================================================
+        // PERBAIKAN: Mengarahkan ke view login ADMIN
+        // =======================================================
+        return view('presentation_tier.admin.auth.login'); 
     }
-   
+    
+    /**
+     * Proses login admin
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -40,15 +39,16 @@ class AdminAuthController extends BaseController
 
         if ($admin && Hash::check($request->password, $admin->password)) {
             Auth::guard('admin')->login($admin);
-            $request->session()->regenerate(); // <--- ini penting
+            $request->session()->regenerate();
 
             return redirect()->intended('/admin/dashboard');
         }
 
-        return back()->withInput()->withErrors([
-            'email' => 'Email atau password salah.',
-        ]);
-
+        return back()
+            ->withInput($request->only('email')) // Mengembalikan email yg lama
+            ->withErrors([
+                'email' => 'Email atau password salah.', // Mengirim pesan error
+            ]);
     }
 
     /**

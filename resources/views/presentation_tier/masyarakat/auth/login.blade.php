@@ -1,7 +1,7 @@
 @extends('presentation_tier.layout')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('presentation_tier/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('presentation_tier/css/shared/style.css') }}">
 
 <div class="login-container">
     <h2 class="login-title">Login</h2>

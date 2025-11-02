@@ -3,15 +3,16 @@
 use Illuminate\Support\Facades\Route;
 
 // ---------------- LOGIC TIER CONTROLLERS ----------------
-use App\LogicTier\Controllers\AuthController;
-use App\LogicTier\Controllers\VerificationController;
-use App\LogicTier\Controllers\SuratController;
-use App\LogicTier\Controllers\DomisiliController;
-use App\LogicTier\Controllers\AdminAuthController;
-use App\LogicTier\Controllers\AdminController;
-use App\LogicTier\Controllers\NotificationController;
-use App\LogicTier\Controllers\SKTMController;
-use App\LogicTier\Controllers\SKUController;
+use App\LogicTier\Controllers\Masyarakat\AuthController;
+use App\LogicTier\Controllers\Masyarakat\VerificationController;
+use App\LogicTier\Controllers\Masyarakat\SuratController;
+use App\LogicTier\Controllers\Masyarakat\DomisiliController;
+use App\LogicTier\Controllers\Admin\AdminAuthController;
+use App\LogicTier\Controllers\Admin\AdminController;
+use App\LogicTier\Controllers\shared\NotificationController;
+use App\LogicTier\Controllers\Masyarakat\SKTMController;
+use App\LogicTier\Controllers\Masyarakat\SKUController;
+
 
 // ---------------- DEFAULT REDIRECT ----------------
 Route::get('/', function () {
@@ -102,16 +103,16 @@ Route::middleware('auth:admin')->group(function () {
         ->name('admin.notifications.markAsRead');
 
     // === Laporan ===
-    Route::get('/admin/laporan', [\App\LogicTier\Controllers\AdminController::class, 'showLaporan'])
+    Route::get('/admin/laporan', [\App\LogicTier\Controllers\Admin\AdminController::class, 'showLaporan'])
         ->name('admin.laporan');
     
     // === MANAJEMEN ADMIN (hanya untuk superadmin) ===
     Route::prefix('admin/manajemen-admin')->name('admin.manajemen-admin.')->group(function () {
-        Route::get('/', [\App\LogicTier\Controllers\AdminManagementController::class, 'index'])->name('index');
-        Route::get('/create', [\App\LogicTier\Controllers\AdminManagementController::class, 'create'])->name('create');
-        Route::post('/', [\App\LogicTier\Controllers\AdminManagementController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [\App\LogicTier\Controllers\AdminManagementController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [\App\LogicTier\Controllers\AdminManagementController::class, 'update'])->name('update');
-        Route::delete('/{id}', [\App\LogicTier\Controllers\AdminManagementController::class, 'destroy'])->name('destroy');
+        Route::get('/', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'index'])->name('index');
+        Route::get('/create', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'create'])->name('create');
+        Route::post('/', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'destroy'])->name('destroy');
     });
 });

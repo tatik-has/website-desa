@@ -1,7 +1,7 @@
-@extends('presentation_tier.layout')
+@extends('presentation_tier.masyarakat.layout')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('presentation_tier/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('presentation_tier/css/shared/style.css') }}">
 
 <div class="verify-container">
     <h2 class="verify-title">Verifikasi Akun</h2>

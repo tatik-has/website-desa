@@ -1,6 +1,6 @@
 <?php
 
-namespace App\LogicTier\Controllers;
+namespace App\LogicTier\Controllers\Masyarakat;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -63,7 +63,7 @@ class AuthController extends BaseController
     // ==========================
     public function showLogin()
     {
-        return view('presentation_tier.auth.login');
+        return view('presentation_tier.masyarakat.auth.login');
     }
 
     public function login(Request $request)

@@ -1,9 +1,8 @@
-{{-- File: resources/views/presentation_tier/auth/pengajuan.blade.php --}}
-@extends('presentation_tier.auth.layout') {{-- Menggunakan layout utama yang benar --}}
+@extends('presentation_tier.masyarakat.layout')
 
 @push('styles')
     {{-- Memuat CSS khusus untuk halaman ini saja --}}
-    <link rel="stylesheet" href="{{ asset('presentation_tier/css/pengajuan.css') }}">
+    <link rel="stylesheet" href="{{ asset('presentation_tier/css/masyarakat/pengajuan.css') }}">
 @endpush
 
 @section('content')

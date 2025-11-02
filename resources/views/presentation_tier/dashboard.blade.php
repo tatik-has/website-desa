@@ -1,5 +1,5 @@
 {{-- File: resources/views/presentation_tier/dashboard.blade.php --}}
-@extends('presentation_tier.auth.layout')
+@extends('presentation_tier.masyarakat.layout')
 
 @section('content')
     {{-- Perhatikan: Bagian <link> CSS dan <nav class="navbar"> sudah tidak ada di sini --}}

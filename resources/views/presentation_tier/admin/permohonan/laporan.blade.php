@@ -1,6 +1,4 @@
-{{-- resources/views/presentation_tier/admin/laporan.blade.php --}}
-
-@extends('presentation_tier.admin.layout')
+@extends('presentation_tier.admin.partials.layout')
 
 {{-- ========================================================== --}}
 {{-- == PERUBAHAN DI SINI == --}}
@@ -9,7 +7,7 @@
 {{-- CSS Khusus untuk halaman ini --}}
 @push('styles')
     {{-- Kita ganti semua blok <style> dengan link ke file CSS baru --}}
-    <link rel="stylesheet" href="{{ asset('presentation_tier/css/admin-laporan.css') }}">
+    <link rel="stylesheet" href="{{ asset('presentation_tier/css/admin/admin-laporan.css') }}">
 @endpush
 
 {{-- ========================================================== --}}

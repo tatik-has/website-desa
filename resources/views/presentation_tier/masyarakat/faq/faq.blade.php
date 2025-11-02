@@ -1,10 +1,8 @@
-{{-- File: resources/views/presentation_tier/faq.blade.php --}}
-
-@extends('presentation_tier.auth.layout')
+@extends('presentation_tier.masyarakat.layout')
 
 {{-- Memuat file CSS eksternal untuk halaman FAQ --}}
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('presentation_tier/css/faq.css') }}">
+    <link rel="stylesheet" href="{{ asset('presentation_tier/css/shared/faq.css') }}">
 @endpush
 
 {{-- Konten utama halaman --}}

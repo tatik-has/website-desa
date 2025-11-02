@@ -1,6 +1,6 @@
 <?php
 
-namespace App\LogicTier\Controllers;
+namespace App\LogicTier\Controllers\Masyarakat;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -9,21 +9,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\LogicTier\Events\SuratDiajukan; // Import event
 
-// === TAMBAHAN UNTUK NOTIFIKASI ===
-use App\DataTier\Models\Admin;
-use App\Notifications\PengajuanMasukNotification;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Log;
-// === AKHIR TAMBAHAN ===
+// // === TAMBAHAN UNTUK NOTIFIKASI ===
+// use App\DataTier\Models\Admin;
+// use App\Notifications\PengajuanMasukNotification;
+// use Illuminate\Support\Facades\Notification;
+// use Illuminate\Support\Facades\Log;
+// // === AKHIR TAMBAHAN ===
 
 class DomisiliController extends BaseController
 {
-    /**
-     * Menampilkan form pengajuan Surat Keterangan Domisili.
-     */
+   
     public function showForm()
     {
-        return view('presentation_tier.auth.domisili');
+        return view('presentation_tier.masyarakat.permohonan.domisili');
     }
 
     /**
@@ -71,23 +69,6 @@ class DomisiliController extends BaseController
             'Keterangan Domisili'
         ));
 
-        // === TAMBAHAN KODE NOTIFIKASI ADMIN ===
-        try {
-            // 1. Ambil semua admin
-            $admins = Admin::all();
-
-            if ($admins->isNotEmpty()) {
-                // 2. Kirim notifikasi menggunakan file notifikasi Anda
-                Notification::send(
-                    $admins, 
-                    new PengajuanMasukNotification($permohonan) // Gunakan notifikasi Anda
-                );
-            }
-        } catch (\Exception $e) {
-            // Jika gagal, catat di log tapi jangan gagalkan pengajuan
-            Log::error('Gagal kirim notifikasi admin: ' . $e->getMessage());
-        }
-        // === AKHIR KODE TAMBAHAN ===
 
         // 5. Kembalikan ke dashboard
         return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Domisili berhasil diajukan!');

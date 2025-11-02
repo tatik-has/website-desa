@@ -1,5 +1,4 @@
-{{-- File: resources/views/presentation_tier/admin/manajemen-admin/create.blade.php --}}
-@extends('presentation_tier.admin.layout')
+@extends('presentation_tier.admin.partials.layout')
 
 @section('content')
 <div class="content-header">

@@ -1,8 +1,8 @@
-@extends('presentation_tier.auth.layout')
+@extends('presentation_tier.masyarakat.layout')
 
 @section('content')
     {{-- PERBAIKAN 1: Gunakan file CSS yang sesuai untuk SKU --}}
-    <link rel="stylesheet" href="{{ asset('presentation_tier/css/usaha.css') }}">
+    <link rel="stylesheet" href="{{ asset('presentation_tier/css/masyarakat/usaha.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <main class="form-page-container">
