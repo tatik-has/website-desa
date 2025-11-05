@@ -2,7 +2,7 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('presentation_tier/css/masyarakat/ktm.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.css">
 
     <nav class="navbar">
         {{-- ... Navbar Anda ... --}}
@@ -15,7 +15,6 @@
                 <h1>Surat Keterangan Tidak Mampu (SKTM)</h1>
             </div>
 
-            <!-- pemberitahuan eror -->
             @if ($errors->any())
                 <div class="alert alert-danger"
                     style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
@@ -35,6 +34,7 @@
                     {{ session('success') }}
                 </div>
             @endif
+            {{-- Ini adalah duplikat, tapi saya biarkan sesuai kode asli Anda --}}
             @if($errors->any())
                 <div class="alert alert-danger">
                     <strong>Terdapat kesalahan pada input Anda. Mohon periksa kembali.</strong>
@@ -101,9 +101,10 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="penghasilan">Penghasilan Rata-rata / Bulan (Rp)</label>
-                        <input type="number" id="penghasilan" name="penghasilan" placeholder="Contoh: 800000"
-                            value="{{ old('penghasilan') }}" required>
+                        <label for="penghasilan_display">Penghasilan Rata-rata / Bulan (Rp)</label>
+                        <input type="text" id="penghasilan_display" placeholder="Contoh: 800.000"
+                            value="{{ old('penghasilan') ? number_format(old('penghasilan'), 0, ',', '.') : '' }}" required>
+                        <input type="hidden" id="penghasilan" name="penghasilan" value="{{ old('penghasilan') }}">
                         @error('penghasilan') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
@@ -179,6 +180,25 @@
 
     {{-- Script untuk tombol pilih file & tampilan nama file --}}
     <script>
+        // ========= SCRIPT BARU UNTUK FORMAT RUPIAH (Penghasilan) =========
+        const penghasilanDisplay = document.getElementById('penghasilan_display');
+        const penghasilanHidden = document.getElementById('penghasilan');
+
+        if (penghasilanDisplay && penghasilanHidden) {
+            penghasilanDisplay.addEventListener('input', function (e) {
+                // 1. Dapatkan nilai, hapus semua yg bukan angka (termasuk titik sebelumnya)
+                let rawValue = e.target.value.replace(/[^0-9]/g, '');
+
+                penghasilanHidden.value = rawValue === '' ? '' : rawValue;
+
+                let formattedValue = rawValue === '' ? '' : rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+                // 4. Set nilai kembali ke input display
+                e.target.value = formattedValue;
+            });
+        }
+
+
         // --- KODE BARU UNTUK MENGHUBUNGKAN TOMBOL ---
         const customButtons = document.querySelectorAll('.file-choose-btn');
 
@@ -188,7 +208,6 @@
                 realInput.click();
             });
         });
-        // --- AKHIR KODE BARU ---
 
         // Script ini tidak perlu diubah (untuk menampilkan nama file)
         document.querySelectorAll('.file-input').forEach(input => {

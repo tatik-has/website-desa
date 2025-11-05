@@ -102,14 +102,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/semua-permohonan', [AdminController::class, 'semuaPermohonan'])->name('admin.semuaPermohonan');
 
     // === NOTIFIKASI ADMIN ===
-    Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])
-        ->name('admin.notifications.unread');
-    Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])
-        ->name('admin.notifications.markAsRead');
+    Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])->name('admin.notifications.unread');
+    Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
 
     // === Laporan ===
-    Route::get('/admin/laporan', [\App\LogicTier\Controllers\Admin\AdminController::class, 'showLaporan'])
-        ->name('admin.laporan');
+    Route::get('/admin/laporan', [\App\LogicTier\Controllers\Admin\AdminController::class, 'showLaporan'])->name('admin.laporan');
     
     // === MANAJEMEN ADMIN (hanya untuk superadmin) ===
     Route::prefix('admin/manajemen-admin')->name('admin.manajemen-admin.')->group(function () {
@@ -122,9 +119,7 @@ Route::middleware('auth:admin')->group(function () {
     
     });
 
-    Route::get('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'show'])
-         ->name('admin.profile.show'); // <-- Ini yang dicari
+    Route::get('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'show'])->name('admin.profile.show'); // <-- Ini yang dicari
          
-    Route::post('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'update'])
-         ->name('admin.profile.update');
+    Route::post('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'update'])->name('admin.profile.update');
 });

@@ -7,28 +7,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 
-// Model utama surat
+// Model Surat masih perlu untuk method 'index' dan 'ajukan'
 use App\DataTier\Models\Surat;
 
-// Model tambahan untuk tiap jenis surat
-use App\DataTier\Models\PermohonanDomisili;
-use App\DataTier\Models\PermohonanKTM;
-use App\DataTier\Models\PermohonanSKU;
+// HAPUS 'USE' MODEL PERMOHONAN (DOMISILI, KTM, SKU)
 
 // === TAMBAHAN UNTUK NOTIFIKASI ===
-// Pastikan path ke Model Admin Anda sudah benar
+// Ini semua masih perlu untuk method 'ajukan'
 use App\DataTier\Models\Admin; 
-// Pastikan Anda sudah membuat file Notifikasi ini
 use App\LogicTier\Notifications\SuratBaruNotification; 
-use Illuminate\Support\Facades\Notification; // Import fasad Notifikasi
-use Illuminate\Support\Facades\Log; // Untuk mencatat error jika notifikasi gagal
-// === AKHIR TAMBAHAN ===
+use Illuminate\Support\Facades\Notification; 
+use Illuminate\Support\Facades\Log; 
+
+// 1. PANGGIL "PEKERJA" (SERVICE) KITA
+use App\LogicTier\Services\PermohonanMasyarakatService;
 
 
 class SuratController extends BaseController
 {
+    // 2. Siapkan variabel service
+    protected $permohonanService;
+
+    // 3. Buat __construct
+    public function __construct(PermohonanMasyarakatService $service)
+    {
+        $this->permohonanService = $service;
+    }
+
     /**
-     * Menampilkan halaman dashboard berisi daftar surat milik user yang sedang login.
+     * TIDAK BERUBAH. Ini method sederhana, tidak perlu service.
      */
     public function index()
     {
@@ -37,19 +44,21 @@ class SuratController extends BaseController
     }
 
    
+    /**
+     * TIDAK BERUBAH. Ini method sederhana.
+     */
     public function showPengajuanForm()
     {
         return view('presentation_tier.masyarakat.permohonan.pengajuan');
     }
 
     /**
-     * Menangani proses pengajuan surat umum (bukan surat domisili).
+     * TIDAK BERUBAH. Logika ini spesifik & sederhana.
      */
     public function ajukan($jenis): RedirectResponse
     {
         $user = Auth::user();
 
-        // Buat surat terlebih dahulu agar kita bisa mendapatkan ID-nya
         $surat = Surat::create([
             'user_id' => $user->id,
             'nama_pemohon' => $user->name,
@@ -57,52 +66,30 @@ class SuratController extends BaseController
             'keterangan' => 'Permohonan sedang diproses',
         ]);
 
-        // === TAMBAHAN UNTUK NOTIFIKASI ADMIN ===
         try {
             $admins = Admin::all();
-
             if ($admins->isNotEmpty()) {
-                // Kita kirim objek $surat dan $user agar data notifikasi bisa lengkap
-                // File SuratBaruNotification akan kita buat di langkah selanjutnya
                 Notification::send($admins, new SuratBaruNotification($surat, $user));
             }
-
         } catch (\Exception $e) {
             Log::error('Gagal mengirim notifikasi admin: ' . $e->getMessage());
         }
-        // === AKHIR TAMBAHAN ===
 
         return redirect('/dashboard')->with('success', 'Surat berhasil diajukan!');
     }
 
 
     /**
-     * Menampilkan riwayat semua permohonan user.
+     * Method history sekarang RAMPING
      */
     public function history()
     {
         $userId = Auth::id();
 
-        $domisili = PermohonanDomisili::where('user_id', $userId)->latest()->get();
-        $ktm = PermohonanKTM::where('user_id', $userId)->latest()->get();
-        $sku = PermohonanSKU::where('user_id', $userId)->latest()->get();
+        // 4. Suruh service bekerja
+        $allPermohonan = $this->permohonanService->getHistory($userId);
 
-        // Gabungkan semua permohonan dan tambahkan label jenis surat
-        $allPermohonan = collect()
-            ->merge($domisili->map(function ($item) {
-                $item->jenis_surat = 'Keterangan Domisili';
-                return $item;
-            }))
-            ->merge($ktm->map(function ($item) {
-                $item->jenis_surat = 'Keterangan Tidak Mampu';
-                return $item;
-            }))
-            ->merge($sku->map(function ($item) {
-                $item->jenis_surat = 'Keterangan Usaha';
-                return $item;
-            }))
-            ->sortByDesc('created_at');
-
+        // 5. Kirim ke view
         return view('presentation_tier.history', compact('allPermohonan'));
     }
 }

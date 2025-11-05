@@ -3,78 +3,41 @@
 namespace App\LogicTier\Controllers\Masyarakat;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+// HAPUS 'USE' STORAGE
 use App\Http\Controllers\Controller as BaseController;
-use App\DataTier\Models\PermohonanKTM;
-use App\LogicTier\Events\SuratDiajukan;
-use Illuminate\Support\Facades\Auth;
+// HAPUS 'USE' MODEL
+// HAPUS 'USE' EVENT
+use Illuminate\Support\Facades\Auth; // Auth masih perlu
 
+// 1. PANGGIL "PEKERJA" (SERVICE) KITA
+use App\LogicTier\Services\PermohonanMasyarakatService;
 
 class SKTMController extends BaseController
 {
+    // 2. Siapkan variabel service
+    protected $permohonanService;
+
+    // 3. Buat __construct
+    public function __construct(PermohonanMasyarakatService $service)
+    {
+        $this->permohonanService = $service;
+    }
+
     public function create()
     {
         return view('presentation_tier.masyarakat.permohonan.ktm');
     }
 
+    /**
+     * Method store sekarang RAMPING
+     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nik' => 'required|digits:16|unique:permohonan_ktm,nik',
-            'nama' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'nomor_telp' => 'required|string|max:15',
-            'alamat_lengkap' => 'required|string',
-            'keperluan' => 'required|string',
-            'penghasilan' => 'required|numeric|min:0',
-            'jumlah_tanggungan' => 'required|integer|min:0',
-            'ktp' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-            'kk' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-            'surat_pengantar_rt_rw' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-            'foto_rumah' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-            'declaration' => 'accepted',
-        ]);
+        // 1. Suruh service bekerja (validasi, upload, save, event)
+        $this->permohonanService->storeKtm($request);
 
-        $dokumenPaths = [];
-        $filesToUpload = [
-            'ktp' => 'path_ktp',
-            'kk' => 'path_kk',
-            'surat_pengantar_rt_rw' => 'path_surat_pengantar_rt_rw',
-            'foto_rumah' => 'path_foto_rumah'
-        ];
-
-        foreach ($filesToUpload as $fileKey => $pathKey) {
-            if ($request->hasFile($fileKey)) {
-                $file = $request->file($fileKey);
-                $filename = $request->nik . '-' . $fileKey . '-' . time() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('public/dokumen_sktm', $filename);
-                $dokumenPaths[$pathKey] = $path;
-            }
-        }
-
-        $dataToStore = array_merge(
-            [
-                'user_id' => Auth::id(),
-                'status' => 'Diproses',
-            ],
-            // === BAGIAN YANG DIPERBAIKI ===
-            $request->only([
-                'nik', 'nama', 'jenis_kelamin', 'nomor_telp', 'alamat_lengkap',
-                'keperluan', 'penghasilan', 'jumlah_tanggungan' // <-- INI YANG TERLEWAT
-            ]),
-            $dokumenPaths
-        );
-
-        // Simpan ke database dan ambil hasilnya
-        $permohonan = PermohonanKTM::create($dataToStore);
-
-        // PICU EVENT
-        event(new SuratDiajukan(
-            $permohonan,
-            'SKTM'
-        ));
-
-        // 5. Kembalikan ke dashboard
-        return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Domisili berhasil diajukan!');
+        // 2. Kasih respon (Tugas Mandor)
+        // (Ini pesan sukses dari kode asli SKU/Domisili Anda, saya paskan)
+        return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Tidak Mampu berhasil diajukan!');
     }
 }

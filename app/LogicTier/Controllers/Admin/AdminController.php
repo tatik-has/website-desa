@@ -4,235 +4,155 @@ namespace App\LogicTier\Controllers\Admin;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\DataTier\Models\PermohonanDomisili;
-use App\DataTier\Models\PermohonanKTM;
-use App\DataTier\Models\PermohonanSKU;
-use App\DataTier\Models\User;
-use App\Notifications\SuratSelesaiNotification;
-use App\LogicTier\Events\StatusDiperbarui;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Response;
+// HAPUS SEMUA 'USE' MODEL KARNA SUDAH DI SERVICE
+// HAPUS 'USE' NOTIFICATION KARNA SUDAH DI SERVICE
+// HAPUS 'USE' STORAGE KARNA SUDAH DI SERVICE
+use Illuminate\Support\Carbon; // Ini tetap perlu
+use Illuminate\Support\Facades\Response; // Ini tetap perlu
+
+// 1. PANGGIL "PEKERJA" (SERVICE) KITA
+use App\LogicTier\Services\PermohonanAdminService;
 
 class AdminController extends BaseController
 {
+    // 2. Siapkan variabel untuk menampung service
+    protected $permohonanService;
+
+    // 3. Buat __construct untuk "Dependency Injection"
+    // Laravel akan otomatis mengisi $service
+    public function __construct(PermohonanAdminService $service)
+    {
+        $this->permohonanService = $service;
+    }
+
+    /**
+     * Method index sekarang RAMPING
+     */
     public function index()
     {
-        // 1. Menghitung total permohonan yang masih 'Diproses'
-        $totalDiproses = PermohonanDomisili::where('status', 'Diproses')->count()
-            + PermohonanKTM::where('status', 'Diproses')->count()
-            + PermohonanSKU::where('status', 'Diproses')->count();
+        // 4. Suruh service bekerja
+        $summary = $this->permohonanService->getDashboardSummary();
 
-        // 2. Menghitung total permohonan yang sudah 'Selesai' (Disetujui)
-        $totalSelesai = PermohonanDomisili::where('status', 'Selesai')->count()
-            + PermohonanKTM::where('status', 'Selesai')->count()
-            + PermohonanSKU::where('status', 'Selesai')->count();
-
-        // 3. Menghitung total permohonan yang 'Ditolak'
-        // (Saya asumsikan "Total Laporan" di dashboard Anda merujuk ke "Total Ditolak")
-        $totalDitolak = PermohonanDomisili::where('status', 'Ditolak')->count()
-            + PermohonanKTM::where('status', 'Ditolak')->count()
-            + PermohonanSKU::where('status', 'Ditolak')->count();
-
-        // 4. Kirim data ke view
-        return view('presentation_tier.admin.dashboard', compact(
-            'totalDiproses',
-            'totalSelesai',
-            'totalDitolak'
-        ));
+        // 5. Kirim data ke view (data $summary sudah dalam bentuk array)
+        return view('presentation_tier.admin.dashboard', $summary);
     }
+    
+    /**
+     * Method showPermohonanSurat sekarang RAMPING
+     */
     public function showPermohonanSurat()
     {
-        $domisiliGrouped = PermohonanDomisili::with('user')->latest()->get()->groupBy('status');
-        $ktmGrouped = PermohonanKTM::with('user')->latest()->get()->groupBy('status');
-        $skuGrouped = PermohonanSKU::with('user')->latest()->get()->groupBy('status');
+        // Suruh service bekerja
+        $groupedData = $this->permohonanService->getGroupedPermohonan();
 
-        return view('presentation_tier.admin.permohonan.permohonan-surat', compact(
-            'domisiliGrouped',
-            'ktmGrouped',
-            'skuGrouped'
-        ));
+        // Kirim ke view (data $groupedData sudah dalam bentuk array)
+        return view('presentation_tier.admin.permohonan.permohonan-surat', $groupedData);
     }
 
+    /**
+     * Method updateStatusPermohonan sekarang RAMPING
+     */
     public function updateStatusPermohonan(Request $request, string $type, int $id)
     {
+        // 1. Validasi tetap di Controller (Tugas Mandor)
         $request->validate([
             'status' => 'required|in:Diproses,Selesai,Ditolak',
             'keterangan_penolakan' => 'required_if:status,ditolak,Ditolak|string|nullable',
             'surat_jadi' => 'required_if:status,selesai,Selesai|file|mimes:pdf|max:2048',
         ]);
 
-        $modelClass = match ($type) {
-            'domisili' => PermohonanDomisili::class,
-            'ktm' => PermohonanKTM::class,
-            'sku' => PermohonanSKU::class,
-            default => abort(404, 'Jenis permohonan tidak valid.')
-        };
+        // 2. Suruh service bekerja (upload, save db, notif)
+        $this->permohonanService->updateStatus($request, $type, $id);
 
-        $permohonan = $modelClass::findOrFail($id);
-        $newStatus = ucfirst(strtolower($request->status));
-        $permohonan->status = $newStatus;
-
-        if ($newStatus == 'Ditolak') {
-            $permohonan->keterangan_penolakan = $request->keterangan_penolakan;
-            if ($permohonan->path_surat_jadi) {
-                Storage::delete($permohonan->path_surat_jadi);
-                $permohonan->path_surat_jadi = null;
-            }
-        } elseif ($newStatus == 'Selesai' && $request->hasFile('surat_jadi')) {
-            if ($permohonan->path_surat_jadi) {
-                Storage::delete($permohonan->path_surat_jadi);
-            }
-            $path = $request->file('surat_jadi')->store('public/surat_selesai');
-            $permohonan->path_surat_jadi = $path;
-            $permohonan->keterangan_penolakan = null;
-        } else {
-            $permohonan->keterangan_penolakan = null;
-        }
-
-        $permohonan->save();
-
-
-        if (($permohonan->status == 'Selesai' || $permohonan->status == 'Ditolak') && $permohonan->user_id) {
-            $user = User::find($permohonan->user_id);
-            if ($user) {
-                $user->notify(new SuratSelesaiNotification($permohonan));
-            }
-        }
-
+        // 3. Kasih respon (Tugas Mandor)
         return redirect()->route('admin.surat.index')->with('success', 'Status permohonan berhasil diperbarui!');
     }
 
+    /**
+     * Method semuaPermohonan sekarang RAMPING
+     */
     public function semuaPermohonan()
     {
-        $domisili = PermohonanDomisili::with('user')->latest()->get();
-        $ktm = PermohonanKTM::with('user')->latest()->get();
-        $sku = PermohonanSKU::with('user')->latest()->get();
-
-        return view('presentation_tier.admin.semua-permohonan', compact('domisili', 'ktm', 'sku'));
+        // Suruh service bekerja
+        $allData = $this->permohonanService->getAllPermohonan();
+        
+        // Kirim ke view
+        return view('presentation_tier.admin.semua-permohonan', $allData);
     }
 
-    // === TAMBAHAN: METHOD UNIVERSAL DETAIL SURAT ===
+    /**
+     * Method showDetailSurat sekarang RAMPING
+     */
     public function showDetailSurat($jenis, $id)
     {
-        $modelClass = match ($jenis) {
-            'domisili' => PermohonanDomisili::class,
-            'ktm' => PermohonanKTM::class,
-            'sku' => PermohonanSKU::class,
-            default => abort(404, 'Jenis surat tidak ditemukan.')
-        };
+        // Suruh service bekerja
+        $data = $this->permohonanService->getPermohonanDetail($jenis, $id);
 
-        $permohonan = $modelClass::with('user')->findOrFail($id);
-
-        $jenisSurat = match ($jenis) {
-            'domisili' => 'Keterangan Domisili',
-            'ktm' => 'Keterangan Tidak Mampu',
-            'sku' => 'Keterangan Usaha (SKU)',
-        };
-
-        return view('presentation_tier.admin.permohonan.detail-surat', [
-            'permohonan' => $permohonan,
-            'jenis_surat' => $jenisSurat,
-        ]);
-    }
-
-
-    public function showDomisiliDetail($id)
-    {
-        $permohonan = PermohonanDomisili::with('user')->findOrFail($id);
-
-        return view('presentation_tier.admin.permohonan.detail-surat', [
-            'permohonan' => $permohonan,
-            'jenis_surat' => 'Domisili',
-            'title' => 'Keterangan Domisili'
-        ]);
-    }
-
-    public function showKtmDetail($id)
-    {
-        $permohonan = PermohonanKTM::with('user')->findOrFail($id);
-
-        return view('presentation_tier.admin.permohonan.detail-surat', [
-            'permohonan' => $permohonan,
-            'jenis_surat' => 'SKTM',
-            'title' => 'Keterangan Tidak Mampu (SKTM)'
-        ]);
-    }
-
-    public function showSkuDetail($id)
-    {
-        $permohonan = PermohonanSKU::with('user')->findOrFail($id);
-
-        return view('presentation_tier.admin.permohonan.detail-surat', [
-            'permohonan' => $permohonan,
-            'jenis_surat' => 'SKU',
-            'title' => 'Keterangan Usaha (SKU)'
-        ]);
-    }
-    public function showLaporan(Request $request)
-    {
-        $tanggalMulai = $request->input('tanggal_mulai', Carbon::now()->subDays(30)->toDateString());
-        $tanggalAkhir = $request->input('tanggal_akhir', Carbon::now()->toDateString());
-        $statusFilter = $request->input('status', 'semua'); // Tambahan filter status
-
-        $start = Carbon::parse($tanggalMulai)->startOfDay();
-        $end = Carbon::parse($tanggalAkhir)->endOfDay();
-
-        // 1. Ambil data dari semua model permohonan dengan filter status
-        $domisiliQuery = PermohonanDomisili::with('user')
-            ->whereBetween('created_at', [$start, $end]);
-
-        $ktmQuery = PermohonanKTM::with('user')
-            ->whereBetween('created_at', [$start, $end]);
-
-        $skuQuery = PermohonanSKU::with('user')
-            ->whereBetween('created_at', [$start, $end]);
-
-        // Terapkan filter status jika bukan "semua"
-        if ($statusFilter !== 'semua') {
-            $status = ucfirst(strtolower($statusFilter));
-            $domisiliQuery->where('status', $status);
-            $ktmQuery->where('status', $status);
-            $skuQuery->where('status', $status);
+        if (!$data) {
+            abort(404, 'Jenis surat tidak ditemukan.');
         }
 
-        $domisili = $domisiliQuery->get()->map(function ($item) {
-            $item->jenis_surat_label = 'Keterangan Domisili';
-            return $item;
-        });
+        // Kirim ke view
+        return view('presentation_tier.admin.permohonan.detail-surat', $data);
+    }
 
-        $ktm = $ktmQuery->get()->map(function ($item) {
-            $item->jenis_surat_label = 'Keterangan Tidak Mampu';
-            return $item;
-        });
+    /**
+     * Method showDomisiliDetail sekarang RAMPING
+     * (Kita tetap biarkan ada sesuai janji "tidak mengurangi kode")
+     */
+    public function showDomisiliDetail($id)
+    {
+        // Suruh service bekerja
+        $data = $this->permohonanService->getPermohonanDetail('domisili', $id);
+        
+        return view('presentation_tier.admin.permohonan.detail-surat', $data);
+    }
 
-        $sku = $skuQuery->get()->map(function ($item) {
-            $item->jenis_surat_label = 'Keterangan Usaha';
-            return $item;
-        });
+    /**
+     * Method showKtmDetail sekarang RAMPING
+     */
+    public function showKtmDetail($id)
+    {
+        // Suruh service bekerja
+        $data = $this->permohonanService->getPermohonanDetail('ktm', $id);
+        
+        return view('presentation_tier.admin.permohonan.detail-surat', $data);
+    }
 
-        // 2. Gabungkan semua data dan urutkan berdasarkan tanggal dibuat (terbaru dulu)
-        $allPermohonan = collect()
-            ->merge($domisili)
-            ->merge($ktm)
-            ->merge($sku)
-            ->sortByDesc('created_at');
+    /**
+     * Method showSkuDetail sekarang RAMPING
+     */
+    public function showSkuDetail($id)
+    {
+        // Suruh service bekerja
+        $data = $this->permohonanService->getPermohonanDetail('sku', $id);
+        
+        return view('presentation_tier.admin.permohonan.detail-surat', $data);
+    }
+    
+    /**
+     * Method showLaporan sekarang RAMPING
+     */
+    public function showLaporan(Request $request)
+    {
+        // 1. Ambil input (Tugas Mandor)
+        $tanggalMulai = $request->input('tanggal_mulai', Carbon::now()->subDays(30)->toDateString());
+        $tanggalAkhir = $request->input('tanggal_akhir', Carbon::now()->toDateString());
+        $statusFilter = $request->input('status', 'semua');
 
-        // 3. Cek apakah ini permintaan ekspor Word
+        // 2. Suruh service mengambil data
+        $allPermohonan = $this->permohonanService->getLaporanData($tanggalMulai, $tanggalAkhir, $statusFilter);
+
+        // 3. Logika 'export' adalah 'Response', jadi tetap di Controller (Tugas Mandor)
         if ($request->has('export') && $request->export == 'word') {
-            // Render view khusus untuk Word
+            
             $html = view('presentation_tier.admin.permohonan.laporan-word', compact(
-                'allPermohonan',
-                'tanggalMulai',
-                'tanggalAkhir',
-                'statusFilter'
+                'allPermohonan', 'tanggalMulai', 'tanggalAkhir', 'statusFilter'
             ))->render();
 
-            // Buat nama file dengan status
             $statusLabel = $statusFilter === 'semua' ? 'Semua' : ucfirst($statusFilter);
             $fileName = 'Laporan_Surat_' . $statusLabel . '_' . $tanggalMulai . '_sd_' . $tanggalAkhir . '.doc';
 
-            // Siapkan headers untuk memaksa download file .doc
             $headers = [
                 'Content-Type' => 'application/vnd.ms-word',
                 'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
@@ -242,12 +162,9 @@ class AdminController extends BaseController
             return Response::make($html, 200, $headers);
         }
 
-        // 4. Jika bukan ekspor, tampilkan halaman laporan biasa
+        // 4. Tampilkan view laporan biasa
         return view('presentation_tier.admin.permohonan.laporan', compact(
-            'allPermohonan',
-            'tanggalMulai',
-            'tanggalAkhir',
-            'statusFilter'
+            'allPermohonan', 'tanggalMulai', 'tanggalAkhir', 'statusFilter'
         ));
     }
 }
