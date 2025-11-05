@@ -74,8 +74,7 @@ class SKTMController extends BaseController
             'SKTM'
         ));
 
-        return redirect()
-            ->back()
-            ->with('success', 'Permohonan SKTM Anda telah berhasil dikirim! Mohon tunggu informasi selanjutnya.');
+        // 5. Kembalikan ke dashboard
+        return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Domisili berhasil diajukan!');
     }
 }

@@ -1,19 +1,8 @@
 @extends('presentation_tier.admin.partials.layout')
 
-{{-- ========================================================== --}}
-{{-- == PERUBAHAN DI SINI == --}}
-{{-- ========================================================== --}}
-
-{{-- CSS Khusus untuk halaman ini --}}
 @push('styles')
-    {{-- Kita ganti semua blok <style> dengan link ke file CSS baru --}}
     <link rel="stylesheet" href="{{ asset('presentation_tier/css/admin/admin-laporan.css') }}">
 @endpush
-
-{{-- ========================================================== --}}
-{{-- == AKHIR PERUBAHAN == --}}
-{{-- ========================================================== --}}
-
 
 @section('content')
 <div class="report-page">
@@ -32,6 +21,15 @@
                 <label for="tanggal_akhir">Sampai Tanggal</label>
                 <input type="date" id="tanggal_akhir" name="tanggal_akhir" value="{{ $tanggalAkhir }}">
             </div>
+            {{-- FILTER STATUS BARU --}}
+            <div class="filter-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" class="status-select">
+                    <option value="semua" {{ $statusFilter == 'semua' ? 'selected' : '' }}>Semua</option>
+                    <option value="selesai" {{ $statusFilter == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="ditolak" {{ $statusFilter == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                </select>
+            </div>
             <div class="filter-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-filter"></i> Filter
@@ -43,7 +41,15 @@
         </form>
     </div>
 
-    {{-- TABEL LAPORAN (Isi tabel ini tidak perlu diubah) --}}
+    {{-- INFO FILTER AKTIF --}}
+    @if($statusFilter !== 'semua')
+    <div class="filter-info">
+        <i class="fa-solid fa-info-circle"></i>
+        Menampilkan data dengan status: <strong>{{ ucfirst($statusFilter) }}</strong>
+    </div>
+    @endif
+
+    {{-- TABEL LAPORAN --}}
     <div class="report-table-wrapper">
         <table class="report-table">
             <thead>
@@ -83,7 +89,7 @@
                 @empty
                     <tr>
                         <td colspan="6" class="empty-state">
-                            Tidak ada data permohonan pada rentang tanggal ini.
+                            Tidak ada data permohonan dengan status "{{ ucfirst($statusFilter) }}" pada rentang tanggal ini.
                         </td>
                     </tr>
                 @endforelse

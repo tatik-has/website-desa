@@ -40,7 +40,7 @@
                     <i class="fa-solid fa-file-alt"></i>
                     <span>Laporan</span>
                 </a>
-                
+
                 {{-- Menu Manajemen Admin hanya untuk superadmin --}}
                 @if(Auth::guard('admin')->user()->role == 'superadmin')
                     <a href="{{ url('/admin/manajemen-admin') }}"
@@ -49,6 +49,13 @@
                         <span>Manajemen Admin</span>
                     </a>
                 @endif
+
+                {{-- Menu Profile untuk semua admin --}}
+                <a href="{{ route('admin.profile.show') }}" 
+                    class="{{ request()->is('admin/profile*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
             </nav>
         </aside>
 
@@ -56,31 +63,45 @@
         {{-- == BAGIAN KONTEN UTAMA == --}}
         {{-- =============================================== --}}
         <main class="main-content">
+
             {{-- Bagian Top Bar --}}
             <div class="top-bar">
-                <div class="notification-wrapper">
-                    <i class="fa-solid fa-bell icon-btn" id="notification-bell">
-                        <span class="notification-count" id="notification-count">0</span>
-                    </i>
-                    <div class="notification-dropdown" id="notification-dropdown">
-                        <div class="notification-header">
-                            <span>Notifikasi</span>
-                        </div>
-                        <div class="notification-list" id="notification-list">
-                            {{-- Notifikasi akan dimuat di sini oleh JavaScript --}}
-                            <p style="text-align: center; padding: 20px; color: #888;">Tidak ada notifikasi baru.</p>
-                        </div>
-                    </div>
+                {{-- Wrapper Kiri (Kosong) --}}
+                <div class="top-bar-left">
                 </div>
 
-                <form action="{{ route('admin.logout') }}" method="POST" style="margin: 0;">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        Logout
-                    </button>
-                </form>
+                {{-- Wrapper Kanan (Notifikasi & Logout) --}}
+                <div class="top-bar-right">
+                    {{-- Notifikasi --}}
+                    <div class="notification-wrapper">
+                        <i class="fa-solid fa-bell icon-btn" id="notification-bell">
+                            <span class="notification-count" id="notification-count">0</span>
+                        </i>
+                        <div class="notification-dropdown" id="notification-dropdown">
+                            <div class="notification-header">
+                                <span>Notifikasi</span>
+                            </div>
+                            <div class="notification-list" id="notification-list">
+                                <p style="text-align: center; padding: 20px; color: #888;">
+                                    Tidak ada notifikasi baru.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="divider">|</span> {{-- Pemisah visual --}}
+
+                    {{-- Logout --}}
+                    <form action="{{ route('admin.logout') }}" method="POST" style="margin: 0;">
+                        @csrf
+                        <button type="submit" class="logout-btn">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
             </div>
+
 
             {{-- Tempat konten unik tiap halaman --}}
             @yield('content')
@@ -122,11 +143,11 @@
                                     let url = '{{ url("/admin") }}/' + typeKey + '/' + permohonanId;
 
                                     let item = `
-                                        <a href="${url}" class="notification-item">
-                                            <div class="message">${notif.data.pesan}</div>
-                                            <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
-                                        </a>
-                                    `;
+                                            <a href="${url}" class="notification-item">
+                                                <div class="message">${notif.data.pesan}</div>
+                                                <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
+                                            </a>
+                                        `;
                                     list.append(item);
                                 });
                             } else {

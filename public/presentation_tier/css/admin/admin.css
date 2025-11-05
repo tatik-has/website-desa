@@ -605,3 +605,50 @@ body {
         justify-content: center;
     }
 }
+/* public/presentation_tier/css/admin/admin.css */
+
+/* ... (CSS Anda yang sudah ada) ... */
+
+/* === GAYA BARU UNTUK TOP BAR === */
+
+.top-bar {
+    display: flex;
+    justify-content: space-between; /* Pisahkan kiri dan kanan */
+    align-items: center;
+}
+
+.top-bar-left {
+    /* (biarkan kosong, notifikasi Anda sudah ditata) */
+}
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Jarak antar item (profile, pemisah, logout) */
+}
+
+/* Tautan Profil */
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.profile-link:hover {
+    color: #007bff; /* Warna biru saat hover */
+}
+
+.profile-link i {
+    font-size: 1.2rem;
+}
+
+/* Pemisah */
+.divider {
+    color: #e0e0e0;
+    font-size: 1.2rem;
+}
+

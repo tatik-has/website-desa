@@ -19,7 +19,7 @@
                 <i class="fa fa-chevron-down"></i>
             </button>
             <div class="faq-answer">
-                <p>Ini adalah platform web resmi Kantor Desa Pakning Asal yang dirancang untuk memudahkan warga dalam proses pengajuan berbagai jenis surat keterangan (seperti SKTM, Surat Keterangan Domisi, Surat Pengantar KTP, dll.) secara online.</p>
+                <p>Ini adalah platform web resmi Kantor Desa Pakning Asal yang dirancang untuk memudahkan warga dalam proses pengajuan berbagai jenis surat keterangan (seperti Surat Keterangan Tidak Mampu, Surat Keterangan Domisi, dan Surat Keterangan Usaha.) secara online.</p>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
                 <i class="fa fa-chevron-down"></i>
             </button>
             <div class="faq-answer">
-                <p>Waktu proses standar adalah <strong>1-3 hari kerja</strong> sejak pengajuan dikirimkan. Waktu ini digunakan oleh staf desa untuk memverifikasi data dan dokumen Anda. Anda akan mendapatkan notifikasi jika ada pembaruan status.</p>
+                <p>Waktu proses standar adalah <strong>1-2 hari kerja</strong> sejak pengajuan dikirimkan. Waktu ini digunakan oleh staf desa untuk memverifikasi data dan dokumen Anda. Anda akan mendapatkan notifikasi jika ada pembaruan status.</p>
             </div>
         </div>
 

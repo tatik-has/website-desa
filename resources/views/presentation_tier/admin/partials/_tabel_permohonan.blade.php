@@ -63,12 +63,6 @@
                     {{-- Tombol Detail --}}
                     <a href="{{ $detailUrl }}" class="btn btn-detail">Detail</a>
 
-                    <!-- {{-- Tombol Proses --}}
-                    <form action="{{ $updateUrl }}" method="POST" style="display:inline;">
-                        @csrf
-                        <input type="hidden" name="status" value="Diproses">
-                        <button type="submit" class="btn btn-proses" title="Set status ke Diproses">Proses</button>
-                    </form> -->
 
                     {{-- Tombol Selesai (buka modal upload surat jadi) --}}
                     <button type="button" class="btn btn-selesai"

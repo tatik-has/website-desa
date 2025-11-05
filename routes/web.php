@@ -12,6 +12,7 @@ use App\LogicTier\Controllers\Admin\AdminController;
 use App\LogicTier\Controllers\shared\NotificationController;
 use App\LogicTier\Controllers\Masyarakat\SKTMController;
 use App\LogicTier\Controllers\Masyarakat\SKUController;
+use App\LogicTier\Controllers\Masyarakat\ProfileController;
 
 
 // ---------------- DEFAULT REDIRECT ----------------
@@ -57,6 +58,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengajuan/sku', [SKUController::class, 'create'])->name('sku.create');
     Route::post('/pengajuan/sku', [SKUController::class, 'store'])->name('sku.store');
 
+    // ---------------- PROFILE USER ----------------
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+
     // ---------------- RIWAYAT PENGAJUAN ----------------
     Route::get('/riwayat-surat', [SuratController::class, 'history'])->name('surat.history');
 
@@ -65,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifikasi', [NotificationController::class, 'destroyAll'])->name('notifications.deleteAll');
     Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])->name('notifications.delete');
 
-    Route::get('/faq', function () {return view('presentation_tier.faq.faq');})->name('faq');
+    Route::get('/faq', function () {return view('presentation_tier.masyarakat.faq.faq');})->name('faq');
 });
 
 // ============================================================
@@ -114,5 +119,12 @@ Route::middleware('auth:admin')->group(function () {
         Route::get('/{id}/edit', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'edit'])->name('edit');
         Route::put('/{id}', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'update'])->name('update');
         Route::delete('/{id}', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'destroy'])->name('destroy');
+    
     });
+
+    Route::get('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'show'])
+         ->name('admin.profile.show'); // <-- Ini yang dicari
+         
+    Route::post('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'update'])
+         ->name('admin.profile.update');
 });

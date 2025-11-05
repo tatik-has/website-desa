@@ -78,6 +78,7 @@ class SKUController extends BaseController
         ));
 
 
-        return redirect()->back()->with('success', 'Permohonan SKU Anda telah berhasil dikirim!');
+        // 5. Kembalikan ke dashboard
+        return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Domisili berhasil diajukan!');
     }
 }

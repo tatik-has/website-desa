@@ -173,32 +173,43 @@ class AdminController extends BaseController
     {
         $tanggalMulai = $request->input('tanggal_mulai', Carbon::now()->subDays(30)->toDateString());
         $tanggalAkhir = $request->input('tanggal_akhir', Carbon::now()->toDateString());
-
+        $statusFilter = $request->input('status', 'semua'); // Tambahan filter status
 
         $start = Carbon::parse($tanggalMulai)->startOfDay();
         $end = Carbon::parse($tanggalAkhir)->endOfDay();
 
-        // 1. Ambil data dari semua model permohonan
-        $domisili = PermohonanDomisili::with('user')
-            ->whereBetween('created_at', [$start, $end])
-            ->get()->map(function ($item) {
-                $item->jenis_surat_label = 'Keterangan Domisili';
-                return $item;
-            });
+        // 1. Ambil data dari semua model permohonan dengan filter status
+        $domisiliQuery = PermohonanDomisili::with('user')
+            ->whereBetween('created_at', [$start, $end]);
 
-        $ktm = PermohonanKTM::with('user')
-            ->whereBetween('created_at', [$start, $end])
-            ->get()->map(function ($item) {
-                $item->jenis_surat_label = 'Keterangan Tidak Mampu';
-                return $item;
-            });
+        $ktmQuery = PermohonanKTM::with('user')
+            ->whereBetween('created_at', [$start, $end]);
 
-        $sku = PermohonanSKU::with('user')
-            ->whereBetween('created_at', [$start, $end])
-            ->get()->map(function ($item) {
-                $item->jenis_surat_label = 'Keterangan Usaha';
-                return $item;
-            });
+        $skuQuery = PermohonanSKU::with('user')
+            ->whereBetween('created_at', [$start, $end]);
+
+        // Terapkan filter status jika bukan "semua"
+        if ($statusFilter !== 'semua') {
+            $status = ucfirst(strtolower($statusFilter));
+            $domisiliQuery->where('status', $status);
+            $ktmQuery->where('status', $status);
+            $skuQuery->where('status', $status);
+        }
+
+        $domisili = $domisiliQuery->get()->map(function ($item) {
+            $item->jenis_surat_label = 'Keterangan Domisili';
+            return $item;
+        });
+
+        $ktm = $ktmQuery->get()->map(function ($item) {
+            $item->jenis_surat_label = 'Keterangan Tidak Mampu';
+            return $item;
+        });
+
+        $sku = $skuQuery->get()->map(function ($item) {
+            $item->jenis_surat_label = 'Keterangan Usaha';
+            return $item;
+        });
 
         // 2. Gabungkan semua data dan urutkan berdasarkan tanggal dibuat (terbaru dulu)
         $allPermohonan = collect()
@@ -209,16 +220,17 @@ class AdminController extends BaseController
 
         // 3. Cek apakah ini permintaan ekspor Word
         if ($request->has('export') && $request->export == 'word') {
-
             // Render view khusus untuk Word
             $html = view('presentation_tier.admin.permohonan.laporan-word', compact(
                 'allPermohonan',
                 'tanggalMulai',
-                'tanggalAkhir'
+                'tanggalAkhir',
+                'statusFilter'
             ))->render();
 
-            // Buat nama file
-            $fileName = 'Laporan_Surat_' . $tanggalMulai . '_sd_' . $tanggalAkhir . '.doc';
+            // Buat nama file dengan status
+            $statusLabel = $statusFilter === 'semua' ? 'Semua' : ucfirst($statusFilter);
+            $fileName = 'Laporan_Surat_' . $statusLabel . '_' . $tanggalMulai . '_sd_' . $tanggalAkhir . '.doc';
 
             // Siapkan headers untuk memaksa download file .doc
             $headers = [
@@ -234,7 +246,8 @@ class AdminController extends BaseController
         return view('presentation_tier.admin.permohonan.laporan', compact(
             'allPermohonan',
             'tanggalMulai',
-            'tanggalAkhir'
+            'tanggalAkhir',
+            'statusFilter'
         ));
     }
 }
