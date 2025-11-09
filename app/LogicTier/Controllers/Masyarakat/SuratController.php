@@ -7,19 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 
-// Model Surat masih perlu untuk method 'index' dan 'ajukan'
+
 use App\DataTier\Models\Surat;
-
-// HAPUS 'USE' MODEL PERMOHONAN (DOMISILI, KTM, SKU)
-
-// === TAMBAHAN UNTUK NOTIFIKASI ===
 // Ini semua masih perlu untuk method 'ajukan'
 use App\DataTier\Models\Admin; 
 use App\LogicTier\Notifications\SuratBaruNotification; 
 use Illuminate\Support\Facades\Notification; 
 use Illuminate\Support\Facades\Log; 
-
-// 1. PANGGIL "PEKERJA" (SERVICE) KITA
 use App\LogicTier\Services\PermohonanMasyarakatService;
 
 
@@ -44,9 +38,6 @@ class SuratController extends BaseController
     }
 
    
-    /**
-     * TIDAK BERUBAH. Ini method sederhana.
-     */
     public function showPengajuanForm()
     {
         return view('presentation_tier.masyarakat.permohonan.pengajuan');

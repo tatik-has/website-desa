@@ -28,7 +28,7 @@
                     </svg>
                 </div>
                 <div class="header-text">
-                    <h5 class="mb-0">📝 Detail Surat {{ strtoupper($title ?? 'SURAT') }}</h5>
+                    <h5 class="mb-0"> Detail Surat {{ strtoupper($title ?? 'SURAT') }}</h5>
                     <p class="header-subtitle">Informasi lengkap permohonan surat</p>
                 </div>
             </div>
@@ -39,7 +39,7 @@
             {{-- SECTION: DATA PEMOHON (SEMUA JENIS SURAT) --}}
             {{-- ============================================ --}}
 
-            <h4 class="section-title">📋 Data Pemohon</h4>
+            <h4 class="section-title"> Data Pemohon</h4>
             <div class="info-grid">
                 <div class="info-item-modern">
                     <label>Nama Lengkap</label>
@@ -101,7 +101,7 @@
             {{-- ============================================ --}}
             @if($jenis_surat === 'SKTM')
                 <hr class="divider-modern">
-                <h4 class="section-title">💰 Data Ekonomi & Keperluan</h4>
+                <h4 class="section-title"> Data Ekonomi & Keperluan</h4>
                 <div class="row mb-3">
                     <div class="col-12">
                         <div class="info-item-modern">
@@ -129,7 +129,7 @@
             {{-- ============================================ --}}
             @if($jenis_surat === 'SKU')
                 <hr class="divider-modern">
-                <h4 class="section-title">🏪 Data Usaha</h4>
+                <h4 class="section-title"> Data Usaha</h4>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="info-item-modern">
@@ -179,7 +179,7 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="document-label">📄 Scan/Foto KTP</p>
+                        <p class="document-label"> Scan/Foto KTP</p>
                     </div>
                 @endif
 
@@ -198,7 +198,7 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="document-label">📄 Scan/Foto Kartu Keluarga</p>
+                        <p class="document-label"> Scan/Foto Kartu Keluarga</p>
                     </div>
                 @endif
 
@@ -217,7 +217,7 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="document-label">📄 Surat Pengantar RT/RW</p>
+                        <p class="document-label"> Surat Pengantar RT/RW</p>
                     </div>
                 @endif
 
@@ -236,7 +236,7 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="document-label">🏠 Foto Rumah Tampak Depan</p>
+                        <p class="document-label"> Foto Rumah Tampak Depan</p>
                     </div>
                 @endif
 
@@ -255,7 +255,7 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="document-label">📄 Surat Pengantar RT/RW</p>
+                        <p class="document-label"> Surat Pengantar RT/RW</p>
                     </div>
                 @endif
 
@@ -274,7 +274,7 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="document-label">🏪 Foto Tempat Usaha</p>
+                        <p class="document-label"> Foto Tempat Usaha</p>
                     </div>
                 @endif
             </div>
@@ -291,7 +291,7 @@
                             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
                             <rect x="6" y="14" width="12" height="8"/>
                         </svg>
-                        📄 Cetak Surat
+                         Cetak Surat
                     </a>
                 @endif
             </div>

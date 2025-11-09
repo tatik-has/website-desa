@@ -33,7 +33,9 @@ class SKUController extends BaseController
     public function store(Request $request)
     {
         // 1. Suruh service bekerja (validasi, upload, save, event)
-        $this-permohonanService->storeSku($request);
+
+        // PERBAIKAN: Menggunakan '->' (panah) bukan '-' (hubung)
+        $this->permohonanService->storeSku($request);
 
         // 2. Kasih respon (Tugas Mandor)
         // (Ini pesan sukses dari kode asli SKU/Domisili Anda, saya paskan)
