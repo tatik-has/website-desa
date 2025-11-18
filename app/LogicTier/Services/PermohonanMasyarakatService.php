@@ -24,13 +24,71 @@ class PermohonanMasyarakatService
             'nik' => 'required|digits:16',
             'nama' => 'required|string|max:255',
             'alamat_domisili' => 'required|string',
-            'nomor_telp' => 'required|string',
+            'nomor_telp' => [
+                'required',
+                'string',
+                'regex:/^(08|\+628)[0-9]{9,11}$/',
+            ],
             'rt_domisili' => 'required|numeric',
             'rw_domisili' => 'required|numeric',
             'jenis_kelamin' => 'required|string',
             'alamat_ktp' => 'required|string',
-            'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'ktp' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word.");
+                    }
+                }
+            ],
+            'kk' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word.");
+                    }
+                }
+            ],
+        ], [
+            'nomor_telp.regex' => 'Nomor telepon harus diawali dengan 08 atau +628 dan memiliki total 11-13 digit (contoh: 08123456789 atau +628123456789).',
         ]);
 
         $pathKTP = $request->file('ktp')->store('public/dokumen/ktp');
@@ -56,12 +114,12 @@ class PermohonanMasyarakatService
             'Keterangan Domisili'
         ));
 
-        return $permohonan; // Kembalikan hasil
+        return $permohonan;
     }
 
     /**
      * Logika dari SKTMController@store
-     * (Saya copy-paste utuh kode Anda)
+     * (Diperbaiki validasi nomor_telp dan file upload)
      */
     public function storeKtm(Request $request)
     {
@@ -69,16 +127,126 @@ class PermohonanMasyarakatService
             'nik' => 'required|digits:16|unique:permohonan_ktm,nik',
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'nomor_telp' => 'required|string|max:15',
+            'nomor_telp' => [
+                'required',
+                'string',
+                'regex:/^(\+62|62|08)[0-9]{9,12}$/',
+            ],
             'alamat_lengkap' => 'required|string',
             'keperluan' => 'required|string',
             'penghasilan' => 'required|numeric|min:0',
             'jumlah_tanggungan' => 'required|integer|min:0',
-            'ktp' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-            'kk' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-            'surat_pengantar_rt_rw' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-            'foto_rumah' => 'required|image|mimes:jpeg,png,jpg|max:1024',
+            'ktp' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream' // Kadang file dari HP menggunakan ini
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word. File yang diupload: $extension ($mimeType)");
+                    }
+                }
+            ],
+            'kk' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word. File yang diupload: $extension ($mimeType)");
+                    }
+                }
+            ],
+            'surat_pengantar_rt_rw' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word. File yang diupload: $extension ($mimeType)");
+                    }
+                }
+            ],
+            'foto_rumah' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word. File yang diupload: $extension ($mimeType)");
+                    }
+                }
+            ],
             'declaration' => 'accepted',
+        ], [
+            'nomor_telp.regex' => 'Nomor telepon harus diawali dengan +62, 62, atau 08 dan memiliki total 11-14 karakter.',
         ]);
 
         $dokumenPaths = [];
@@ -104,8 +272,14 @@ class PermohonanMasyarakatService
                 'status' => 'Diproses',
             ],
             $request->only([
-                'nik', 'nama', 'jenis_kelamin', 'nomor_telp', 'alamat_lengkap',
-                'keperluan', 'penghasilan', 'jumlah_tanggungan'
+                'nik',
+                'nama',
+                'jenis_kelamin',
+                'nomor_telp',
+                'alamat_lengkap',
+                'keperluan',
+                'penghasilan',
+                'jumlah_tanggungan'
             ]),
             $dokumenPaths
         );
@@ -124,21 +298,134 @@ class PermohonanMasyarakatService
      * Logika dari SKUController@store
      * (Saya copy-paste utuh kode Anda)
      */
+    /**
+     * Logika dari SKUController@store
+     */
     public function storeSku(Request $request)
     {
         $request->validate([
             'nik' => 'required|digits:16',
             'nama' => 'required|string|max:255',
             'alamat_ktp' => 'required|string',
-            'nomor_telp' => 'required|string|max:15',
+            'nomor_telp' => [
+                'required',
+                'string',
+                'regex:/^(08|\+628)[0-9]{9,11}$/',
+            ],
             'nama_usaha' => 'required|string|max:255',
             'jenis_usaha' => 'required|string|max:255',
             'alamat_usaha' => 'required|string',
             'lama_usaha' => 'required|string|max:50',
-            'ktp' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-            'kk' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-            'surat_pengantar' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-            'foto_usaha' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'ktp' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word.");
+                    }
+                }
+            ],
+            'kk' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word.");
+                    }
+                }
+            ],
+            'surat_pengantar' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word.");
+                    }
+                }
+            ],
+            'foto_usaha' => [
+                'nullable',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'docx'];
+                    $allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'application/pdf',
+                        'application/x-pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/octet-stream'
+                    ];
+
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    $mimeType = $value->getMimeType();
+
+                    if (!in_array($extension, $allowedExtensions) && !in_array($mimeType, $allowedMimeTypes)) {
+                        $fail("File $attribute harus berupa gambar (JPG/PNG), PDF, atau dokumen Word.");
+                    }
+                }
+            ],
+        ], [
+            'nomor_telp.regex' => 'Nomor telepon harus diawali dengan 08 atau +628 dan memiliki total 11-13 digit (contoh: 08123456789 atau +628123456789).',
         ]);
 
         $dokumenPaths = [];
@@ -159,8 +446,14 @@ class PermohonanMasyarakatService
         }
 
         $dataToStore = $request->only([
-            'nik', 'nama', 'alamat_ktp', 'nomor_telp', 'nama_usaha',
-            'jenis_usaha', 'alamat_usaha', 'lama_usaha'
+            'nik',
+            'nama',
+            'alamat_ktp',
+            'nomor_telp',
+            'nama_usaha',
+            'jenis_usaha',
+            'alamat_usaha',
+            'lama_usaha'
         ]);
 
         $permohonan = PermohonanSKU::create(array_merge(

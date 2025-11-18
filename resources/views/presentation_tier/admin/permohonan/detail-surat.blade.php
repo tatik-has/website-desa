@@ -5,345 +5,486 @@
 @endpush
 
 @section('content')
-<div class="container-detail mt-4">
-    <!-- Tombol Kembali -->
-    <div class="mb-3">
-        <a href="{{ route('admin.surat.index') }}" class="btn-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            Kembali ke Daftar Permohonan
-        </a>
-    </div>
-
-    <div class="card-detail shadow-sm border-0">
-        <div class="card-detail-header">
-            <div class="header-content">
-                <div class="header-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                    </svg>
-                </div>
-                <div class="header-text">
-                    <h5 class="mb-0"> Detail Surat {{ strtoupper($title ?? 'SURAT') }}</h5>
-                    <p class="header-subtitle">Informasi lengkap permohonan surat</p>
-                </div>
-            </div>
+    <div class="container-detail mt-4">
+        <!-- Tombol Kembali -->
+        <div class="mb-3">
+            <a href="{{ route('admin.surat.index') }}" class="btn-back">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Kembali ke Daftar Permohonan
+            </a>
         </div>
 
-        <div class="card-detail-body px-5 py-4">
-            {{-- ============================================ --}}
-            {{-- SECTION: DATA PEMOHON (SEMUA JENIS SURAT) --}}
-            {{-- ============================================ --}}
-
-            <h4 class="section-title"> Data Pemohon</h4>
-            <div class="info-grid">
-                <div class="info-item-modern">
-                    <label>Nama Lengkap</label>
-                    <p>{{ $permohonan->nama ?? '-' }}</p>
-                </div>
-                <div class="info-item-modern">
-                    <label>NIK</label>
-                    <p>{{ $permohonan->nik ?? '-' }}</p>
-                </div>
-
-                {{-- Jenis Kelamin (untuk SKTM dan Domisili) --}}
-                @if(isset($permohonan->jenis_kelamin))
-                    <div class="info-item-modern">
-                        <label>Jenis Kelamin</label>
-                        <p>{{ $permohonan->jenis_kelamin }}</p>
-                    </div>
-                @endif
-
-                {{-- Nomor Telepon --}}
-                @if(isset($permohonan->nomor_telp))
-                    <div class="info-item-modern">
-                        <label>Nomor Telepon / WhatsApp</label>
-                        <p>{{ $permohonan->nomor_telp }}</p>
-                    </div>
-                @endif
-
-                {{-- Tanggal Pengajuan --}}
-                <div class="info-item-modern">
-                    <label>Tanggal Pengajuan</label>
-                    <p>{{ \Carbon\Carbon::parse($permohonan->created_at)->format('d-m-Y H:i') }} WIB</p>
-                </div>
-
-                {{-- Status --}}
-                <div class="info-item-modern">
-                    <label>Status Permohonan</label>
-                    <p>
-                        <span class="status-badge 
-                            @if($permohonan->status == 'Diproses') status-diproses
-                            @elseif($permohonan->status == 'Selesai') status-selesai
-                            @elseif($permohonan->status == 'Ditolak') status-ditolak
-                            @else status-default @endif">
-                            <span class="status-dot"></span>
-                            {{ $permohonan->status }}
-                        </span>
-                    </p>
-                </div>
-
-                {{-- RT/RW untuk Domisili --}}
-                @if(isset($permohonan->rt_domisili) && isset($permohonan->rw_domisili))
-                    <div class="info-item-modern">
-                        <label>RT / RW Domisili</label>
-                        <p>RT {{ $permohonan->rt_domisili }} / RW {{ $permohonan->rw_domisili }}</p>
-                    </div>
-                @endif
-            </div>
-
-            {{-- ============================================ --}}
-            {{-- SECTION: DATA SPESIFIK SKTM --}}
-            {{-- ============================================ --}}
-            @if($jenis_surat === 'SKTM')
-                <hr class="divider-modern">
-                <h4 class="section-title"> Data Ekonomi & Keperluan</h4>
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="info-item-modern">
-                            <label>Keperluan Pembuatan SKTM</label>
-                            <p>{{ $permohonan->keperluan ?? '-' }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-item-modern">
-                            <label>Penghasilan Rata-rata / Bulan</label>
-                            <p>Rp {{ number_format($permohonan->penghasilan ?? 0, 0, ',', '.') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-item-modern">
-                            <label>Jumlah Anggota Keluarga yang Ditanggung</label>
-                            <p>{{ $permohonan->jumlah_tanggungan ?? '-' }} orang</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            {{-- ============================================ --}}
-            {{-- SECTION: DATA SPESIFIK SKU --}}
-            {{-- ============================================ --}}
-            @if($jenis_surat === 'SKU')
-                <hr class="divider-modern">
-                <h4 class="section-title"> Data Usaha</h4>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="info-item-modern">
-                            <label>Nama Usaha</label>
-                            <p>{{ $permohonan->nama_usaha ?? '-' }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-item-modern">
-                            <label>Jenis Usaha</label>
-                            <p>{{ $permohonan->jenis_usaha ?? '-' }}</p>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="info-item-modern">
-                            <label>Alamat Lengkap Tempat Usaha</label>
-                            <p>{{ $permohonan->alamat_usaha ?? '-' }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-item-modern">
-                            <label>Lama Usaha Berdiri</label>
-                            <p>{{ $permohonan->lama_usaha ?? '-' }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            {{-- ============================================ --}}
-            {{-- SECTION: DOKUMEN PENDUKUNG --}}
-            {{-- ============================================ --}}
-            <hr class="divider-modern">
-            <h4 class="section-title">📎 Dokumen Pendukung</h4>
-            <div class="document-grid">
-                {{-- KTP (semua jenis surat) --}}
-                @if(isset($permohonan->path_ktp) && $permohonan->path_ktp)
-                    <div class="document-item">
-                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_ktp) }}">
-                            <img src="{{ Storage::url($permohonan->path_ktp) }}" alt="KTP">
-                            <div class="document-overlay">
-                                <a href="{{ Storage::url($permohonan->path_ktp) }}" target="_blank" class="btn-view">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                    Lihat
-                                </a>
-                            </div>
-                        </div>
-                        <p class="document-label"> Scan/Foto KTP</p>
-                    </div>
-                @endif
-
-                {{-- KK (semua jenis surat) --}}
-                @if(isset($permohonan->path_kk) && $permohonan->path_kk)
-                    <div class="document-item">
-                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_kk) }}">
-                            <img src="{{ Storage::url($permohonan->path_kk) }}" alt="KK">
-                            <div class="document-overlay">
-                                <a href="{{ Storage::url($permohonan->path_kk) }}" target="_blank" class="btn-view">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                    Lihat
-                                </a>
-                            </div>
-                        </div>
-                        <p class="document-label"> Scan/Foto Kartu Keluarga</p>
-                    </div>
-                @endif
-
-                {{-- Surat Pengantar RT/RW (SKTM) --}}
-                @if($jenis_surat === 'SKTM' && isset($permohonan->path_surat_pengantar_rt_rw) && $permohonan->path_surat_pengantar_rt_rw)
-                    <div class="document-item">
-                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_surat_pengantar_rt_rw) }}">
-                            <img src="{{ Storage::url($permohonan->path_surat_pengantar_rt_rw) }}" alt="Surat Pengantar">
-                            <div class="document-overlay">
-                                <a href="{{ Storage::url($permohonan->path_surat_pengantar_rt_rw) }}" target="_blank" class="btn-view">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                    Lihat
-                                </a>
-                            </div>
-                        </div>
-                        <p class="document-label"> Surat Pengantar RT/RW</p>
-                    </div>
-                @endif
-
-                {{-- Foto Rumah (SKTM) --}}
-                @if($jenis_surat === 'SKTM' && isset($permohonan->path_foto_rumah) && $permohonan->path_foto_rumah)
-                    <div class="document-item">
-                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_foto_rumah) }}">
-                            <img src="{{ Storage::url($permohonan->path_foto_rumah) }}" alt="Foto Rumah">
-                            <div class="document-overlay">
-                                <a href="{{ Storage::url($permohonan->path_foto_rumah) }}" target="_blank" class="btn-view">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                    Lihat
-                                </a>
-                            </div>
-                        </div>
-                        <p class="document-label"> Foto Rumah Tampak Depan</p>
-                    </div>
-                @endif
-
-                {{-- Surat Pengantar RT/RW (SKU) --}}
-                @if($jenis_surat === 'SKU' && isset($permohonan->path_surat_pengantar) && $permohonan->path_surat_pengantar)
-                    <div class="document-item">
-                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_surat_pengantar) }}">
-                            <img src="{{ Storage::url($permohonan->path_surat_pengantar) }}" alt="Surat Pengantar">
-                            <div class="document-overlay">
-                                <a href="{{ Storage::url($permohonan->path_surat_pengantar) }}" target="_blank" class="btn-view">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                    Lihat
-                                </a>
-                            </div>
-                        </div>
-                        <p class="document-label"> Surat Pengantar RT/RW</p>
-                    </div>
-                @endif
-
-                {{-- Foto Usaha (SKU) --}}
-                @if($jenis_surat === 'SKU' && isset($permohonan->path_foto_usaha) && $permohonan->path_foto_usaha)
-                    <div class="document-item">
-                        <div class="document-preview" data-url="{{ Storage::url($permohonan->path_foto_usaha) }}">
-                            <img src="{{ Storage::url($permohonan->path_foto_usaha) }}" alt="Foto Usaha">
-                            <div class="document-overlay">
-                                <a href="{{ Storage::url($permohonan->path_foto_usaha) }}" target="_blank" class="btn-view">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                    Lihat
-                                </a>
-                            </div>
-                        </div>
-                        <p class="document-label"> Foto Tempat Usaha</p>
-                    </div>
-                @endif
-            </div>
-
-            {{-- ============================================ --}}
-            {{-- SECTION: TOMBOL AKSI --}}
-            {{-- ============================================ --}}
-            <hr class="divider-modern">
-            <div class="text-center mt-4">
-                @if($permohonan->status == 'Selesai')
-                    <a href="#" class="btn-print">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 6 2 18 2 18 9"/>
-                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                            <rect x="6" y="14" width="12" height="8"/>
+        <div class="card-detail shadow-sm border-0">
+            <div class="card-detail-header">
+                <div class="header-content">
+                    <div class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
                         </svg>
-                         Cetak Surat
-                    </a>
+                    </div>
+                    <div class="header-text">
+                        <h5 class="mb-0"> Detail Surat {{ strtoupper($title ?? 'SURAT') }}</h5>
+                        <p class="header-subtitle">Informasi lengkap permohonan surat</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-detail-body px-5 py-4">
+                {{-- ============================================ --}}
+                {{-- SECTION: DATA PEMOHON (SEMUA JENIS SURAT) --}}
+                {{-- ============================================ --}}
+
+                <h4 class="section-title"> Data Pemohon</h4>
+                <div class="info-grid">
+                    <div class="info-item-modern">
+                        <label>Nama Lengkap</label>
+                        <p>{{ $permohonan->nama ?? '-' }}</p>
+                    </div>
+                    <div class="info-item-modern">
+                        <label>NIK</label>
+                        <p>{{ $permohonan->nik ?? '-' }}</p>
+                    </div>
+
+                    {{-- Jenis Kelamin (untuk SKTM dan Domisili) --}}
+                    @if(isset($permohonan->jenis_kelamin))
+                        <div class="info-item-modern">
+                            <label>Jenis Kelamin</label>
+                            <p>{{ $permohonan->jenis_kelamin }}</p>
+                        </div>
+                    @endif
+
+                    {{-- Nomor Telepon --}}
+                    @if(isset($permohonan->nomor_telp))
+                        <div class="info-item-modern">
+                            <label>Nomor Telepon / WhatsApp</label>
+                            <p>{{ $permohonan->nomor_telp }}</p>
+                        </div>
+                    @endif
+
+                    {{-- Tanggal Pengajuan --}}
+                    <div class="info-item-modern">
+                        <label>Tanggal Pengajuan</label>
+                        <p>{{ \Carbon\Carbon::parse($permohonan->created_at)->format('d-m-Y H:i') }} WIB</p>
+                    </div>
+
+                    {{-- Status --}}
+                    <div class="info-item-modern">
+                        <label>Status Permohonan</label>
+                        <p>
+                            <span class="status-badge 
+                                    @if($permohonan->status == 'Diproses') status-diproses
+                                    @elseif($permohonan->status == 'Selesai') status-selesai
+                                    @elseif($permohonan->status == 'Ditolak') status-ditolak
+                                    @else status-default @endif">
+                                <span class="status-dot"></span>
+                                {{ $permohonan->status }}
+                            </span>
+                        </p>
+                    </div>
+
+                    {{-- RT/RW untuk Domisili --}}
+                    @if(isset($permohonan->rt_domisili) && isset($permohonan->rw_domisili))
+                        <div class="info-item-modern">
+                            <label>RT / RW Domisili</label>
+                            <p>RT {{ $permohonan->rt_domisili }} / RW {{ $permohonan->rw_domisili }}</p>
+                        </div>
+                    @endif
+                </div>
+
+                {{-- ============================================ --}}
+                {{-- SECTION: DATA SPESIFIK SKTM --}}
+                {{-- ============================================ --}}
+                @if($jenis_surat === 'SKTM')
+                    <hr class="divider-modern">
+                    <h4 class="section-title"> Data Ekonomi & Keperluan</h4>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="info-item-modern">
+                                <label>Keperluan Pembuatan SKTM</label>
+                                <p>{{ $permohonan->keperluan ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item-modern">
+                                <label>Penghasilan Rata-rata / Bulan</label>
+                                <p>Rp {{ number_format($permohonan->penghasilan ?? 0, 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item-modern">
+                                <label>Jumlah Anggota Keluarga yang Ditanggung</label>
+                                <p>{{ $permohonan->jumlah_tanggungan ?? '-' }} orang</p>
+                            </div>
+                        </div>
+                    </div>
                 @endif
+
+                {{-- ============================================ --}}
+                {{-- SECTION: DATA SPESIFIK SKU --}}
+                {{-- ============================================ --}}
+                @if($jenis_surat === 'Keterangan Usaha') {{-- ✅ PERBAIKAN: Hapus "(SKU)" --}}
+                    <hr class="divider-modern">
+                    <h4 class="section-title"> Data Usaha</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="info-item-modern">
+                                <label>Nama Usaha</label>
+                                <p>{{ $permohonan->nama_usaha ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item-modern">
+                                <label>Jenis Usaha</label>
+                                <p>{{ $permohonan->jenis_usaha ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-item-modern">
+                                <label>Alamat Lengkap Tempat Usaha</label>
+                                <p>{{ $permohonan->alamat_usaha ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item-modern">
+                                <label>Lama Usaha Berdiri</label>
+                                <p>{{ $permohonan->lama_usaha ?? '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- ============================================ --}}
+                {{-- SECTION: DOKUMEN PENDUKUNG --}}
+                {{-- ============================================ --}}
+                <hr class="divider-modern">
+                <h4 class="section-title">📎 Dokumen Pendukung</h4>
+                <div class="document-grid">
+                    {{-- KTP (semua jenis surat) --}}
+                    @if(isset($permohonan->path_ktp) && $permohonan->path_ktp)
+                        <div class="document-item">
+                            @php
+                                $ktpUrl = Storage::url($permohonan->path_ktp);
+                                $ktpExtension = strtolower(pathinfo($permohonan->path_ktp, PATHINFO_EXTENSION));
+                            @endphp
+
+                            <div class="document-preview" data-url="{{ $ktpUrl }}">
+                                @if(in_array($ktpExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ $ktpUrl }}" alt="KTP">
+                                @elseif($ktpExtension === 'pdf')
+                                    <div class="file-icon-preview pdf-preview">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>PDF</span>
+                                    </div>
+                                @elseif(in_array($ktpExtension, ['doc', 'docx']))
+                                    <div class="file-icon-preview doc-preview">
+                                        <i class="fas fa-file-word"></i>
+                                        <span>Word</span>
+                                    </div>
+                                @else
+                                    <div class="file-icon-preview">
+                                        <i class="fas fa-file"></i>
+                                        <span>{{ strtoupper($ktpExtension) }}</span>
+                                    </div>
+                                @endif
+                                <div class="document-overlay">
+                                    <a href="{{ $ktpUrl }}" target="_blank" class="btn-view">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        Lihat
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="document-label">Scan/Foto KTP</p>
+                        </div>
+                    @endif
+
+                    {{-- KK (semua jenis surat) --}}
+                    @if(isset($permohonan->path_kk) && $permohonan->path_kk)
+                        <div class="document-item">
+                            @php
+                                $kkUrl = Storage::url($permohonan->path_kk);
+                                $kkExtension = strtolower(pathinfo($permohonan->path_kk, PATHINFO_EXTENSION));
+                            @endphp
+
+                            <div class="document-preview" data-url="{{ $kkUrl }}">
+                                @if(in_array($kkExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ $kkUrl }}" alt="KK">
+                                @elseif($kkExtension === 'pdf')
+                                    <div class="file-icon-preview pdf-preview">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>PDF</span>
+                                    </div>
+                                @elseif(in_array($kkExtension, ['doc', 'docx']))
+                                    <div class="file-icon-preview doc-preview">
+                                        <i class="fas fa-file-word"></i>
+                                        <span>Word</span>
+                                    </div>
+                                @else
+                                    <div class="file-icon-preview">
+                                        <i class="fas fa-file"></i>
+                                        <span>{{ strtoupper($kkExtension) }}</span>
+                                    </div>
+                                @endif
+                                <div class="document-overlay">
+                                    <a href="{{ $kkUrl }}" target="_blank" class="btn-view">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        Lihat
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="document-label">Scan/Foto Kartu Keluarga</p>
+                        </div>
+                    @endif
+
+                    {{-- Surat Pengantar RT/RW (SKTM) --}}
+                    @if($jenis_surat === 'Keterangan Tidak Mampu' && isset($permohonan->path_surat_pengantar_rt_rw) && $permohonan->path_surat_pengantar_rt_rw)
+                        <div class="document-item">
+                            @php
+                                $suratUrl = Storage::url($permohonan->path_surat_pengantar_rt_rw);
+                                $suratExtension = strtolower(pathinfo($permohonan->path_surat_pengantar_rt_rw, PATHINFO_EXTENSION));
+                            @endphp
+
+                            <div class="document-preview" data-url="{{ $suratUrl }}">
+                                @if(in_array($suratExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ $suratUrl }}" alt="Surat Pengantar">
+                                @elseif($suratExtension === 'pdf')
+                                    <div class="file-icon-preview pdf-preview">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>PDF</span>
+                                    </div>
+                                @elseif(in_array($suratExtension, ['doc', 'docx']))
+                                    <div class="file-icon-preview doc-preview">
+                                        <i class="fas fa-file-word"></i>
+                                        <span>Word</span>
+                                    </div>
+                                @else
+                                    <div class="file-icon-preview">
+                                        <i class="fas fa-file"></i>
+                                        <span>{{ strtoupper($suratExtension) }}</span>
+                                    </div>
+                                @endif
+                                <div class="document-overlay">
+                                    <a href="{{ $suratUrl }}" target="_blank" class="btn-view">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        Lihat
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="document-label">Surat Pengantar RT/RW</p>
+                        </div>
+                    @endif
+
+                    {{-- Foto Rumah (SKTM) --}}
+                    @if($jenis_surat === 'Keterangan Tidak Mampu' && isset($permohonan->path_foto_rumah) && $permohonan->path_foto_rumah)
+                        <div class="document-item">
+                            @php
+                                $rumahUrl = Storage::url($permohonan->path_foto_rumah);
+                                $rumahExtension = strtolower(pathinfo($permohonan->path_foto_rumah, PATHINFO_EXTENSION));
+                            @endphp
+
+                            <div class="document-preview" data-url="{{ $rumahUrl }}">
+                                @if(in_array($rumahExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ $rumahUrl }}" alt="Foto Rumah">
+                                @elseif($rumahExtension === 'pdf')
+                                    <div class="file-icon-preview pdf-preview">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>PDF</span>
+                                    </div>
+                                @elseif(in_array($rumahExtension, ['doc', 'docx']))
+                                    <div class="file-icon-preview doc-preview">
+                                        <i class="fas fa-file-word"></i>
+                                        <span>Word</span>
+                                    </div>
+                                @else
+                                    <div class="file-icon-preview">
+                                        <i class="fas fa-file"></i>
+                                        <span>{{ strtoupper($rumahExtension) }}</span>
+                                    </div>
+                                @endif
+                                <div class="document-overlay">
+                                    <a href="{{ $rumahUrl }}" target="_blank" class="btn-view">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        Lihat
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="document-label">Foto Rumah Tampak Depan</p>
+                        </div>
+                    @endif
+
+                    {{-- Surat Pengantar RT/RW (SKU) --}}
+                    @if($jenis_surat === 'Keterangan Usaha' && isset($permohonan->path_surat_pengantar) && $permohonan->path_surat_pengantar)
+                        <div class="document-item">
+                            @php
+                                $suratSkuUrl = Storage::url($permohonan->path_surat_pengantar);
+                                $suratSkuExtension = strtolower(pathinfo($permohonan->path_surat_pengantar, PATHINFO_EXTENSION));
+                            @endphp
+
+                            <div class="document-preview" data-url="{{ $suratSkuUrl }}">
+                                @if(in_array($suratSkuExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ $suratSkuUrl }}" alt="Surat Pengantar">
+                                @elseif($suratSkuExtension === 'pdf')
+                                    <div class="file-icon-preview pdf-preview">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>PDF</span>
+                                    </div>
+                                @elseif(in_array($suratSkuExtension, ['doc', 'docx']))
+                                    <div class="file-icon-preview doc-preview">
+                                        <i class="fas fa-file-word"></i>
+                                        <span>Word</span>
+                                    </div>
+                                @else
+                                    <div class="file-icon-preview">
+                                        <i class="fas fa-file"></i>
+                                        <span>{{ strtoupper($suratSkuExtension) }}</span>
+                                    </div>
+                                @endif
+                                <div class="document-overlay">
+                                    <a href="{{ $suratSkuUrl }}" target="_blank" class="btn-view">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        Lihat
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="document-label">Surat Pengantar RT/RW</p>
+                        </div>
+                    @endif
+
+                    {{-- Foto Usaha (SKU) - Opsional --}}
+                    @if($jenis_surat === 'Keterangan Usaha' && isset($permohonan->path_foto_usaha) && $permohonan->path_foto_usaha)
+                        <div class="document-item">
+                            @php
+                                $usahaUrl = Storage::url($permohonan->path_foto_usaha);
+                                $usahaExtension = strtolower(pathinfo($permohonan->path_foto_usaha, PATHINFO_EXTENSION));
+                            @endphp
+
+                            <div class="document-preview" data-url="{{ $usahaUrl }}">
+                                @if(in_array($usahaExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ $usahaUrl }}" alt="Foto Usaha">
+                                @elseif($usahaExtension === 'pdf')
+                                    <div class="file-icon-preview pdf-preview">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>PDF</span>
+                                    </div>
+                                @elseif(in_array($usahaExtension, ['doc', 'docx']))
+                                    <div class="file-icon-preview doc-preview">
+                                        <i class="fas fa-file-word"></i>
+                                        <span>Word</span>
+                                    </div>
+                                @else
+                                    <div class="file-icon-preview">
+                                        <i class="fas fa-file"></i>
+                                        <span>{{ strtoupper($usahaExtension) }}</span>
+                                    </div>
+                                @endif
+                                <div class="document-overlay">
+                                    <a href="{{ $usahaUrl }}" target="_blank" class="btn-view">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        Lihat
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="document-label">Foto Tempat Usaha (Opsional)</p>
+                        </div>
+                    @endif
+                </div>
+
+                {{-- ============================================ --}}
+                {{-- SECTION: TOMBOL AKSI --}}
+                {{-- ============================================ --}}
+                <hr class="divider-modern">
+                <div class="text-center mt-4">
+                    @if($permohonan->status == 'Selesai')
+                        <a href="#" class="btn-print">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 6 2 18 2 18 9" />
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                <rect x="6" y="14" width="12" height="8" />
+                            </svg>
+                            Cetak Surat
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Document Preview Script Loaded');
-        
-        // Ambil semua elemen document-preview
-        const documentPreviews = document.querySelectorAll('.document-preview');
-        
-        console.log('Found ' + documentPreviews.length + ' document previews');
-        
-        // Tambahkan event listener untuk setiap preview
-        documentPreviews.forEach(function(preview, index) {
-            const url = preview.getAttribute('data-url');
-            console.log('Preview ' + index + ' URL:', url);
-            
-            // Event untuk klik pada area preview
-            preview.addEventListener('click', function(e) {
-                console.log('Preview clicked:', url);
-                
-                // Cek apakah yang diklik bukan tombol "Lihat"
-                if (!e.target.closest('.btn-view')) {
-                    e.preventDefault();
-                    if (url) {
-                        window.open(url, '_blank');
-                        console.log('Opening URL:', url);
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Document Preview Script Loaded');
+
+            // Ambil semua elemen document-preview
+            const documentPreviews = document.querySelectorAll('.document-preview');
+
+            console.log('Found ' + documentPreviews.length + ' document previews');
+
+            // Tambahkan event listener untuk setiap preview
+            documentPreviews.forEach(function (preview, index) {
+                const url = preview.getAttribute('data-url');
+                console.log('Preview ' + index + ' URL:', url);
+
+                // Event untuk klik pada area preview
+                preview.addEventListener('click', function (e) {
+                    console.log('Preview clicked:', url);
+
+                    // Cek apakah yang diklik bukan tombol "Lihat"
+                    if (!e.target.closest('.btn-view')) {
+                        e.preventDefault();
+                        if (url) {
+                            window.open(url, '_blank');
+                            console.log('Opening URL:', url);
+                        }
                     }
-                }
+                });
+
+                // Tambahkan cursor pointer
+                preview.style.cursor = 'pointer';
             });
-            
-            // Tambahkan cursor pointer
-            preview.style.cursor = 'pointer';
-        });
-        
-        // Event listener untuk tombol "Lihat"
-        const btnViews = document.querySelectorAll('.btn-view');
-        console.log('Found ' + btnViews.length + ' view buttons');
-        
-        btnViews.forEach(function(btn, index) {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation(); // Mencegah event bubbling
-                const url = this.getAttribute('href');
-                console.log('Button ' + index + ' clicked, URL:', url);
+
+            // Event listener untuk tombol "Lihat"
+            const btnViews = document.querySelectorAll('.btn-view');
+            console.log('Found ' + btnViews.length + ' view buttons');
+
+            btnViews.forEach(function (btn, index) {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation(); // Mencegah event bubbling
+                    const url = this.getAttribute('href');
+                    console.log('Button ' + index + ' clicked, URL:', url);
+                });
             });
         });
-    });
-</script>
+    </script>
 @endpush

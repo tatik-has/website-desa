@@ -52,7 +52,7 @@
 
                     <div class="form-group">
                         <label for="nomor-telp">Nomor Telp/Whatsapp</label>
-                        <input type="number" id="nomor-telp" name="nomor_telp" placeholder="Masukkan Nomor" required>
+                        <input type="text" id="nomor-telp" name="nomor_telp" placeholder="Contoh: 08123456789 atau +628123456789" required>
                     </div>
 
                     <div class="form-row">
@@ -86,18 +86,18 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="ktp">Upload KTP</label>
+                            <label for="ktp">Upload KTP (Foto/PDF/Word)</label>
                             <div class="file-upload-wrapper">
-                                <input type="file" id="ktp" name="ktp" class="file-input" accept="image/*,application/pdf"
+                                <input type="file" id="ktp" name="ktp" class="file-input" accept="image/jpeg,image/jpg,image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                     capture="environment" required>
                                 <button type="button" class="file-choose-btn">Choose File</button>
                                 <span class="file-name-display">No File Chosen</span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="kk">Upload KK</label>
+                            <label for="kk">Upload KK (Foto/PDF/Word)</label>
                             <div class="file-upload-wrapper">
-                                <input type="file" id="kk" name="kk" class="file-input" accept="image/*,application/pdf"
+                                <input type="file" id="kk" name="kk" class="file-input" accept="image/jpeg,image/jpg,image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                     capture="environment" required>
                                 <button type="button" class="file-choose-btn">Choose File</button>
                                 <span class="file-name-display">No File Chosen</span>

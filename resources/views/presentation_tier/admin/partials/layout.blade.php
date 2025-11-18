@@ -118,97 +118,106 @@
     <script src="{{ asset('js/app.js') }}"></script>
 
     @auth('admin')
-        <script>
-            $(document).ready(function () {
-                const bell = $('#notification-bell');
-                const countBadge = $('#notification-count');
-                const dropdown = $('#notification-dropdown');
-                const list = $('#notification-list');
+    <script>
+        $(document).ready(function () {
+            const bell = $('#notification-bell');
+            const countBadge = $('#notification-count');
+            const dropdown = $('#notification-dropdown');
+            const list = $('#notification-list');
 
-                function fetchNotifications() {
+            function fetchNotifications() {
+                $.ajax({
+                    url: '{{ route("admin.notifications.unread") }}',
+                    method: 'GET',
+                    success: function (response) {
+                        // Update badge count
+                        if (response.count > 0) {
+                            countBadge.text(response.count).show();
+                        } else {
+                            countBadge.hide();
+                        }
+
+                        // Update dropdown list
+                        list.empty();
+                        if (response.notifications.length > 0) {
+                            response.notifications.forEach(function (notif) {
+                                // Ambil kunci rute dari data notifikasi
+                                let typeKey = notif.data.jenis_surat_key; // 'domisili', 'ktm', atau 'sku'
+                                let permohonanId = notif.data.permohonan_id;
+
+                                // Buat URL sesuai route yang ada di web.php
+                                let url = '';
+                                if (typeKey === 'domisili') {
+                                    url = '{{ route("admin.domisili.show", ":id") }}'.replace(':id', permohonanId);
+                                } else if (typeKey === 'ktm') {
+                                    url = '{{ route("admin.ktm.show", ":id") }}'.replace(':id', permohonanId);
+                                } else if (typeKey === 'sku') {
+                                    url = '{{ route("admin.sku.show", ":id") }}'.replace(':id', permohonanId);
+                                } else {
+                                    url = '#'; // fallback jika tidak dikenali
+                                }
+
+                                let item = `
+                                    <a href="${url}" class="notification-item">
+                                        <div class="message">${notif.data.pesan}</div>
+                                        <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
+                                    </a>
+                                `;
+                                list.append(item);
+                            });
+                        } else {
+                            list.html('<p style="text-align: center; padding: 20px; color: #888;">Tidak ada notifikasi baru.</p>');
+                        }
+                    }
+                });
+            }
+
+            // Klik lonceng untuk tampil/sembunyi dropdown
+            bell.on('click', function (e) {
+                e.stopPropagation();
+                dropdown.toggle();
+
+                // Tandai notifikasi sudah dibaca
+                if (dropdown.is(':visible') && parseInt(countBadge.text()) > 0) {
                     $.ajax({
-                        url: '{{ route("admin.notifications.unread") }}',
-                        method: 'GET',
-                        success: function (response) {
-                            // Update badge count
-                            if (response.count > 0) {
-                                countBadge.text(response.count).show();
-                            } else {
-                                countBadge.hide();
-                            }
-
-                            // Update dropdown list
-                            list.empty();
-                            if (response.notifications.length > 0) {
-                                response.notifications.forEach(function (notif) {
-                                    // Ambil kunci rute (domisili, ktm, sku) dari data notifikasi
-                                    let typeKey = notif.data.jenis_surat_key;
-                                    let permohonanId = notif.data.permohonan_id;
-
-                                    // Buat URL yang benar sesuai dengan rute di web.php
-                                    let url = '{{ url("/admin") }}/' + typeKey + '/' + permohonanId;
-
-                                    let item = `
-                                            <a href="${url}" class="notification-item">
-                                                <div class="message">${notif.data.pesan}</div>
-                                                <div class="timestamp">${new Date(notif.created_at).toLocaleString('id-ID')}</div>
-                                            </a>
-                                        `;
-                                    list.append(item);
-                                });
-                            } else {
-                                list.html('<p style="text-align: center; padding: 20px; color: #888;">Tidak ada notifikasi baru.</p>');
-                            }
+                        url: '{{ route("admin.notifications.markAsRead") }}',
+                        method: 'POST',
+                        data: { _token: '{{ csrf_token() }}' },
+                        success: function () {
+                            countBadge.text('0').hide();
                         }
                     });
                 }
+            });
 
-                // Klik lonceng untuk tampil/sembunyi dropdown
-                bell.on('click', function (e) {
-                    e.stopPropagation();
-                    dropdown.toggle();
-
-                    // Tandai notifikasi sudah dibaca
-                    if (dropdown.is(':visible') && parseInt(countBadge.text()) > 0) {
-                        $.ajax({
-                            url: '{{ route("admin.notifications.markAsRead") }}',
-                            method: 'POST',
-                            data: { _token: '{{ csrf_token() }}' },
-                            success: function () {
-                                countBadge.text('0').hide();
-                            }
-                        });
-                    }
-                });
-
-                // Sembunyikan dropdown saat klik di luar area
-                $(document).on('click', function (e) {
-                    if (!$(e.target).closest('.notification-wrapper').length) {
-                        dropdown.hide();
-                    }
-                });
-
-                // Ambil notifikasi saat halaman pertama dimuat
-                fetchNotifications();
-
-                // Laravel Echo real-time listener
-                if (typeof window.Echo !== 'undefined') {
-                    window.Echo.private('admin-channel')
-                        .listen('SuratDiajukan', (e) => {
-                            console.log('Event diterima:', e);
-                            fetchNotifications();
-
-                            // Tambah notifikasi popup kecil (opsional)
-                            const toast = $('<div class="toast-notification"></div>')
-                                .text(e.message)
-                                .appendTo('body')
-                                .css('display', 'block');
-                            setTimeout(() => toast.fadeOut(500, () => toast.remove()), 4000);
-                        });
+            // Sembunyikan dropdown saat klik di luar area
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.notification-wrapper').length) {
+                    dropdown.hide();
                 }
             });
-        </script>
-    @endauth
+
+            // Ambil notifikasi saat halaman pertama dimuat
+            fetchNotifications();
+
+            // Laravel Echo real-time listener
+            if (typeof window.Echo !== 'undefined') {
+                window.Echo.private('admin-channel')
+                    .listen('SuratDiajukan', (e) => {
+                        console.log('Event diterima:', e);
+                        fetchNotifications();
+
+                        // Tambah notifikasi popup kecil (opsional)
+                        const toast = $('<div class="toast-notification"></div>')
+                            .text(e.message)
+                            .appendTo('body')
+                            .css('display', 'block');
+                        setTimeout(() => toast.fadeOut(500, () => toast.remove()), 4000);
+                    });
+            }
+        });
+    </script>
+@endauth
 
     {{-- Slot untuk script tambahan dari halaman lain --}}
     @stack('scripts')

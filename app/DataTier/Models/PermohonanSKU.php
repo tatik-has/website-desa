@@ -28,7 +28,7 @@ class PermohonanSKU extends Model
         'status',
         'keterangan_penolakan',
         'path_surat_jadi',
-        'archived_at', // ✅ Tambahkan ini
+        'archived_at', // Tambahkan ini
     ];
 
     // ✅ Tambahkan casting untuk archived_at

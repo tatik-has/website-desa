@@ -75,8 +75,9 @@
                     </div>
                     <div class="form-group">
                         <label for="nomor-telp">Nomor Telp/Whatsapp Aktif</label>
-                        <input type="number" id="nomor-telp" name="nomor_telp" placeholder="Contoh: 081234567890"
-                            value="{{ old('nomor_telp') }}" required>
+                        <input type="text" id="nomor-telp" name="nomor_telp" placeholder="Contoh: 081234567890 atau +6281234567890"
+                            value="{{ old('nomor_telp') }}" required maxlength="14">
+                        <small style="color: #666; font-size: 12px;">Format: 08xxxxxxxxxx (11-13 digit) atau +62xxxxxxxxxx</small>
                         @error('nomor_telp') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                 </div>
@@ -116,13 +117,13 @@
                 </div>
 
                 <h3 class="form-section-title">Unggah Dokumen Persyaratan</h3>
-                <p class="upload-note">Mohon unggah dokumen dalam format .JPG, .JPEG, atau .PNG. Ukuran maksimal 2MB.</p>
+                <p class="upload-note">Mohon unggah dokumen dalam format .JPG, .JPEG, .PNG, .PDF, .DOC, atau .DOCX. Ukuran maksimal 2MB per file.</p>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="ktp">Scan/Foto KTP</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="ktp" name="ktp" class="file-input" accept=".jpg,.jpeg,.png" required>
+                            <input type="file" id="ktp" name="ktp" class="file-input" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" required>
                             <button type="button" class="file-choose-btn">Pilih File</button>
                             <span class="file-name-display">Belum ada file</span>
                         </div>
@@ -131,7 +132,7 @@
                     <div class="form-group">
                         <label for="kk">Scan/Foto Kartu Keluarga (KK)</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="kk" name="kk" class="file-input" accept=".jpg,.jpeg,.png" required>
+                            <input type="file" id="kk" name="kk" class="file-input" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" required>
                             <button type="button" class="file-choose-btn">Pilih File</button>
                             <span class="file-name-display">Belum ada file</span>
                         </div>
@@ -144,7 +145,7 @@
                         <label for="surat-pengantar">Surat Pengantar RT/RW</label>
                         <div class="file-upload-wrapper">
                             <input type="file" id="surat-pengantar" name="surat_pengantar_rt_rw" class="file-input"
-                                accept=".jpg,.jpeg,.png" required>
+                                accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" required>
                             <button type="button" class="file-choose-btn">Pilih File</button>
                             <span class="file-name-display">Belum ada file</span>
                         </div>
@@ -153,7 +154,7 @@
                     <div class="form-group">
                         <label for="foto-rumah">Foto Rumah Tampak Depan</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="foto-rumah" name="foto_rumah" class="file-input" accept=".jpg,.jpeg,.png"
+                            <input type="file" id="foto-rumah" name="foto_rumah" class="file-input" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
                                 required>
                             <button type="button" class="file-choose-btn">Pilih File</button>
                             <span class="file-name-display">Belum ada file</span>

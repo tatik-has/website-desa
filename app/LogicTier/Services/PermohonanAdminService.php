@@ -65,13 +65,13 @@ class PermohonanAdminService
             ->latest()
             ->get()
             ->groupBy('status');
-            
+
         $ktmGrouped = PermohonanKTM::with('user')
             ->whereNull('archived_at') // ✅ Filter hanya yang belum diarsipkan
             ->latest()
             ->get()
             ->groupBy('status');
-            
+
         $skuGrouped = PermohonanSKU::with('user')
             ->whereNull('archived_at') // ✅ Filter hanya yang belum diarsipkan
             ->latest()
@@ -140,6 +140,9 @@ class PermohonanAdminService
     /**
      * Logika dari AdminController@showDetailSurat (dan variannya)
      */
+    /**
+     * Logika dari AdminController@showDetailSurat (dan variannya)
+     */
     public function getPermohonanDetail(string $jenis, int $id): ?array
     {
         $modelClass = $this->getModelClass($jenis);
@@ -149,12 +152,13 @@ class PermohonanAdminService
 
         $permohonan = $modelClass::with('user')->findOrFail($id);
 
+        // ✅ PERBAIKAN: Konsistenkan nama jenis_surat
         $jenisSurat = match ($jenis) {
             'domisili' => 'Keterangan Domisili',
             'ktm' => 'Keterangan Tidak Mampu',
-            'sku' => 'Keterangan Usaha (SKU)',
+            'sku' => 'Keterangan Usaha',  // ✅ TANPA "(SKU)"
         };
-        
+
         $title = match ($jenis) {
             'domisili' => 'Keterangan Domisili',
             'ktm' => 'Keterangan Tidak Mampu (SKTM)',
@@ -163,8 +167,8 @@ class PermohonanAdminService
 
         return [
             'permohonan' => $permohonan,
-            'jenis_surat' => $jenisSurat,
-            'title' => $title // Kita sertakan title untuk varian method
+            'jenis_surat' => $jenisSurat,  // ✅ Ini yang dipakai di view
+            'title' => $title
         ];
     }
 
@@ -275,12 +279,12 @@ class PermohonanAdminService
             ->whereNotNull('archived_at')
             ->latest('archived_at')
             ->get();
-            
+
         $ktm = PermohonanKTM::with('user')
             ->whereNotNull('archived_at')
             ->latest('archived_at')
             ->get();
-            
+
         $sku = PermohonanSKU::with('user')
             ->whereNotNull('archived_at')
             ->latest('archived_at')

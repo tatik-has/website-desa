@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label for="nomor_telp">Nomor Telp/Whatsapp Aktif</label>
-                    <input type="number" id="nomor_telp" name="nomor_telp" placeholder="Contoh: 081234567890" required>
+                    <input type="text" id="nomor_telp" name="nomor_telp" placeholder="Contoh: 08123456789 atau +628123456789" required>
                 </div>
 
                 {{-- Bagian Data Usaha (sudah benar) --}}
@@ -68,19 +68,36 @@
                 </div>
                 <div class="form-group">
                     <label for="lama_usaha">Lama Usaha Berdiri</label>
-                    <input type="text" id="lama_usaha" name="lama_usaha" placeholder="Contoh: 3 Tahun, Sejak 2022" required>
+                    <div class="select-wrapper">
+                        <select id="lama_usaha" name="lama_usaha" required>
+                            <option value="">-- Pilih Lama Usaha --</option>
+                            <option value="Kurang dari 6 bulan">Kurang dari 6 bulan</option>
+                            <option value="6 bulan">6 bulan</option>
+                            <option value="1 tahun">1 tahun</option>
+                            <option value="2 tahun">2 tahun</option>
+                            <option value="3 tahun">3 tahun</option>
+                            <option value="4 tahun">4 tahun</option>
+                            <option value="5 tahun">5 tahun</option>
+                            <option value="6 tahun">6 tahun</option>
+                            <option value="7 tahun">7 tahun</option>
+                            <option value="8 tahun">8 tahun</option>
+                            <option value="9 tahun">9 tahun</option>
+                            <option value="10 tahun">10 tahun</option>
+                            <option value="Lebih dari 10 tahun">Lebih dari 10 tahun</option>
+                        </select>
+                    </div>
                 </div>
 
                 {{-- Bagian Dokumen (sudah benar) --}}
                 <h3 class="form-section-title">Dokumen Pendukung</h3>
-                <small style="color: #666; display: block; margin-top: 5px;">
-                            Gunakan Foto
-                        </small>
+                <small style="color: #666; display: block; margin-top: 5px; margin-bottom: 15px;">
+                    Format yang diterima: Foto (JPG/PNG), PDF, atau Word (DOC/DOCX)
+                </small>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="ktp">Scan/Foto KTP</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="ktp" name="ktp" class="file-input" required>
+                            <input type="file" id="ktp" name="ktp" class="file-input" accept="image/jpeg,image/jpg,image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
                             <button type="button" class="file-choose-btn">Choose File</button>
                             <span class="file-name-display">No File Chosen</span>
                         </div>
@@ -88,7 +105,7 @@
                     <div class="form-group">
                         <label for="kk">Scan/Foto KK</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="kk" name="kk" class="file-input" required>
+                            <input type="file" id="kk" name="kk" class="file-input" accept="image/jpeg,image/jpg,image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
                             <button type="button" class="file-choose-btn">Choose File</button>
                             <span class="file-name-display">No File Chosen</span>
                         </div>
@@ -98,7 +115,7 @@
                     <div class="form-group">
                         <label for="surat_pengantar">Surat Pengantar RT/RW</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="surat_pengantar" name="surat_pengantar" class="file-input" required>
+                            <input type="file" id="surat_pengantar" name="surat_pengantar" class="file-input" accept="image/jpeg,image/jpg,image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
                             <button type="button" class="file-choose-btn">Choose File</button>
                             <span class="file-name-display">No File Chosen</span>
                         </div>
@@ -106,7 +123,7 @@
                     <div class="form-group">
                         <label for="foto_usaha">Foto Tempat Usaha (Opsional)</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="foto_usaha" name="foto_usaha" class="file-input">
+                            <input type="file" id="foto_usaha" name="foto_usaha" class="file-input" accept="image/jpeg,image/jpg,image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                             <button type="button" class="file-choose-btn">Choose File</button>
                             <span class="file-name-display">No File Chosen</span>
                         </div>

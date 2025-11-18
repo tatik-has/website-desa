@@ -3,13 +3,13 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue; // 1. TAMBAHKAN INI
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model; 
-use Illuminate\Notifications\Messages\BroadcastMessage; // 2. TAMBAHKAN INI
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class PengajuanMasukNotification extends Notification implements ShouldQueue // 3. TAMBAHKAN ShouldQueue
+class PengajuanMasukNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -35,7 +35,6 @@ class PengajuanMasukNotification extends Notification implements ShouldQueue // 
      */
     public function via(object $notifiable): array
     {
-        // 4. TAMBAHKAN 'broadcast'
         return ['database', 'broadcast']; 
     }
 
@@ -53,7 +52,6 @@ class PengajuanMasukNotification extends Notification implements ShouldQueue // 
         ];
     }
 
-    // 5. TAMBAHKAN FUNGSI INI UNTUK PUSHER (REAL-TIME)
     /**
      * Get the broadcastable representation of the notification.
      */
@@ -72,12 +70,22 @@ class PengajuanMasukNotification extends Notification implements ShouldQueue // 
      */
     private function getPermohonanTypeInfo(): array
     {
-        // Pastikan path model ini sudah benar
-        return match(get_class($this->permohonan)) {
-            \App\DataTier\Models\PermohonanDomisili::class => ['domisili', 'Keterangan Domisili'],
-            \App\DataTier\Models\PermohonanKTM::class      => ['ktm', 'SKTM'], // Saya ganti dari Ktm ke KTM
-            \App\DataTier\Models\PermohonanSKU::class      => ['sku', 'Keterangan Usaha (SKU)'],
-            default => ['unknown', 'Surat Tidak Dikenal']
-        };
+        $modelClass = get_class($this->permohonan);
+        $modelBaseName = class_basename($modelClass); // Ambil nama class tanpa namespace
+        
+        // Cek dengan case-insensitive untuk menghindari masalah huruf besar/kecil
+        $modelLower = strtolower($modelBaseName);
+        
+        if (str_contains($modelLower, 'domisili')) {
+            return ['domisili', 'Keterangan Domisili'];
+        } elseif (str_contains($modelLower, 'ktm')) {
+            return ['ktm', 'Surat Keterangan Tidak Mampu (SKTM)'];
+        } elseif (str_contains($modelLower, 'sku')) {
+            return ['sku', 'Keterangan Usaha (SKU)'];
+        } else {
+            // Log untuk debugging jika masih ada yang tidak dikenali
+            \Log::warning('Model tidak dikenali: ' . $modelClass);
+            return ['unknown', 'Surat Tidak Dikenal'];
+        }
     }
 }
