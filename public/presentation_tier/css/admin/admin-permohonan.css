@@ -28,7 +28,7 @@
     border-radius: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     margin-bottom: 25px;
-    border-left: 4px solid #0891b2;
+    border-left: 4px solid #1e3a8a;
 }
 
 .page-header h1 {
@@ -75,13 +75,13 @@
 
 .tab-btn:hover {
     background: #f1f5f9;
-    color: #0891b2;
+    color: #1e3a8a;
     transform: none;
     box-shadow: none;
 }
 
 .tab-btn.active {
-    background: #0891b2;
+    background: #1e3a8a;
     color: white;
     box-shadow: 0 2px 8px rgba(8, 145, 178, 0.25);
 }
@@ -163,7 +163,7 @@
 }
 
 .table-header {
-    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+    background: linear-gradient(135deg, #1e3a8a 0%, #2b4897 100%);
     padding: 20px 25px;
     position: relative;
 }
@@ -231,7 +231,7 @@ tr:hover {
 
 /* Nama Pemohon Styling */
 td:nth-child(2) a {
-    color: #0891b2;
+    color: #1e3a8a;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -623,4 +623,30 @@ tr td[colspan]::before {
         width: 95%;
         margin: 5% auto;
     }
+}
+/* ===== TOMBOL ARSIP ===== */
+.btn-arsip {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.btn-arsip:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.btn-arsip:active {
+    transform: translateY(0);
 }

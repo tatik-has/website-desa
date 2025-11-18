@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengajuan/sku', [SKUController::class, 'create'])->name('sku.create');
     Route::post('/pengajuan/sku', [SKUController::class, 'store'])->name('sku.store');
 
+
     // ---------------- PROFILE USER ----------------
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
@@ -70,7 +71,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifikasi', [NotificationController::class, 'destroyAll'])->name('notifications.deleteAll');
     Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])->name('notifications.delete');
 
-    Route::get('/faq', function () {return view('presentation_tier.masyarakat.faq.faq');})->name('faq');
+    Route::get('/faq', function () {
+        return view('presentation_tier.masyarakat.faq.faq'); })->name('faq');
 });
 
 // ============================================================
@@ -101,13 +103,18 @@ Route::middleware('auth:admin')->group(function () {
     // === SEMUA PERMOHONAN (gabungan) ===
     Route::get('/admin/semua-permohonan', [AdminController::class, 'semuaPermohonan'])->name('admin.semuaPermohonan');
 
+    // === ARSIP ===
+    Route::get('/admin/arsip', [AdminController::class, 'showArsip'])->name('admin.arsip');
+    Route::post('/admin/surat/{type}/{id}/archive', [AdminController::class, 'archivePermohonan'])->name('admin.surat.archive');
+    Route::post('/admin/run-auto-archive', [AdminController::class, 'runAutoArchive'])->name('admin.runAutoArchive');
+
     // === NOTIFIKASI ADMIN ===
     Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])->name('admin.notifications.unread');
     Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
 
     // === Laporan ===
     Route::get('/admin/laporan', [\App\LogicTier\Controllers\Admin\AdminController::class, 'showLaporan'])->name('admin.laporan');
-    
+
     // === MANAJEMEN ADMIN (hanya untuk superadmin) ===
     Route::prefix('admin/manajemen-admin')->name('admin.manajemen-admin.')->group(function () {
         Route::get('/', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'index'])->name('index');
@@ -116,10 +123,10 @@ Route::middleware('auth:admin')->group(function () {
         Route::get('/{id}/edit', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'edit'])->name('edit');
         Route::put('/{id}', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'update'])->name('update');
         Route::delete('/{id}', [\App\LogicTier\Controllers\Admin\AdminManagementController::class, 'destroy'])->name('destroy');
-    
+
     });
 
     Route::get('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'show'])->name('admin.profile.show'); // <-- Ini yang dicari
-         
+
     Route::post('/admin/profile', [App\LogicTier\Controllers\Admin\AdminProfileController::class, 'update'])->name('admin.profile.update');
 });

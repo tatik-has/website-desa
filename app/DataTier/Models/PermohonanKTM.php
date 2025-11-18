@@ -9,16 +9,10 @@ class PermohonanKtm extends Model
 {
     use HasFactory;
 
-    /**
-     * Nama tabel yang terhubung.
-     */
     protected $table = 'permohonan_ktm';
 
-    /**
-     * Atribut yang dapat diisi secara massal.
-     */
     protected $fillable = [
-        'user_id', // Ditambahkan agar bisa diisi
+        'user_id',
         'nik',
         'nama',
         'jenis_kelamin',
@@ -34,12 +28,14 @@ class PermohonanKtm extends Model
         'status',
         'keterangan_penolakan',
         'path_surat_jadi',
+        'archived_at', // ✅ Tambahkan ini
     ];
-    
 
-    /**
-     * Mendefinisikan relasi ke model User.
-     */
+    // ✅ Tambahkan casting untuk archived_at
+    protected $casts = [
+        'archived_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(\App\DataTier\Models\User::class, 'user_id');

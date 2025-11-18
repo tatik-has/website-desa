@@ -73,6 +73,9 @@
 
                 {{-- Bagian Dokumen (sudah benar) --}}
                 <h3 class="form-section-title">Dokumen Pendukung</h3>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                            Gunakan Foto
+                        </small>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="ktp">Scan/Foto KTP</label>

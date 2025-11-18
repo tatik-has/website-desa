@@ -17,7 +17,7 @@ class AuthController extends BaseController
     // ==========================
     public function showRegister()
     {
-        return view('presentation_tier.auth.register');
+        return view('presentation_tier.masyarakat.auth.register');
     }
 
     public function register(Request $request)

@@ -4,9 +4,6 @@ namespace App\LogicTier\Controllers\Admin;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
-// HAPUS SEMUA 'USE' MODEL KARNA SUDAH DI SERVICE
-// HAPUS 'USE' NOTIFICATION KARNA SUDAH DI SERVICE
-// HAPUS 'USE' STORAGE KARNA SUDAH DI SERVICE
 use Illuminate\Support\Carbon; // Ini tetap perlu
 use Illuminate\Support\Facades\Response; // Ini tetap perlu
 
@@ -166,5 +163,47 @@ class AdminController extends BaseController
         return view('presentation_tier.admin.permohonan.laporan', compact(
             'allPermohonan', 'tanggalMulai', 'tanggalAkhir', 'statusFilter'
         ));
+    }
+
+    // ============================================================
+    // ✅ FITUR ARSIP - TAMBAHAN BARU
+    // ============================================================
+
+    /**
+     * Arsipkan permohonan secara manual
+     */
+    public function archivePermohonan(string $type, int $id)
+    {
+        // Suruh service mengarsipkan
+        $result = $this->permohonanService->archivePermohonan($type, $id);
+
+        if ($result) {
+            return redirect()->back()->with('success', 'Permohonan berhasil diarsipkan!');
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengarsipkan permohonan.');
+    }
+
+    /**
+     * Jalankan arsip otomatis (bisa dipanggil manual atau via scheduler)
+     */
+    public function runAutoArchive()
+    {
+        // Suruh service menjalankan arsip otomatis
+        $count = $this->permohonanService->autoArchiveOldPermohonan();
+        
+        return redirect()->back()->with('success', "Berhasil mengarsipkan {$count} permohonan yang sudah lebih dari 15 hari!");
+    }
+
+    /**
+     * Tampilkan halaman arsip
+     */
+    public function showArsip()
+    {
+        // Suruh service mengambil data arsip
+        $archivedData = $this->permohonanService->getArchivedPermohonan();
+        
+        // Kirim ke view
+        return view('presentation_tier.admin.permohonan.arsip', $archivedData);
     }
 }

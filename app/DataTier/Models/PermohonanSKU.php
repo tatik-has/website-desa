@@ -9,9 +9,6 @@ class PermohonanSKU extends Model
 {
     use HasFactory;
 
-    /**
-     * Nama tabel yang terhubung.
-     */
     protected $table = 'permohonan_sku';
 
     protected $fillable = [
@@ -31,8 +28,13 @@ class PermohonanSKU extends Model
         'status',
         'keterangan_penolakan',
         'path_surat_jadi',
+        'archived_at', // ✅ Tambahkan ini
     ];
-    
+
+    // ✅ Tambahkan casting untuk archived_at
+    protected $casts = [
+        'archived_at' => 'datetime',
+    ];
 
     public function user()
     {

@@ -8,6 +8,24 @@
 
     <form method="POST" action="{{ url('/register') }}">
         @csrf
+        {{-- Untuk error umum (spt gagal kirim email) --}}
+        @if(session('error'))
+            <div style="color: red; background: #ffe0e0; border: 1px solid red; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- Untuk error validasi (NIK/Email sudah ada, dll) --}}
+        @if ($errors->any())
+            <div style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <strong>Oops! Terjadi kesalahan:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         {{-- Nama Lengkap --}}
         <div>

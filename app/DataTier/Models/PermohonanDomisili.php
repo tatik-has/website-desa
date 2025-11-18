@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTier\Models; // Sesuaikan namespace jika perlu
+namespace App\DataTier\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +26,12 @@ class PermohonanDomisili extends Model
         'status',
         'keterangan_penolakan',
         'path_surat_jadi',
+        'archived_at', // Tambahkan ini
+    ];
+
+    // Tambahkan casting untuk archived_at
+    protected $casts = [
+        'archived_at' => 'datetime',
     ];
     
     public function user()

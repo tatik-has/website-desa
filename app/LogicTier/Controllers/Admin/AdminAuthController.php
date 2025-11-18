@@ -22,7 +22,7 @@ class AdminAuthController extends BaseController
         // =======================================================
         // PERBAIKAN: Mengarahkan ke view login ADMIN
         // =======================================================
-        return view('presentation_tier.admin.auth.login'); 
+        return view('presentation_tier.masyarakat.auth.login'); 
     }
     
     /**

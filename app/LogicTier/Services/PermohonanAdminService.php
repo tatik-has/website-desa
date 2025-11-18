@@ -56,12 +56,27 @@ class PermohonanAdminService
 
     /**
      * Logika dari AdminController@showPermohonanSurat
+     * HANYA menampilkan permohonan yang BELUM diarsipkan
      */
     public function getGroupedPermohonan(): array
     {
-        $domisiliGrouped = PermohonanDomisili::with('user')->latest()->get()->groupBy('status');
-        $ktmGrouped = PermohonanKTM::with('user')->latest()->get()->groupBy('status');
-        $skuGrouped = PermohonanSKU::with('user')->latest()->get()->groupBy('status');
+        $domisiliGrouped = PermohonanDomisili::with('user')
+            ->whereNull('archived_at') // ✅ Filter hanya yang belum diarsipkan
+            ->latest()
+            ->get()
+            ->groupBy('status');
+            
+        $ktmGrouped = PermohonanKTM::with('user')
+            ->whereNull('archived_at') // ✅ Filter hanya yang belum diarsipkan
+            ->latest()
+            ->get()
+            ->groupBy('status');
+            
+        $skuGrouped = PermohonanSKU::with('user')
+            ->whereNull('archived_at') // ✅ Filter hanya yang belum diarsipkan
+            ->latest()
+            ->get()
+            ->groupBy('status');
 
         return compact('domisiliGrouped', 'ktmGrouped', 'skuGrouped');
     }
@@ -198,5 +213,79 @@ class PermohonanAdminService
             ->merge($ktm)
             ->merge($sku)
             ->sortByDesc('created_at');
+    }
+
+    // ============================================================
+    // ✅ METHOD ARSIP - TAMBAHAN BARU
+    // ============================================================
+
+    /**
+     * Arsipkan permohonan secara manual
+     */
+    public function archivePermohonan(string $type, int $id): bool
+    {
+        $modelClass = $this->getModelClass($type);
+        if (!$modelClass) {
+            return false;
+        }
+
+        $permohonan = $modelClass::findOrFail($id);
+        $permohonan->archived_at = now();
+        $permohonan->save();
+
+        return true;
+    }
+
+    /**
+     * Arsipkan otomatis permohonan yang sudah Selesai/Ditolak > 15 hari
+     * Method ini dipanggil via Scheduler atau manual
+     */
+    public function autoArchiveOldPermohonan(): int
+    {
+        $threshold = now()->subDays(15);
+        $count = 0;
+
+        // Arsipkan Domisili
+        $count += PermohonanDomisili::whereIn('status', ['Selesai', 'Ditolak'])
+            ->whereNull('archived_at')
+            ->where('updated_at', '<=', $threshold)
+            ->update(['archived_at' => now()]);
+
+        // Arsipkan KTM
+        $count += PermohonanKTM::whereIn('status', ['Selesai', 'Ditolak'])
+            ->whereNull('archived_at')
+            ->where('updated_at', '<=', $threshold)
+            ->update(['archived_at' => now()]);
+
+        // Arsipkan SKU
+        $count += PermohonanSKU::whereIn('status', ['Selesai', 'Ditolak'])
+            ->whereNull('archived_at')
+            ->where('updated_at', '<=', $threshold)
+            ->update(['archived_at' => now()]);
+
+        return $count;
+    }
+
+    /**
+     * Ambil data permohonan yang sudah diarsipkan
+     */
+    public function getArchivedPermohonan(): array
+    {
+        $domisili = PermohonanDomisili::with('user')
+            ->whereNotNull('archived_at')
+            ->latest('archived_at')
+            ->get();
+            
+        $ktm = PermohonanKTM::with('user')
+            ->whereNotNull('archived_at')
+            ->latest('archived_at')
+            ->get();
+            
+        $sku = PermohonanSKU::with('user')
+            ->whereNotNull('archived_at')
+            ->latest('archived_at')
+            ->get();
+
+        return compact('domisili', 'ktm', 'sku');
     }
 }

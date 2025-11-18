@@ -41,6 +41,12 @@
                     <span>Laporan</span>
                 </a>
 
+                {{-- ✅ MENU ARSIP BARU --}}
+                <a href="{{ route('admin.arsip') }}" class="{{ request()->is('admin/arsip*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-archive"></i>
+                    <span>Arsip</span>
+                </a>
+
                 {{-- Menu Manajemen Admin hanya untuk superadmin --}}
                 @if(Auth::guard('admin')->user()->role == 'superadmin')
                     <a href="{{ url('/admin/manajemen-admin') }}"
