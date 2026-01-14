@@ -7,29 +7,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 
-
 use App\DataTier\Models\Surat;
-// Ini semua masih perlu untuk method 'ajukan'
 use App\DataTier\Models\Admin; 
 use App\LogicTier\Notifications\SuratBaruNotification; 
 use Illuminate\Support\Facades\Notification; 
 use Illuminate\Support\Facades\Log; 
-use App\LogicTier\Services\PermohonanMasyarakatService;
 
+// ✅ PERBAIKAN: Gunakan salah satu service hasil pemisahan (misal DomisiliService) 
+// atau arahkan ke service yang menangani pengambilan data history.
+use App\LogicTier\Services\SuratDomisiliService;
 
 class SuratController extends BaseController
 {
-    // 2. Siapkan variabel service
-    protected $permohonanService;
+    protected $suratService;
 
-    // 3. Buat __construct
-    public function __construct(PermohonanMasyarakatService $service)
+    // ✅ PERBAIKAN: Gunakan service yang tersedia
+    public function __construct(SuratDomisiliService $service)
     {
-        $this->permohonanService = $service;
+        $this->suratService = $service;
     }
 
     /**
-     * TIDAK BERUBAH. Ini method sederhana, tidak perlu service.
+     * Menampilkan dashboard masyarakat
      */
     public function index()
     {
@@ -37,14 +36,13 @@ class SuratController extends BaseController
         return view('presentation_tier.dashboard', compact('surats'));
     }
 
-   
     public function showPengajuanForm()
     {
         return view('presentation_tier.masyarakat.permohonan.pengajuan');
     }
 
     /**
-     * TIDAK BERUBAH. Logika ini spesifik & sederhana.
+     * Proses pengajuan surat umum
      */
     public function ajukan($jenis): RedirectResponse
     {
@@ -69,18 +67,17 @@ class SuratController extends BaseController
         return redirect('/dashboard')->with('success', 'Surat berhasil diajukan!');
     }
 
-
     /**
-     * Method history sekarang RAMPING
+     * Method history menggunakan logic dari Service
      */
     public function history()
     {
         $userId = Auth::id();
 
-        // 4. Suruh service bekerja
-        $allPermohonan = $this->permohonanService->getHistory($userId);
+        // ✅ PERBAIKAN: Pastikan di SuratDomisiliService atau Service lainnya 
+        // Anda sudah memindahkan method getHistory() dari PermohonanMasyarakatService yang lama.
+        $allPermohonan = $this->suratService->getHistory($userId);
 
-        // 5. Kirim ke view
         return view('presentation_tier.history', compact('allPermohonan'));
     }
 }

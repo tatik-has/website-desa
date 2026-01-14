@@ -4,7 +4,7 @@ namespace App\LogicTier\Controllers\Shared;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Impor Auth
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends BaseController
 {
@@ -12,51 +12,67 @@ class NotificationController extends BaseController
     // METODE UNTUK USER (MASYARAKAT)
     // ============================================================
 
+    /**
+     * Menampilkan daftar notifikasi masyarakat
+     */
     public function index()
     {
-        // Menggunakan Auth::user() untuk mengambil user yang sedang login
         $user = Auth::user(); 
         
         if (!$user) {
-            // Jika entah bagaimana user tidak login, kembalikan ke halaman login
             return redirect()->route('login');
         }
 
-        // Ambil semua notifikasi milik user tersebut
+        // Ambil semua notifikasi
         $notifications = $user->notifications; 
         
-        // Tandai notifikasi yang belum dibaca sebagai "sudah dibaca"
-        // saat halaman dibuka
+        // Otomatis tandai sebagai sudah dibaca saat membuka halaman
         $user->unreadNotifications->markAsRead();
 
-        // Tampilkan view blade notifikasi dan kirim data notifikasinya
         return view('presentation_tier.masyarakat.notifications.index', compact('notifications'));
     }
+
+    /**
+     * Menghapus SATU notifikasi tertentu
+     * Perbaikan untuk error: Route [notifications.delete] not defined
+     */
+    public function destroy($id)
+    {
+        $user = Auth::user();
+        
+        // Cari notifikasi berdasarkan ID yang hanya dimiliki oleh user tersebut
+        $notification = $user->notifications()->where('id', $id)->first();
+
+        if ($notification) {
+            $notification->delete();
+            return redirect()->back()->with('success', 'Notifikasi berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Notifikasi tidak ditemukan.');
+    }
+
+    /**
+     * Menghapus SEMUA notifikasi milik user
+     */
     public function destroyAll()
     {
-        // Dapatkan user yang sedang login
         $user = Auth::user();
 
-        // Jika tidak ada user (seharusnya tidak mungkin karena middleware 'auth')
         if (!$user) {
             return redirect()->route('login');
         }
 
-        // Hapus semua notifikasi milik user ini
         $user->notifications()->delete();
 
-        // Kembalikan ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Semua notifikasi berhasil dihapus.');
     }
 
     
     // ============================================================
-    // METODE UNTUK ADMIN
+    // METODE UNTUK ADMIN (LOGIC TIER - API/SHARED)
     // ============================================================
-
     public function getUnread()
     {
-        // PENTING: Menggunakan Auth::guard('admin') untuk mengambil admin
         $admin = Auth::guard('admin')->user();
         
         if (!$admin) {
@@ -71,11 +87,9 @@ class NotificationController extends BaseController
 
     /**
      * [API] Tandai semua notifikasi admin sebagai sudah dibaca.
-     * Dipanggil oleh rute: POST /admin/notifications/mark-as-read
      */
     public function markAsRead()
     {
-        // PENTING: Menggunakan Auth::guard('admin') untuk mengambil admin
         $admin = Auth::guard('admin')->user();
 
         if (!$admin) {

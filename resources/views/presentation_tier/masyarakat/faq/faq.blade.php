@@ -71,7 +71,7 @@
                 <i class="fa fa-chevron-down"></i>
             </button>
             <div class="faq-answer">
-                <p>Jika pengajuan ditolak, staf desa akan memberikan catatan alasan penolakan (misalnya: 'Data tidak lengkap' atau 'Scan KK tidak jelas'). Silakan perbaiki pengajuan Anda sesuai catatan tersebut dan kirimkan kembali.</p>
+                <p>Jika pengajuan ditolak, staf desa akan memberikan catatan alasan penolakan (misalnya: 'Data tidak lengkap' atau 'Scan KK tidak jelas'). Silakan <strong>ajukan kembali surat </strong> yang ingin di buat, kemudian kirimkan kembali untuk diproses..</p>
             </div>
         </div>
 

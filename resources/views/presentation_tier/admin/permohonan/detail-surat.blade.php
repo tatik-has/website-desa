@@ -79,10 +79,10 @@
                         <label>Status Permohonan</label>
                         <p>
                             <span class="status-badge 
-                                    @if($permohonan->status == 'Diproses') status-diproses
-                                    @elseif($permohonan->status == 'Selesai') status-selesai
-                                    @elseif($permohonan->status == 'Ditolak') status-ditolak
-                                    @else status-default @endif">
+                                                @if($permohonan->status == 'Diproses') status-diproses
+                                                @elseif($permohonan->status == 'Selesai') status-selesai
+                                                @elseif($permohonan->status == 'Ditolak') status-ditolak
+                                                @else status-default @endif">
                                 <span class="status-dot"></span>
                                 {{ $permohonan->status }}
                             </span>
@@ -99,63 +99,94 @@
                 </div>
 
                 {{-- ============================================ --}}
-                {{-- SECTION: DATA SPESIFIK SKTM --}}
+                {{-- SECTION: DATA SPESIFIK SKTM - DIPERBAIKI --}}
                 {{-- ============================================ --}}
-                @if($jenis_surat === 'SKTM')
+                @if($jenis_surat === 'Keterangan Tidak Mampu')
                     <hr class="divider-modern">
                     <h4 class="section-title"> Data Ekonomi & Keperluan</h4>
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <div class="info-item-modern">
-                                <label>Keperluan Pembuatan SKTM</label>
-                                <p>{{ $permohonan->keperluan ?? '-' }}</p>
-                            </div>
+                    <div class="info-grid">
+                        {{-- TAMBAHAN: Alamat Lengkap --}}
+                        <div class="info-item-modern">
+                            <label>Alamat Lengkap (sesuai KK)</label>
+                            <p>{{ $permohonan->alamat_lengkap ?? '-' }}</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-item-modern">
-                                <label>Penghasilan Rata-rata / Bulan</label>
-                                <p>Rp {{ number_format($permohonan->penghasilan ?? 0, 0, ',', '.') }}</p>
-                            </div>
+
+                        {{-- Keperluan --}}
+                        <div class="info-item-modern">
+                            <label>Keperluan Pembuatan SKTM</label>
+                            <p>{{ $permohonan->keperluan ?? '-' }}</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-item-modern">
-                                <label>Jumlah Anggota Keluarga yang Ditanggung</label>
-                                <p>{{ $permohonan->jumlah_tanggungan ?? '-' }} orang</p>
-                            </div>
+
+                        {{-- Penghasilan --}}
+                        <div class="info-item-modern">
+                            <label>Penghasilan Rata-rata / Bulan</label>
+                            <p>Rp {{ number_format($permohonan->penghasilan ?? 0, 0, ',', '.') }}</p>
+                        </div>
+
+                        {{-- Jumlah Tanggungan --}}
+                        <div class="info-item-modern">
+                            <label>Jumlah Anggota Keluarga yang Ditanggung</label>
+                            <p>{{ $permohonan->jumlah_tanggungan ?? '-' }} orang</p>
                         </div>
                     </div>
                 @endif
 
                 {{-- ============================================ --}}
-                {{-- SECTION: DATA SPESIFIK SKU --}}
+                {{-- SECTION: DATA SPESIFIK DOMISILI - DITAMBAHKAN --}}
                 {{-- ============================================ --}}
-                @if($jenis_surat === 'Keterangan Usaha') {{-- ✅ PERBAIKAN: Hapus "(SKU)" --}}
+                @if($jenis_surat === 'Keterangan Domisili')
+                    <hr class="divider-modern">
+                    <h4 class="section-title"> Data Domisili</h4>
+                    <div class="info-grid">
+                        {{-- Alamat Domisili --}}
+                        <div class="info-item-modern">
+                            <label>Alamat Domisili</label>
+                            <p>{{ $permohonan->alamat_domisili ?? '-' }}</p>
+                        </div>
+
+                        {{-- Alamat KTP --}}
+                        <div class="info-item-modern">
+                            <label>Alamat Sesuai KTP</label>
+                            <p>{{ $permohonan->alamat_ktp ?? '-' }}</p>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- ============================================ --}}
+                {{-- SECTION: DATA SPESIFIK SKU - DIPERBAIKI --}}
+                {{-- ============================================ --}}
+                @if($jenis_surat === 'Keterangan Usaha')
                     <hr class="divider-modern">
                     <h4 class="section-title"> Data Usaha</h4>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="info-item-modern">
-                                <label>Nama Usaha</label>
-                                <p>{{ $permohonan->nama_usaha ?? '-' }}</p>
-                            </div>
+                    <div class="info-grid">
+                        {{-- ✅ TAMBAHAN: Alamat KTP --}}
+                        <div class="info-item-modern">
+                            <label>Alamat Sesuai KTP</label>
+                            <p>{{ $permohonan->alamat_ktp ?? '-' }}</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-item-modern">
-                                <label>Jenis Usaha</label>
-                                <p>{{ $permohonan->jenis_usaha ?? '-' }}</p>
-                            </div>
+
+                        {{-- Nama Usaha --}}
+                        <div class="info-item-modern">
+                            <label>Nama Usaha</label>
+                            <p>{{ $permohonan->nama_usaha ?? '-' }}</p>
                         </div>
-                        <div class="col-12">
-                            <div class="info-item-modern">
-                                <label>Alamat Lengkap Tempat Usaha</label>
-                                <p>{{ $permohonan->alamat_usaha ?? '-' }}</p>
-                            </div>
+
+                        {{-- Jenis Usaha --}}
+                        <div class="info-item-modern">
+                            <label>Jenis Usaha</label>
+                            <p>{{ $permohonan->jenis_usaha ?? '-' }}</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-item-modern">
-                                <label>Lama Usaha Berdiri</label>
-                                <p>{{ $permohonan->lama_usaha ?? '-' }}</p>
-                            </div>
+
+                        {{-- Alamat Usaha --}}
+                        <div class="info-item-modern">
+                            <label>Alamat Lengkap Tempat Usaha</label>
+                            <p>{{ $permohonan->alamat_usaha ?? '-' }}</p>
+                        </div>
+
+                        {{-- Lama Usaha --}}
+                        <div class="info-item-modern">
+                            <label>Lama Usaha Berdiri</label>
+                            <p>{{ $permohonan->lama_usaha ?? '-' }}</p>
                         </div>
                     </div>
                 @endif

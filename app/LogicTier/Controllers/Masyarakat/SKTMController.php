@@ -3,24 +3,20 @@
 namespace App\LogicTier\Controllers\Masyarakat;
 
 use Illuminate\Http\Request;
-// HAPUS 'USE' STORAGE
 use App\Http\Controllers\Controller as BaseController;
-// HAPUS 'USE' MODEL
-// HAPUS 'USE' EVENT
-use Illuminate\Support\Facades\Auth; // Auth masih perlu
+use Illuminate\Support\Facades\Auth;
 
-// 1. PANGGIL "PEKERJA" (SERVICE) KITA
-use App\LogicTier\Services\PermohonanMasyarakatService;
+// ✅ PERBAIKAN: Gunakan SuratKtmService
+use App\LogicTier\Services\SuratKtmService;
 
 class SKTMController extends BaseController
 {
-    // 2. Siapkan variabel service
-    protected $permohonanService;
+    protected $ktmService;
 
-    // 3. Buat __construct
-    public function __construct(PermohonanMasyarakatService $service)
+    // ✅ PERBAIKAN: Injeksi SuratKtmService
+    public function __construct(SuratKtmService $service)
     {
-        $this->permohonanService = $service;
+        $this->ktmService = $service;
     }
 
     public function create()
@@ -28,16 +24,11 @@ class SKTMController extends BaseController
         return view('presentation_tier.masyarakat.permohonan.ktm');
     }
 
-    /**
-     * Method store sekarang RAMPING
-     */
     public function store(Request $request)
     {
-        // 1. Suruh service bekerja (validasi, upload, save, event)
-        $this->permohonanService->storeKtm($request);
+        // ✅ Panggil method dari service yang benar
+        $this->ktmService->storeKtm($request);
 
-        // 2. Kasih respon (Tugas Mandor)
-        // (Ini pesan sukses dari kode asli SKU/Domisili Anda, saya paskan)
         return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Tidak Mampu berhasil diajukan!');
     }
 }

@@ -4,22 +4,19 @@ namespace App\LogicTier\Controllers\Masyarakat;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as BaseController;
-// HAPUS 'USE' MODEL
-use Illuminate\Support\Facades\Auth; // Auth masih perlu
-// HAPUS 'USE' EVENT
+use Illuminate\Support\Facades\Auth;
 
-// 1. PANGGIL "PEKERJA" (SERVICE) KITA
-use App\LogicTier\Services\PermohonanMasyarakatService;
+// ✅ PERBAIKAN: Gunakan SuratSkuService
+use App\LogicTier\Services\SuratSkuService;
 
 class SKUController extends BaseController
 {
-    // 2. Siapkan variabel service
-    protected $permohonanService;
+    protected $skuService;
 
-    // 3. Buat __construct
-    public function __construct(PermohonanMasyarakatService $service)
+    // ✅ PERBAIKAN: Injeksi SuratSkuService
+    public function __construct(SuratSkuService $service)
     {
-        $this->permohonanService = $service;
+        $this->skuService = $service;
     }
 
     public function create()
@@ -27,18 +24,11 @@ class SKUController extends BaseController
         return view('presentation_tier.masyarakat.permohonan.usaha');
     }
 
-    /**
-     * Method store sekarang RAMPING
-     */
     public function store(Request $request)
     {
-        // 1. Suruh service bekerja (validasi, upload, save, event)
+        // ✅ Panggil method dari service yang benar
+        $this->skuService->storeSku($request);
 
-        // PERBAIKAN: Menggunakan '->' (panah) bukan '-' (hubung)
-        $this->permohonanService->storeSku($request);
-
-        // 2. Kasih respon (Tugas Mandor)
-        // (Ini pesan sukses dari kode asli SKU/Domisili Anda, saya paskan)
         return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Usaha berhasil diajukan!');
     }
 }

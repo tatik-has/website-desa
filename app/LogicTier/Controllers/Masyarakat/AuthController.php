@@ -4,68 +4,38 @@ namespace App\LogicTier\Controllers\Masyarakat;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
-use App\DataTier\Models\User;
-use App\DataTier\Models\Admin;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+use App\LogicTier\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends BaseController
 {
-    // ==========================
-    // 🧩 REGISTER
-    // ==========================
-    public function showRegister()
+    protected $authService;
+
+    // Injeksi AuthService ke dalam Controller
+    public function __construct(AuthService $authService)
     {
-        return view('presentation_tier.masyarakat.auth.register');
+        $this->authService = $authService;
     }
 
-    public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'nik' => 'required|string|size:16|unique:users',
-            'desa' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-
-        $verificationCode = rand(100000, 999999);
-
-        $user = User::create([
-            'name' => $request->name,
-            'nik' => $request->nik,
-            'desa' => $request->desa,
-            'alamat' => $request->alamat,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'verification_code' => $verificationCode,
-            'is_verified' => false,
-        ]);
-
-        try {
-            Mail::raw("Halo, {$user->name}!\n\nKode verifikasi akun Anda adalah: $verificationCode", function ($message) use ($user) {
-                $message->to($user->email)
-                        ->subject('Verifikasi Akun Anda');
-            });
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengirim email verifikasi. Cek konfigurasi mail Anda.');
-        }
-
-        $request->session()->put('email_for_verification', $user->email);
-
-        return redirect()->route('verify.form')->with('success', 'Registrasi berhasil! Cek email Anda untuk kode verifikasi.');
-    }
-
-    // ==========================
-    // LOGIN
-    // ==========================
+    /**
+     * Tampilkan halaman login (Method yang tadinya error/hilang)
+     */
     public function showLogin()
     {
         return view('presentation_tier.masyarakat.auth.login');
     }
 
+    /**
+     * Tampilkan halaman register
+     */
+    public function showRegister()
+    {
+        return view('presentation_tier.masyarakat.auth.register');
+    }
+
+    /**
+     * Proses Login menggunakan Service
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -73,48 +43,67 @@ class AuthController extends BaseController
             'password' => 'required',
         ]);
 
-        // 🔍 Cek apakah login sebagai ADMIN
-        $admin = Admin::where('email', $credentials['email'])->first();
-        if ($admin && Hash::check($credentials['password'], $admin->password)) {
-            Auth::guard('admin')->login($admin);
-            $request->session()->regenerate();
+        // Panggil logika login dari Logic Tier (Service)
+        $result = $this->authService->attemptLogin($credentials);
 
-            // Nama admin diambil dari kolom 'nama' tabel admins
-            session(['user_name' => $admin->nama, 'user_role' => 'admin']);
-
-            return redirect()->intended('/admin/dashboard')->with('success', 'Selamat datang, ' . $admin->nama . '!');
+        if (!$result) {
+            return back()->with('error', 'Email atau password salah.');
         }
 
-        // 🔍 Kalau bukan admin, cek USER biasa
-        $user = User::where('email', $credentials['email'])->first();
-        if ($user && Hash::check($credentials['password'], $user->password)) {
-            if (!$user->is_verified) {
-                $request->session()->put('email_for_verification', $user->email);
-                return redirect()->route('verify.form')->with('error', 'Akun Anda belum terverifikasi. Silakan masukkan kode.');
-            }
+        $user = $result['user'];
 
-            Auth::guard('web')->login($user);
-            $request->session()->regenerate();
-
-            // Nama user diambil dari kolom 'name' tabel users
-            session(['user_name' => $user->name, 'user_role' => 'user']);
-
-            return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
+        // Cek verifikasi jika yang login adalah user masyarakat
+        if ($result['role'] === 'user' && !$user->is_verified) {
+            $request->session()->put('email_for_verification', $user->email);
+            return redirect()->route('verify.form')->with('error', 'Akun Anda belum terverifikasi.');
         }
 
-        return back()->with('error', 'Email atau password salah.');
+        // Login menggunakan Guard yang sesuai (admin atau web)
+        Auth::guard($result['guard'])->login($user);
+        $request->session()->regenerate();
+
+        // Simpan data ke session untuk tampilan header/dashboard
+        session([
+            'user_name' => ($result['role'] === 'admin') ? $user->nama : $user->name,
+            'user_role' => $result['role']
+        ]);
+
+        return ($result['role'] === 'admin') 
+            ? redirect()->intended('/admin/dashboard') 
+            : redirect()->intended('/dashboard');
     }
 
-    // ==========================
-    // 🚪 LOGOUT
-    // ==========================
+    /**
+     * Proses Registrasi menggunakan Service
+     */
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'nik' => 'required|string|size:16|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        try {
+            // Jalankan logika registrasi di Service
+            $user = $this->authService->registerUser($request->all());
+            
+            $request->session()->put('email_for_verification', $user->email);
+            return redirect()->route('verify.form')->with('success', 'Registrasi berhasil! Cek email untuk kode verifikasi.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengirim email verifikasi. Cek koneksi internet Anda.');
+        }
+    }
+
+    /**
+     * Logout
+     */
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        // Hapus session custom juga
         session()->forget(['user_name', 'user_role']);
 
         return redirect('/login');
