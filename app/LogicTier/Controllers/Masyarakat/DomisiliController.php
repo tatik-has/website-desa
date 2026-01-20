@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 
-// ✅ PERBAIKAN: Gunakan SuratDomisiliService
+//  Gunakan SuratDomisiliService
 use App\LogicTier\Services\SuratDomisiliService;
 
 class DomisiliController extends BaseController
 {
     protected $domisiliService;
 
-    // ✅ PERBAIKAN: Injeksi SuratDomisiliService
+    //  Injeksi SuratDomisiliService
     public function __construct(SuratDomisiliService $service)
     {
         $this->domisiliService = $service;
@@ -27,7 +27,7 @@ class DomisiliController extends BaseController
 
     public function store(Request $request): RedirectResponse
     {
-        // ✅ Panggil method dari service yang benar
+        //  Panggil method dari service yang benar
         $this->domisiliService->storeDomisili($request);
 
         return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Domisili berhasil diajukan!');

@@ -1,6 +1,6 @@
 @if($permohonans->isEmpty())
     <div class="no-data-container" style="text-align: center; padding: 40px 0;">
-        <p style="color: #888; margin-top: 10px;">📭 Tidak ada data arsip.</p>
+        <p style="color: #888; margin-top: 10px;"> Tidak ada data arsip.</p>
     </div>
 @else
     <table>

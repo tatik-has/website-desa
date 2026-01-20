@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 
-// ✅ PERBAIKAN: Gunakan SuratKtmService
+//  PERBAIKAN: Gunakan SuratKtmService
 use App\LogicTier\Services\SuratKtmService;
 
 class SKTMController extends BaseController
 {
     protected $ktmService;
 
-    // ✅ PERBAIKAN: Injeksi SuratKtmService
+    //  PERBAIKAN: Injeksi SuratKtmService
     public function __construct(SuratKtmService $service)
     {
         $this->ktmService = $service;
@@ -26,7 +26,7 @@ class SKTMController extends BaseController
 
     public function store(Request $request)
     {
-        // ✅ Panggil method dari service yang benar
+        // Panggil method dari service yang benar
         $this->ktmService->storeKtm($request);
 
         return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Tidak Mampu berhasil diajukan!');

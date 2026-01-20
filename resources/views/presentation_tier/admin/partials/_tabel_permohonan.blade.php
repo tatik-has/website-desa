@@ -7,7 +7,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Pemohon</th>
+                    <th>Nama Akun</th>
                     <th>NIK</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Status</th>
@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px;">Tidak ada data.</td>
+                    <td  style="text-align: center; padding: 40px;">Tidak ada data.</td>
                 </tr>
             </tbody>
         </table>
@@ -25,7 +25,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Pemohon</th>
+                    <th>Nama Akun</th>
                     <th>NIK</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Status</th>

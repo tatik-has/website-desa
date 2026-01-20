@@ -1,11 +1,10 @@
-{{-- File: resources/views/presentation_tier/admin/layout.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Desa</title>
+    <title>Admin Desa - Desa Pakning Asal</title>
 
     {{-- CSS dan Font yang sama untuk semua halaman admin --}}
     <link rel="stylesheet" href="{{ asset('presentation_tier/css/admin/admin.css') }}">
@@ -41,7 +40,7 @@
                     <span>Laporan</span>
                 </a>
 
-                {{-- ✅ MENU ARSIP BARU --}}
+                {{-- MENU ARSIP --}}
                 <a href="{{ route('admin.arsip') }}" class="{{ request()->is('admin/arsip*') ? 'active' : '' }}">
                     <i class="fa-solid fa-archive"></i>
                     <span>Arsip</span>
@@ -72,11 +71,8 @@
 
             {{-- Bagian Top Bar --}}
             <div class="top-bar">
-                {{-- Wrapper Kiri (Kosong) --}}
-                <div class="top-bar-left">
-                </div>
+                <div class="top-bar-left"></div>
 
-                {{-- Wrapper Kanan (Notifikasi & Logout) --}}
                 <div class="top-bar-right">
                     {{-- Notifikasi --}}
                     <div class="notification-wrapper">
@@ -95,7 +91,7 @@
                         </div>
                     </div>
 
-                    <span class="divider">|</span> {{-- Pemisah visual --}}
+                    <span class="divider">|</span>
 
                     {{-- Logout --}}
                     <form action="{{ route('admin.logout') }}" method="POST" style="margin: 0;">
@@ -108,9 +104,18 @@
                 </div>
             </div>
 
-
             {{-- Tempat konten unik tiap halaman --}}
-            @yield('content')
+            <div class="content-wrapper" style="padding: 20px;">
+                @yield('content')
+            </div>
+
+            {{-- =============================================== --}}
+            {{-- == FOOTER IDENTITAS (HASTITA SARI) == --}}
+            {{-- =============================================== --}}
+            <footer class="admin-footer">
+                <p>&copy; 2026 Hastita Sari. All Rights Reserved.</p>
+                <small>Panel Administrasi Desa Pakning Asal</small>
+            </footer>
         </main>
     </div>
 
@@ -130,22 +135,18 @@
                     url: '{{ route("admin.notifications.unread") }}',
                     method: 'GET',
                     success: function (response) {
-                        // Update badge count
                         if (response.count > 0) {
                             countBadge.text(response.count).show();
                         } else {
                             countBadge.hide();
                         }
 
-                        // Update dropdown list
                         list.empty();
                         if (response.notifications.length > 0) {
                             response.notifications.forEach(function (notif) {
-                                // Ambil kunci rute dari data notifikasi
-                                let typeKey = notif.data.jenis_surat_key; // 'domisili', 'ktm', atau 'sku'
+                                let typeKey = notif.data.jenis_surat_key;
                                 let permohonanId = notif.data.permohonan_id;
 
-                                // Buat URL sesuai route yang ada di web.php
                                 let url = '';
                                 if (typeKey === 'domisili') {
                                     url = '{{ route("admin.domisili.show", ":id") }}'.replace(':id', permohonanId);
@@ -154,7 +155,7 @@
                                 } else if (typeKey === 'sku') {
                                     url = '{{ route("admin.sku.show", ":id") }}'.replace(':id', permohonanId);
                                 } else {
-                                    url = '#'; // fallback jika tidak dikenali
+                                    url = '#';
                                 }
 
                                 let item = `
@@ -172,12 +173,10 @@
                 });
             }
 
-            // Klik lonceng untuk tampil/sembunyi dropdown
             bell.on('click', function (e) {
                 e.stopPropagation();
                 dropdown.toggle();
 
-                // Tandai notifikasi sudah dibaca
                 if (dropdown.is(':visible') && parseInt(countBadge.text()) > 0) {
                     $.ajax({
                         url: '{{ route("admin.notifications.markAsRead") }}',
@@ -190,37 +189,24 @@
                 }
             });
 
-            // Sembunyikan dropdown saat klik di luar area
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('.notification-wrapper').length) {
                     dropdown.hide();
                 }
             });
 
-            // Ambil notifikasi saat halaman pertama dimuat
             fetchNotifications();
 
-            // Laravel Echo real-time listener
             if (typeof window.Echo !== 'undefined') {
                 window.Echo.private('admin-channel')
                     .listen('SuratDiajukan', (e) => {
-                        console.log('Event diterima:', e);
                         fetchNotifications();
-
-                        // Tambah notifikasi popup kecil (opsional)
-                        const toast = $('<div class="toast-notification"></div>')
-                            .text(e.message)
-                            .appendTo('body')
-                            .css('display', 'block');
-                        setTimeout(() => toast.fadeOut(500, () => toast.remove()), 4000);
                     });
             }
         });
     </script>
-@endauth
+    @endauth
 
-    {{-- Slot untuk script tambahan dari halaman lain --}}
     @stack('scripts')
 </body>
-
 </html>

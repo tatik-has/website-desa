@@ -4,7 +4,17 @@
 <link rel="stylesheet" href="{{ asset('presentation_tier/css/shared/style.css') }}">
 
 <div class="login-container">
-    <h2 class="login-title">Login</h2>
+    {{-- Logo Desa --}}
+    <div class="login-logo">
+        {{-- Ganti 'logo-desa.png' dengan path logo desa Anda --}}
+        <img src="{{ asset('images/logo.png') }}" alt="Logo Desa">
+    </div>
+
+    {{-- Teks Sambutan --}}
+    <div class="login-welcome">
+        <h1>Selamat Datang</h1>
+        <p>Sistem Informasi Desa<br>Silakan login untuk melanjutkan</p>
+    </div>
 
     {{-- Pesan error / sukses --}}
     @if(session('error'))
@@ -28,15 +38,15 @@
         </div>
 
         {{-- Tombol Login --}}
-        <div style="text-align:center;">
-            <button class="login-button" type="submit">Login</button>
+        <div>
+            <button class="login-button" type="submit">Masuk</button>
         </div>
     </form>
 
-    {{-- Link daftar di kanan bawah --}}
+    {{-- Link daftar --}}
     <p class="login-footer">
         Belum punya akun?
-        <a href="{{ url('/register') }}">Daftar</a>
+        <a href="{{ url('/register') }}">Daftar Sekarang</a>
     </p>
 </div>
 @endsection

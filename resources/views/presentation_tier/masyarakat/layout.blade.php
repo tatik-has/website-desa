@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Surat Desa</title>
+    <title>Sistem Surat Desa - Desa Pakning Asal</title>
 
     {{-- PATH CSS utama --}}
     <link rel="stylesheet" href="{{ asset('presentation_tier/css/masyarakat/dashboard.css') }}">
@@ -15,12 +15,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     @stack('styles')
+
 </head>
 <body>
 
-    {{-- ================================================= --}}
-    {{-- NAVBAR UTAMA UNTUK PENGGUNA LOGIN                --}}
-    {{-- ================================================= --}}
+    {{-- NAVBAR UTAMA --}}
     <nav class="navbar">
         <div class="navbar-left">
             <img src="{{ asset('images/logo.png') }}" alt="Logo Desa Pakning Asal">
@@ -34,7 +33,7 @@
             <a href="{{ route('notifications.index') }}" class="bell-icon">
                 <i class="fa fa-bell"></i>
                 @auth
-                    @if(Auth::user() && Auth::user()->unreadNotifications->count() > 0)
+                    @if(Auth::user()->unreadNotifications->count() > 0)
                         <span class="notification-count">
                             {{ Auth::user()->unreadNotifications->count() }}
                         </span>
@@ -51,7 +50,7 @@
 
             {{-- Tombol Logout --}}
             @auth
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf
                     <button type="submit" class="logout-button">Logout</button>
                 </form>
@@ -59,22 +58,30 @@
         </div>
     </nav>
 
+    {{-- KONTEN HALAMAN --}}
     @yield('content')
 
-    {{-- ================================================= --}}
-    {{-- SCRIPT JAVASCRIPT DAN REAL-TIME LISTENER         --}}
-    {{-- ================================================= --}}
+    {{-- FOOTER IDENTITAS --}}
+    <footer class="main-footer">
+        <p>&copy; 2026 Hastita Sari. All Rights Reserved.</p>
+        <small>Sistem Administrasi Surat-Menyurat Desa Pakning Asal</small>
+    </footer>
+
+    {{-- SCRIPT JAVASCRIPT --}}
     <script src="{{ asset('js/app.js') }}"></script>
 
     @auth
     <script>
-        window.Echo.private('user.{{ Auth::id() }}')
-            .listen('StatusDiperbarui', (e) => {
-                alert(e.message);
-                if (e.message.includes('SELESAI')) {
-                    setTimeout(() => window.location.reload(), 2000);
-                }
-            });
+        // Real-time listener untuk status surat
+        if (window.Echo) {
+            window.Echo.private('user.{{ Auth::id() }}')
+                .listen('StatusDiperbarui', (e) => {
+                    alert(e.message);
+                    if (e.message.toLowerCase().includes('selesai')) {
+                        setTimeout(() => window.location.reload(), 2000);
+                    }
+                });
+        }
     </script>
     @endauth
 

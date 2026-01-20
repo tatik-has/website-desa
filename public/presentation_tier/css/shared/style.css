@@ -1,3 +1,37 @@
+/* Background halaman login dengan gambar desa */
+body {
+    background-image: url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1920');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 123, 255, 0.7);
+    z-index: -1;
+}
+
+/* Dekorasi tambahan */
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
+    z-index: -1;
+}
 
 /* halaman verifikasi */
 .verify-container {
@@ -128,70 +162,183 @@
     text-decoration: underline;
 }
 
-
-/* halaman login css */
+/* halaman login css - DIPERCANTIK */
 .login-container {
-    max-width: 380px;
+    max-width: 420px;
     margin: 50px auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 40px 35px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #007BFF, #00D4FF, #007BFF);
+    background-size: 200% 100%;
+    animation: gradientMove 3s ease infinite;
+}
+
+@keyframes gradientMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Logo Desa */
+.login-logo {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.login-logo img {
+    width: 90px;
+    height: 90px;
+    border: 4px solid #007BFF;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 25px;
-    border: 3px solid #007BFF;
+    padding: 8px;
+    transition: transform 0.3s ease;
+}
+
+.login-logo img:hover {
+    transform: scale(1.05);
+}
+
+/* Teks sambutan */
+.login-welcome {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-welcome h1 {
+    color: #007BFF;
+    font-size: 26px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.login-welcome p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
 }
 
 .login-title {
     text-align: center;
     color: #007BFF;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 600;
 }
 
 .login-message-error {
-    color: red;
+    color: #dc3545;
+    background: #ffe6e6;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #dc3545;
+    font-size: 14px;
 }
 
 .login-message-success {
-    color: green;
+    color: #28a745;
+    background: #e6ffe6;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+    font-size: 14px;
 }
 
 .login-input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-bottom: 15px;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.login-input::placeholder {
+    color: #999;
 }
 
 .login-button {
-    background: #007BFF;
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+    padding: 14px 30px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 }
 
 .login-button:hover {
-    background: #0056b3;
+    background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.login-button:active {
+    transform: translateY(0);
 }
 
 .login-footer {
-    text-align: right;
-    margin-top: 15px;
+    text-align: center;
+    margin-top: 25px;
     font-size: 14px;
+    color: #666;
 }
 
 .login-footer a {
-    color: #FFD700;
-    font-weight: bold;
+    color: #007BFF;
+    font-weight: 600;
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .login-footer a:hover {
+    color: #0056b3;
     text-decoration: underline;
+}
+
+/* Animasi halus saat load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-container {
+    animation: fadeInUp 0.6s ease;
 }

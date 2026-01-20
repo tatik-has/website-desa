@@ -13,7 +13,7 @@ use App\LogicTier\Notifications\SuratBaruNotification;
 use Illuminate\Support\Facades\Notification; 
 use Illuminate\Support\Facades\Log; 
 
-// ✅ PERBAIKAN: Gunakan salah satu service hasil pemisahan (misal DomisiliService) 
+// PERBAIKAN: Gunakan salah satu service hasil pemisahan (misal DomisiliService) 
 // atau arahkan ke service yang menangani pengambilan data history.
 use App\LogicTier\Services\SuratDomisiliService;
 
@@ -21,7 +21,7 @@ class SuratController extends BaseController
 {
     protected $suratService;
 
-    // ✅ PERBAIKAN: Gunakan service yang tersedia
+    // PERBAIKAN: Gunakan service yang tersedia
     public function __construct(SuratDomisiliService $service)
     {
         $this->suratService = $service;
@@ -74,7 +74,7 @@ class SuratController extends BaseController
     {
         $userId = Auth::id();
 
-        // ✅ PERBAIKAN: Pastikan di SuratDomisiliService atau Service lainnya 
+        //  PERBAIKAN: Pastikan di SuratDomisiliService atau Service lainnya 
         // Anda sudah memindahkan method getHistory() dari PermohonanMasyarakatService yang lama.
         $allPermohonan = $this->suratService->getHistory($userId);
 

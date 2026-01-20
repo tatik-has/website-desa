@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 
-// ✅ PERBAIKAN: Gunakan SuratSkuService
+//  PERBAIKAN: Gunakan SuratSkuService
 use App\LogicTier\Services\SuratSkuService;
 
 class SKUController extends BaseController
 {
     protected $skuService;
 
-    // ✅ PERBAIKAN: Injeksi SuratSkuService
+    //  PERBAIKAN: Injeksi SuratSkuService
     public function __construct(SuratSkuService $service)
     {
         $this->skuService = $service;
@@ -26,7 +26,7 @@ class SKUController extends BaseController
 
     public function store(Request $request)
     {
-        // ✅ Panggil method dari service yang benar
+        //  Panggil method dari service yang benar
         $this->skuService->storeSku($request);
 
         return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Usaha berhasil diajukan!');

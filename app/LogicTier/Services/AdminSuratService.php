@@ -31,6 +31,49 @@ class AdminSuratService
         return compact('domisiliGrouped', 'ktmGrouped', 'skuGrouped');
     }
 
+
+    public function getAllPermohonan(): array
+    {
+        // Mengambil semua permohonan dari ketiga tabel tanpa filter archived
+        $domisili = PermohonanDomisili::with('user')
+            ->whereNull('archived_at')
+            ->latest()
+            ->get()
+            ->map(function($item) {
+                $item->jenis_surat = 'Domisili';
+                $item->type = 'domisili';
+                return $item;
+            });
+
+        $ktm = PermohonanKTM::with('user')
+            ->whereNull('archived_at')
+            ->latest()
+            ->get()
+            ->map(function($item) {
+                $item->jenis_surat = 'SKTM';
+                $item->type = 'ktm';
+                return $item;
+            });
+
+        $sku = PermohonanSKU::with('user')
+            ->whereNull('archived_at')
+            ->latest()
+            ->get()
+            ->map(function($item) {
+                $item->jenis_surat = 'SKU';
+                $item->type = 'sku';
+                return $item;
+            });
+
+        // Gabungkan semua permohonan dan urutkan berdasarkan tanggal terbaru
+        $allPermohonan = $domisili->concat($ktm)->concat($sku)->sortByDesc('created_at');
+
+        return [
+            'permohonan' => $allPermohonan,
+            'total' => $allPermohonan->count()
+        ];
+    }
+
     public function updateStatus(Request $request, string $type, int $id)
     {
         $modelClass = $this->getModelClass($type);

@@ -4,14 +4,14 @@ namespace App\LogicTier\Controllers\Admin;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
-// ✅ PERBAIKAN: Pastikan menggunakan AdminSuratService sesuai struktur Logic Tier Anda
+//  Pastikan menggunakan AdminSuratService sesuai struktur Logic Tier Anda
 use App\LogicTier\Services\AdminSuratService;
 
 class AdminController extends BaseController
 {
     protected $permohonanService;
 
-    // ✅ Injeksi AdminSuratService ke dalam constructor
+    // Injeksi AdminSuratService ke dalam constructor
     public function __construct(AdminSuratService $service)
     {
         $this->permohonanService = $service;
@@ -27,16 +27,13 @@ class AdminController extends BaseController
         return view('presentation_tier.admin.permohonan.permohonan-surat', $groupedData);
     }
 
-    /**
-     * ✅ TAMBAHAN: Method untuk rute admin.semuaPermohonan
-     * Mengambil seluruh data permohonan tanpa pengelompokan khusus
-     */
+
     public function semuaPermohonan()
     {
         // Panggil logika dari Service
         $allData = $this->permohonanService->getAllPermohonan();
         
-        return view('presentation_tier.admin.semua-permohonan', $allData);
+        return view('presentation_tier.admin.permohonan.permohonan-surat', $allData);
     }
 
     /**
