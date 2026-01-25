@@ -67,7 +67,8 @@ class AuthController extends BaseController
             'user_name' => ($result['role'] === 'admin') ? $user->nama : $user->name,
             'user_role' => $result['role']
         ]);
-
+        
+        // Logika pengalihan ke dashboard masyarakat (/dashboard) jika role adalah user
         return ($result['role'] === 'admin') 
             ? redirect()->intended('/admin/dashboard') 
             : redirect()->intended('/dashboard');

@@ -10,12 +10,13 @@ use App\LogicTier\Controllers\Masyarakat\DomisiliController;
 use App\LogicTier\Controllers\Masyarakat\SKTMController;
 use App\LogicTier\Controllers\Masyarakat\SKUController;
 use App\LogicTier\Controllers\Masyarakat\ProfileController;
+use App\LogicTier\Controllers\Masyarakat\MasyarakatDashboardController; // Controller Baru
 
 // ---------------- LOGIC TIER CONTROLLERS (ADMIN) ----------------
 use App\LogicTier\Controllers\Admin\AdminAuthController;
-use App\LogicTier\Controllers\Admin\AdminController;          // Kini fokus pada operasional surat
-use App\LogicTier\Controllers\Admin\AdminDashboardController; // Controller Baru
-use App\LogicTier\Controllers\Admin\AdminLaporanController;   // Controller Baru
+use App\LogicTier\Controllers\Admin\AdminController;           // Fokus pada operasional surat (Update status)
+use App\LogicTier\Controllers\Admin\AdminDashboardController; // Controller Baru (Statistik)
+use App\LogicTier\Controllers\Admin\AdminLaporanController;   // Controller Baru (Laporan & Arsip)
 use App\LogicTier\Controllers\Admin\AdminManagementController;
 use App\LogicTier\Controllers\Admin\AdminProfileController;
 
@@ -46,13 +47,12 @@ Route::post('/verify', [VerificationController::class, 'verifyCode'])->name('ver
 // USER DASHBOARD & PENGAJUAN SURAT
 // ============================================================
 Route::middleware('auth')->group(function () {
-    // Dashboard utama
-    Route::get('/dashboard', [SuratController::class, 'index'])->name('dashboard');
+    // Dashboard utama menggunakan MasyarakatDashboardController agar SuratController fokus ke form
+    Route::get('/dashboard', [MasyarakatDashboardController::class, 'index'])->name('dashboard');
 
     // ---------------- PENGAJUAN SURAT ----------------
     Route::get('/pengajuan', [SuratController::class, 'showPengajuanForm'])->name('pengajuan.form');
     
-    // Rute POST masing-masing diarahkan ke Controller khusus yang memanggil Service Baru
     Route::get('/pengajuan/domisili', [DomisiliController::class, 'showForm'])->name('pengajuan.domisili.form');
     Route::post('/pengajuan/domisili', [DomisiliController::class, 'store'])->name('pengajuan.domisili.store');
 
@@ -64,7 +64,8 @@ Route::middleware('auth')->group(function () {
 
     // ---------------- PROFILE & HISTORY ----------------
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/riwayat-surat', [SuratController::class, 'history'])->name('surat.history');
+    // History menggunakan MasyarakatDashboardController untuk keterpisahan fungsi
+    Route::get('/riwayat-surat', [MasyarakatDashboardController::class, 'history'])->name('surat.history');
 
     // ---------------- NOTIFIKASI ----------------
     Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifications.index');
@@ -88,10 +89,10 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 // ============================================================
 Route::middleware('auth:admin')->group(function () {
     
-    // 1. Dashboard Admin (Sekarang menggunakan AdminDashboardController)
+    // 1. Dashboard Admin (MENGGUNAKAN AdminDashboardController)
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    // 2. Manajemen Surat (Fungsi verifikasi dan update tetap di AdminController)
+    // 2. Manajemen Surat (Fungsi operasional surat tetap di AdminController)
     Route::get('/admin/surat', [AdminController::class, 'showPermohonanSurat'])->name('admin.surat.index');
     Route::post('/admin/surat/{type}/{id}/update-status', [AdminController::class, 'updateStatusPermohonan'])->name('admin.surat.updateStatus');
 
@@ -102,13 +103,13 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/sktm/{id}', [AdminController::class, 'showSktmDetail'])->name('admin.sktm.show');
     Route::get('/admin/semua-permohonan', [AdminController::class, 'semuaPermohonan'])->name('admin.semuaPermohonan');
 
-    // 3. Laporan & Arsip (Sekarang menggunakan AdminLaporanController)
+    // 3. Laporan & Arsip (MENGGUNAKAN AdminLaporanController)
     Route::get('/admin/laporan', [AdminLaporanController::class, 'showLaporan'])->name('admin.laporan');
     Route::get('/admin/arsip', [AdminLaporanController::class, 'showArsip'])->name('admin.arsip');
     
-    // Fitur Arsip Aksi
-    Route::post('/admin/surat/{type}/{id}/archive', [AdminController::class, 'archivePermohonan'])->name('admin.surat.archive');
-    Route::post('/admin/run-auto-archive', [AdminController::class, 'runAutoArchive'])->name('admin.runAutoArchive');
+    // Fitur Arsip Aksi (Sekarang diarahkan ke AdminLaporanController karena logika arsip ada di sana)
+    Route::post('/admin/surat/{type}/{id}/archive', [AdminLaporanController::class, 'archivePermohonan'])->name('admin.surat.archive');
+    Route::post('/admin/run-auto-archive', [AdminLaporanController::class, 'runAutoArchive'])->name('admin.runAutoArchive');
 
     // 4. Notifikasi Admin
     Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])->name('admin.notifications.unread');

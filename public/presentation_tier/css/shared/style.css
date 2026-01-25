@@ -99,47 +99,55 @@ body::after {
     text-decoration: underline;
 }
 
-/* halaman registrasi */
+/* halaman registrasi - PERBAIKAN TOTAL */
 .register-container {
-    max-width: 500px;
-    margin: 50px auto;
+    width: 50% !important;   /* Memakai 95% lebar layar di HP */
+    max-width: 450px !important; /* Lebar maksimal 900px (Sangat Lebar) */
+    margin: 40px auto !important;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 40px 60px !important; /* Padding dalam yang luas */
     border: 3px solid #007BFF;
+    box-sizing: border-box; /* Wajib agar padding tidak merusak lebar */
+    position: relative;
+    z-index: 10;
 }
 
 .register-title {
     text-align: center;
     color: #007BFF;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-.register-input {
-    width: 100%;
-    padding: 10px;
+/* Pastikan input mengikuti lebar container */
+.register-input, .register-textarea {
+    width: 100% !important;
+    padding: 12px 15px !important;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
     margin-bottom: 15px;
+    font-size: 16px;
+    box-sizing: border-box; /* Agar input tidak keluar jalur */
 }
 
 .register-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    height: 100px;
     resize: none;
-    margin-bottom: 15px;
 }
 
 .register-button {
     background: #007BFF;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+    padding: 15px 40px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%; /* Tombol lebar penuh */
     transition: background 0.3s ease;
 }
 
@@ -147,19 +155,34 @@ body::after {
     background: #0056b3;
 }
 
+/* Perbaikan tombol Login agar seragam dengan tombol Daftar */
 .register-footer {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #eee; /* Memberi pembatas halus */
 }
 
 .register-footer a {
+    display: inline-block;
+    background: transparent;
     color: #007BFF;
+    border: 2px solid #007BFF;
+    padding: 10px 30px;
+    border-radius: 8px;
     font-weight: bold;
     text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    width: 80%; /* Sedikit lebih kecil dari tombol utama agar proporsional */
 }
 
 .register-footer a:hover {
-    text-decoration: underline;
+    background: #007BFF;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
 }
 
 /* halaman login css - DIPERCANTIK */

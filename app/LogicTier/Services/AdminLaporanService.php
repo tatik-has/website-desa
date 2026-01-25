@@ -45,6 +45,34 @@ class AdminLaporanService
 
         return collect()->merge($domisili)->merge($ktm)->merge($sku)->sortByDesc('created_at');
     }
+    /**
+     * Logika untuk mengisi kolom archived_at berdasarkan tipe dan ID
+     */
+    public function archiveData(string $type, $id): bool
+    {
+        // Tentukan model berdasarkan parameter 'type' dari URL
+        $model = null;
+
+        switch ($type) {
+            case 'domisili':
+                $model = PermohonanDomisili::find($id);
+                break;
+            case 'ktm':
+                $model = PermohonanKTM::find($id);
+                break;
+            case 'sku':
+                $model = PermohonanSKU::find($id);
+                break;
+        }
+
+        if ($model) {
+            // Isi kolom archived_at dengan timestamp saat ini
+            $model->archived_at = now();
+            return $model->save();
+        }
+
+        return false;
+    }
 
     /**
      * Logika dari getArchivedPermohonan
