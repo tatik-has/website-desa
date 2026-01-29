@@ -27,6 +27,7 @@
         <div class="navbar-right">
             <a href="{{ url('/dashboard') }}">Home</a>
             <a href="{{ url('/pengajuan') }}">Pengajuan</a>
+            <a href="{{ route('masyarakat.riwayat') }}">Riwayat</a>
             <a href="{{ url('/faq') }}">FAQ</a>
 
             {{-- Ikon Notifikasi --}}

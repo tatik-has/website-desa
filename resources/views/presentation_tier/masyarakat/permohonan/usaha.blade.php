@@ -12,12 +12,25 @@
                 <h1>Surat Keterangan Usaha (SKU)</h1>
             </div>
 
+            <div style="margin-bottom: 15px;">
+            <a href="{{ url()->previous() }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+
+
+            <div class="alert alert-info" style="background-color: #d1ecf1; color: #0c5460; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #17a2b8;">
+                <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
+                <strong>Informasi:</strong> Setelah formulir Surat Keterangan Usaha ini dikirim, admin akan segera memproses pengajuan Anda. Pastikan data usaha dan dokumen pendukung sudah lengkap.
+            </div>
+
             <!-- pemberitahuan eror -->
             @if ($errors->any())
                 <div class="alert alert-danger"
-                    style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #dc3545;">
+                    <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
                     <strong>Terdapat kesalahan pada input Anda:</strong>
-                    <ul style="list-style-type: disc; margin-left: 20px;">
+                    <ul style="list-style-type: disc; margin-left: 20px; margin-top: 10px;">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -33,20 +46,20 @@
                 <h3 class="form-section-title">Data Pemohon (Pemilik Usaha)</h3>
                 <div class="form-group">
                     <label for="nik">NIK</label>
-                    <input type="number" id="nik" name="nik" placeholder="Masukkan NIK Anda" required>
+                    <input type="number" id="nik" name="nik" placeholder="Masukkan NIK Anda" value="{{ old('nik') }}" required>
                 </div>
                 <div class="form-group">
                     <label for="nama">Nama Lengkap</label>
-                    <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Sesuai KTP" required>
+                    <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Sesuai KTP" value="{{ old('nama') }}" required>
                 </div>
                 <div class="form-group">
                     <label for="alamat_ktp">Alamat Sesuai KTP</label>
                     <input type="text" id="alamat_ktp" name="alamat_ktp" placeholder="Masukkan Alamat Lengkap Sesuai KTP"
-                        required>
+                        value="{{ old('alamat_ktp') }}" required>
                 </div>
                 <div class="form-group">
                     <label for="nomor_telp">Nomor Telp/Whatsapp Aktif</label>
-                    <input type="text" id="nomor_telp" name="nomor_telp" placeholder="Contoh: 08123456789 atau +628123456789" required>
+                    <input type="text" id="nomor_telp" name="nomor_telp" placeholder="Contoh: 08123456789 atau +628123456789" value="{{ old('nomor_telp') }}" required>
                 </div>
 
                 {{-- Bagian Data Usaha (sudah benar) --}}
@@ -54,36 +67,36 @@
                 <div class="form-group">
                     <label for="nama_usaha">Nama Usaha</label>
                     <input type="text" id="nama_usaha" name="nama_usaha" placeholder="Contoh: Warung Berkah, Jaya Laundry"
-                        required>
+                        value="{{ old('nama_usaha') }}" required>
                 </div>
                 <div class="form-group">
                     <label for="jenis_usaha">Jenis Usaha</label>
                     <input type="text" id="jenis_usaha" name="jenis_usaha"
-                        placeholder="Contoh: Toko Kelontong, Jasa Jahit, Katering" required>
+                        placeholder="Contoh: Toko Kelontong, Jasa Jahit, Katering" value="{{ old('jenis_usaha') }}" required>
                 </div>
                 <div class="form-group">
                     <label for="alamat_usaha">Alamat Lengkap Tempat Usaha</label>
                     <textarea id="alamat_usaha" name="alamat_usaha" rows="3"
-                        placeholder="Masukkan alamat lengkap lokasi usaha Anda" required></textarea>
+                        placeholder="Masukkan alamat lengkap lokasi usaha Anda" required>{{ old('alamat_usaha') }}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="lama_usaha">Lama Usaha Berdiri</label>
                     <div class="select-wrapper">
                         <select id="lama_usaha" name="lama_usaha" required>
                             <option value="">-- Pilih Lama Usaha --</option>
-                            <option value="Kurang dari 6 bulan">Kurang dari 6 bulan</option>
-                            <option value="6 bulan">6 bulan</option>
-                            <option value="1 tahun">1 tahun</option>
-                            <option value="2 tahun">2 tahun</option>
-                            <option value="3 tahun">3 tahun</option>
-                            <option value="4 tahun">4 tahun</option>
-                            <option value="5 tahun">5 tahun</option>
-                            <option value="6 tahun">6 tahun</option>
-                            <option value="7 tahun">7 tahun</option>
-                            <option value="8 tahun">8 tahun</option>
-                            <option value="9 tahun">9 tahun</option>
-                            <option value="10 tahun">10 tahun</option>
-                            <option value="Lebih dari 10 tahun">Lebih dari 10 tahun</option>
+                            <option value="Kurang dari 6 bulan" {{ old('lama_usaha') == 'Kurang dari 6 bulan' ? 'selected' : '' }}>Kurang dari 6 bulan</option>
+                            <option value="6 bulan" {{ old('lama_usaha') == '6 bulan' ? 'selected' : '' }}>6 bulan</option>
+                            <option value="1 tahun" {{ old('lama_usaha') == '1 tahun' ? 'selected' : '' }}>1 tahun</option>
+                            <option value="2 tahun" {{ old('lama_usaha') == '2 tahun' ? 'selected' : '' }}>2 tahun</option>
+                            <option value="3 tahun" {{ old('lama_usaha') == '3 tahun' ? 'selected' : '' }}>3 tahun</option>
+                            <option value="4 tahun" {{ old('lama_usaha') == '4 tahun' ? 'selected' : '' }}>4 tahun</option>
+                            <option value="5 tahun" {{ old('lama_usaha') == '5 tahun' ? 'selected' : '' }}>5 tahun</option>
+                            <option value="6 tahun" {{ old('lama_usaha') == '6 tahun' ? 'selected' : '' }}>6 tahun</option>
+                            <option value="7 tahun" {{ old('lama_usaha') == '7 tahun' ? 'selected' : '' }}>7 tahun</option>
+                            <option value="8 tahun" {{ old('lama_usaha') == '8 tahun' ? 'selected' : '' }}>8 tahun</option>
+                            <option value="9 tahun" {{ old('lama_usaha') == '9 tahun' ? 'selected' : '' }}>9 tahun</option>
+                            <option value="10 tahun" {{ old('lama_usaha') == '10 tahun' ? 'selected' : '' }}>10 tahun</option>
+                            <option value="Lebih dari 10 tahun" {{ old('lama_usaha') == 'Lebih dari 10 tahun' ? 'selected' : '' }}>Lebih dari 10 tahun</option>
                         </select>
                     </div>
                 </div>

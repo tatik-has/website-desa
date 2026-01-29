@@ -27,6 +27,9 @@
                             'ktm' => route('admin.ktm.show', $item->id),
                             default => '#',
                         };
+
+                        // Route untuk Logic Tier Penghapusan
+                        $deleteUrl = route('admin.surat.destroy', [$type, $item->id]);
                     @endphp
 
                     <td>
@@ -47,8 +50,16 @@
                         @endif
                     </td>
 
-                    <td class="action-buttons">
+                    <td class="action-buttons" style="display: flex; gap: 5px;">
                         <a href="{{ $detailUrl }}" class="btn btn-detail">Lihat Detail</a>
+                        
+                        <form action="{{ $deleteUrl }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini secara permanen? Tindakan ini tidak dapat dibatalkan.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                Hapus
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

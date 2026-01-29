@@ -53,10 +53,13 @@
             </div>
         </form>
 
-        <p class="register-footer" style="text-align: center; margin-top: 20px;">
+        <p class="register-footer" style="text-align: center; margin-top: 20px; color: #6c757d;">
             Sudah punya akun?
-            <a href="{{ url('/login') }}" style="color: #007BFF; font-weight: bold; text-decoration: none;">Login</a>
+            <a href="{{ url('/login') }}" style="color: #007BFF; font-weight: bold; text-decoration: none;">
+                Login
+            </a>
         </p>
+
     </div>
 
 </div>

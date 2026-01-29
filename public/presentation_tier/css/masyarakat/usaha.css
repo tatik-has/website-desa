@@ -205,3 +205,47 @@ input::placeholder { color: #9ca3af; }
     .form-row { flex-direction: column; gap: 0; }
     .navbar { padding: 20px 24px; }
 }
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background-color: #f1f1f1;
+    color: #333;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background-color: #e0e0e0;
+    color: #000;
+}
+/* ============================= */
+/* PERBAIKAN TEXTAREA ALAMAT USAHA */
+/* ============================= */
+
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    outline: none;
+    resize: none; /* hilangkan garis tarik */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Fokus biar cakep */
+.form-group textarea:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+}
+
+/* Placeholder biar soft */
+.form-group textarea::placeholder {
+    color: #999;
+}

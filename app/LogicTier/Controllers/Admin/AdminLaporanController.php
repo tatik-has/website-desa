@@ -19,15 +19,12 @@ class AdminLaporanController extends Controller
 
     public function showLaporan(Request $request)
     {
-        // Mengambil input filter dari request
         $tanggalMulai = $request->input('tanggal_mulai', Carbon::now()->subDays(30)->toDateString());
         $tanggalAkhir = $request->input('tanggal_akhir', Carbon::now()->toDateString());
         $statusFilter = $request->input('status', 'semua');
 
-        // Panggil logika filter data dari Service
         $allPermohonan = $this->permohonanService->getLaporanData($tanggalMulai, $tanggalAkhir, $statusFilter);
 
-        // Logika Export Word (Tetap di Controller karena berurusan dengan Response/Tampilan)
         if ($request->has('export') && $request->export == 'word') {
             $html = view('presentation_tier.admin.permohonan.laporan-word', compact(
                 'allPermohonan',
@@ -50,13 +47,10 @@ class AdminLaporanController extends Controller
 
         return view('presentation_tier.admin.permohonan.laporan', compact('allPermohonan', 'tanggalMulai', 'tanggalAkhir', 'statusFilter'));
     }
-    /**
-     * Method untuk memproses pengarsipan permohonan
-     */
+
     public function archivePermohonan(Request $request, $type, $id)
     {
         try {
-            // Memanggil service untuk memproses pengarsipan
             $success = $this->permohonanService->archiveData($type, $id);
 
             if ($success) {
@@ -69,14 +63,36 @@ class AdminLaporanController extends Controller
         }
     }
 
-    /**
-     * Method untuk menampilkan halaman arsip (pindahan dari AdminController)
-     */
     public function showArsip()
     {
-        // Ambil data arsip dari Service
         $archivedData = $this->permohonanService->getArchivedPermohonan();
-
         return view('presentation_tier.admin.permohonan.arsip', $archivedData);
+    }
+
+    /**
+     * Method baru: Menghapus data permohonan secara permanen dari Data Tier.
+     * Dipanggil melalui rute admin.surat.destroy
+     */
+    public function destroyPermanently($type, $id)
+    {
+        try {
+            // Memilih model berdasarkan tipe surat untuk eksekusi penghapusan di Data Tier
+            $model = match ($type) {
+                'domisili' => \App\DataTier\Models\PermohonanDomisili::findOrFail($id),
+                'sku'      => \App\DataTier\Models\PermohonanSKU::findOrFail($id),
+                'ktm'      => \App\DataTier\Models\PermohonanKTM::findOrFail($id),
+                default    => null,
+            };
+
+            if ($model) {
+                $model->delete();
+                return redirect()->back()->with('success', 'Data arsip berhasil dihapus secara permanen.');
+            }
+
+            return redirect()->back()->with('error', 'Jenis data tidak valid.');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
     }
 }

@@ -27,9 +27,18 @@ class DomisiliController extends BaseController
 
     public function store(Request $request): RedirectResponse
     {
-        //  Panggil method dari service yang benar
-        $this->domisiliService->storeDomisili($request);
+        try {
+            // Logika simpan di Service
+            $this->domisiliService->storeDomisili($request);
 
-        return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Domisili berhasil diajukan!');
+            // Kirim pesan sukses dengan with() untuk session flash
+            return redirect()->route('dashboard')
+                ->with('success', 'Pengajuan Surat Keterangan Domisili berhasil diajukan! Admin akan segera memproses permohonan Anda.');
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

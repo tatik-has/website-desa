@@ -1,0 +1,283 @@
+/* ===============================
+   RIWAYAT PENGAJUAN SURAT - ELEGANT DESIGN
+   =============================== */
+
+/* Override background dari layout */
+body {
+    background: #1a9aae !important;
+}
+
+.riwayat-wrapper {
+    min-height: 100vh;
+    padding: 100px 20px 40px 20px;
+    background: transparent;
+}
+
+.riwayat-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.riwayat-header {
+    text-align: center;
+    margin-bottom: 35px;
+    animation: fadeInDown 0.6s ease;
+}
+
+.riwayat-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.riwayat-title i {
+    margin-right: 10px;
+    color: #ffd700;
+}
+
+.riwayat-subtitle {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Card */
+.riwayat-card {
+    border-radius: 16px;
+    border: none;
+    background: #ffffff;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+}
+
+.riwayat-card .card-body {
+    padding: 0;
+}
+
+/* Table */
+.table-responsive {
+    border-radius: 16px;
+}
+
+.riwayat-table {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.riwayat-table thead {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+}
+
+.riwayat-table thead th {
+    color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+    padding: 18px 15px;
+    border: none;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.riwayat-table tbody td {
+    padding: 20px 15px;
+    vertical-align: middle;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.riwayat-row {
+    transition: all 0.3s ease;
+}
+
+.riwayat-row:hover {
+    background-color: #f8f9ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08);
+}
+
+.riwayat-row:last-child td {
+    border-bottom: none;
+}
+
+/* Number Badge */
+.riwayat-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* Jenis Surat */
+.riwayat-jenis {
+    text-align: left !important;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.riwayat-jenis i {
+    color: #0d6efd;
+    margin-right: 8px;
+}
+
+/* Tanggal */
+.riwayat-tanggal {
+    color: #6c757d;
+    font-size: 13px;
+}
+
+.riwayat-tanggal i {
+    color: #0d6efd;
+    margin-right: 6px;
+}
+
+/* Status Badges */
+.riwayat-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.riwayat-status-badge:hover {
+    transform: scale(1.05);
+}
+
+.riwayat-status-menunggu {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: #000000;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.riwayat-status-disetujui {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.riwayat-status-ditolak {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Empty State */
+.riwayat-empty-state {
+    text-align: center;
+    padding: 80px 40px;
+}
+
+.empty-icon {
+    font-size: 80px;
+    color: #dee2e6;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.riwayat-empty-state h5 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.riwayat-empty-state p {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .riwayat-wrapper {
+        padding: 80px 15px 25px 15px;
+    }
+    
+    .riwayat-title {
+        font-size: 22px;
+    }
+    
+    .riwayat-subtitle {
+        font-size: 13px;
+    }
+    
+    .riwayat-table {
+        font-size: 12px;
+    }
+    
+    .riwayat-table thead th {
+        padding: 14px 10px;
+        font-size: 11px;
+    }
+    
+    .riwayat-table tbody td {
+        padding: 15px 10px;
+    }
+    
+    .riwayat-jenis {
+        font-size: 13px;
+    }
+    
+    .riwayat-status-badge {
+        font-size: 10px;
+        padding: 6px 12px;
+    }
+    
+    .riwayat-empty-state {
+        padding: 60px 20px;
+    }
+    
+    .empty-icon {
+        font-size: 60px;
+    }
+}

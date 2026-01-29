@@ -4,15 +4,23 @@
     <link rel="stylesheet" href="{{ asset('presentation_tier/css/masyarakat/ktm.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.css">
 
-    <nav class="navbar">
-        {{-- ... Navbar Anda ... --}}
-    </nav>
-
     <main class="form-page-container">
         <div class="form-wrapper">
             <div class="form-title">
                 <h2>Formulir Permohonan</h2>
                 <h1>Surat Keterangan Tidak Mampu (SKTM)</h1>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+            <a href="{{ url()->previous() }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+
+
+            <div class="alert alert-info" style="background-color: #d1ecf1; color: #0c5460; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #17a2b8;">
+                <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
+                <strong>Informasi:</strong> Pengajuan Surat Keterangan Tidak Mampu akan diproses oleh admin setelah Anda melengkapi dan mengirim formulir ini. Harap pastikan semua dokumen yang diunggah sudah sesuai.
             </div>
 
             @if ($errors->any())
@@ -41,6 +49,7 @@
                 </div>
             @endif
 
+            
             <form action="{{ route('sktm.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h3 class="form-section-title">Data Diri Pemohon</h3>
@@ -117,7 +126,7 @@
                 </div>
 
                 <h3 class="form-section-title">Unggah Dokumen Persyaratan</h3>
-                <p class="upload-note">Mohon unggah dokumen dalam format .JPG, .JPEG, .PNG, .PDF, .DOC, atau .DOCX. Ukuran maksimal 2MB per file.</p>
+                <p class="upload-note">Mohon unggah dokumen dalam format .JPG, .JPEG, .PNG, .PDF, .DOC, atau .DOCX.</p>
 
                 <div class="form-row">
                     <div class="form-group">

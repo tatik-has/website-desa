@@ -10,7 +10,8 @@ use App\LogicTier\Controllers\Masyarakat\DomisiliController;
 use App\LogicTier\Controllers\Masyarakat\SKTMController;
 use App\LogicTier\Controllers\Masyarakat\SKUController;
 use App\LogicTier\Controllers\Masyarakat\ProfileController;
-use App\LogicTier\Controllers\Masyarakat\MasyarakatDashboardController; // Controller Baru
+use App\LogicTier\Controllers\Masyarakat\MasyarakatDashboardController;
+use App\LogicTier\Controllers\Masyarakat\RiwayatSuratController;
 
 // ---------------- LOGIC TIER CONTROLLERS (ADMIN) ----------------
 use App\LogicTier\Controllers\Admin\AdminAuthController;
@@ -72,9 +73,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifikasi', [NotificationController::class, 'destroyAll'])->name('notifications.deleteAll');
     Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])->name('notifications.delete');
     
-    Route::get('/faq', function () {
-        return view('presentation_tier.masyarakat.faq.faq'); 
-    })->name('faq');
+    // ---------------- Faq ----------------
+    Route::get('/faq', function () {return view('presentation_tier.masyarakat.faq.faq'); })->name('faq');
+
+    // ---------------- Riwayat ----------------
+    Route::get('/riwayat', [RiwayatSuratController::class, 'index'])->name('masyarakat.riwayat');
 });
 
 // ============================================================
@@ -89,12 +92,13 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 // ============================================================
 Route::middleware('auth:admin')->group(function () {
     
-    // 1. Dashboard Admin (MENGGUNAKAN AdminDashboardController)
+    // Dashboard Admin (MENGGUNAKAN AdminDashboardController)
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    // 2. Manajemen Surat (Fungsi operasional surat tetap di AdminController)
+    // Manajemen Surat (Fungsi operasional surat tetap di AdminController)
     Route::get('/admin/surat', [AdminController::class, 'showPermohonanSurat'])->name('admin.surat.index');
     Route::post('/admin/surat/{type}/{id}/update-status', [AdminController::class, 'updateStatusPermohonan'])->name('admin.surat.updateStatus');
+    Route::get('/admin/surat/{type}/{id}/print', [AdminController::class, 'printSurat'])->name('admin.surat.print');
 
     // Detail Surat
     Route::get('/admin/domisili/{id}', [AdminController::class, 'showDomisiliDetail'])->name('admin.domisili.show');
@@ -103,19 +107,20 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/sktm/{id}', [AdminController::class, 'showSktmDetail'])->name('admin.sktm.show');
     Route::get('/admin/semua-permohonan', [AdminController::class, 'semuaPermohonan'])->name('admin.semuaPermohonan');
 
-    // 3. Laporan & Arsip (MENGGUNAKAN AdminLaporanController)
+    // Laporan & Arsip (MENGGUNAKAN AdminLaporanController)
     Route::get('/admin/laporan', [AdminLaporanController::class, 'showLaporan'])->name('admin.laporan');
     Route::get('/admin/arsip', [AdminLaporanController::class, 'showArsip'])->name('admin.arsip');
+    Route::delete('/admin/surat/{type}/{id}/delete', [AdminLaporanController::class, 'destroyPermanently'])->name('admin.surat.destroy');
     
     // Fitur Arsip Aksi (Sekarang diarahkan ke AdminLaporanController karena logika arsip ada di sana)
     Route::post('/admin/surat/{type}/{id}/archive', [AdminLaporanController::class, 'archivePermohonan'])->name('admin.surat.archive');
     Route::post('/admin/run-auto-archive', [AdminLaporanController::class, 'runAutoArchive'])->name('admin.runAutoArchive');
 
-    // 4. Notifikasi Admin
+    // Notifikasi Admin
     Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])->name('admin.notifications.unread');
     Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
 
-    // 5. Manajemen Admin (Hanya Superadmin)
+    // Manajemen Admin (Hanya Superadmin)
     Route::prefix('admin/manajemen-admin')->name('admin.manajemen-admin.')->group(function () {
         Route::get('/', [AdminManagementController::class, 'index'])->name('index');
         Route::get('/create', [AdminManagementController::class, 'create'])->name('create');

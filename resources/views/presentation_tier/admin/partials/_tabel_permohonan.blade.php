@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td  style="text-align: center; padding: 40px;">Tidak ada data.</td>
+                   <td colspan="6">Tidak ada data.</td>
                 </tr>
             </tbody>
         </table>

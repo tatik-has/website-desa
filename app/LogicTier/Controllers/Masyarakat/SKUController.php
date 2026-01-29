@@ -26,9 +26,17 @@ class SKUController extends BaseController
 
     public function store(Request $request)
     {
-        //  Panggil method dari service yang benar
-        $this->skuService->storeSku($request);
+        try {
+            //  Panggil method dari service yang benar
+            $this->skuService->storeSku($request);
 
-        return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Usaha berhasil diajukan!');
+            return redirect()->route('dashboard')
+                ->with('success', 'Pengajuan Surat Keterangan Usaha berhasil diajukan! Admin akan segera memproses permohonan Anda.');
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

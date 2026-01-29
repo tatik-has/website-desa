@@ -26,9 +26,17 @@ class SKTMController extends BaseController
 
     public function store(Request $request)
     {
-        // Panggil method dari service yang benar
-        $this->ktmService->storeKtm($request);
+        try {
+            // Panggil method dari service yang benar
+            $this->ktmService->storeKtm($request);
 
-        return redirect()->route('dashboard')->with('success', 'Permohonan Surat Keterangan Tidak Mampu berhasil diajukan!');
+            return redirect()->route('dashboard')
+                ->with('success', 'Pengajuan Surat Keterangan Tidak Mampu berhasil diajukan! Admin akan segera memproses permohonan Anda.');
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

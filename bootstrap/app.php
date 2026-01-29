@@ -10,8 +10,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+    $middleware->statefulApi(); // Menjaga agar session tetap stabil jika ada interaksi API/Web
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
