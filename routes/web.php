@@ -15,10 +15,9 @@ use App\LogicTier\Controllers\Masyarakat\RiwayatSuratController;
 
 // ---------------- LOGIC TIER CONTROLLERS (ADMIN) ----------------
 use App\LogicTier\Controllers\Admin\AdminAuthController;
-use App\LogicTier\Controllers\Admin\AdminController;           // Fokus pada operasional surat (Update status)
-use App\LogicTier\Controllers\Admin\AdminDashboardController; // Controller Baru (Statistik)
-use App\LogicTier\Controllers\Admin\AdminLaporanController;   // Controller Baru (Laporan & Arsip)
-use App\LogicTier\Controllers\Admin\AdminManagementController;
+use App\LogicTier\Controllers\Admin\AdminController;           
+use App\LogicTier\Controllers\Admin\AdminDashboardController; 
+use App\LogicTier\Controllers\Admin\AdminLaporanController;   
 use App\LogicTier\Controllers\Admin\AdminProfileController;
 
 // ---------------- SHARED CONTROLLERS ----------------
@@ -98,6 +97,7 @@ Route::middleware('auth:admin')->group(function () {
     // Manajemen Surat (Fungsi operasional surat tetap di AdminController)
     Route::get('/admin/surat', [AdminController::class, 'showPermohonanSurat'])->name('admin.surat.index');
     Route::post('/admin/surat/{type}/{id}/update-status', [AdminController::class, 'updateStatusPermohonan'])->name('admin.surat.updateStatus');
+    Route::post('/admin/surat/{type}/{id}/kirim-surat', [AdminController::class, 'kirimSurat'])->name('admin.surat.kirimSurat');
     Route::get('/admin/surat/{type}/{id}/print', [AdminController::class, 'printSurat'])->name('admin.surat.print');
 
     // Detail Surat
@@ -120,16 +120,6 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/notifications/unread', [NotificationController::class, 'getUnread'])->name('admin.notifications.unread');
     Route::post('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
 
-    // Manajemen Admin (Hanya Superadmin)
-    Route::prefix('admin/manajemen-admin')->name('admin.manajemen-admin.')->group(function () {
-        Route::get('/', [AdminManagementController::class, 'index'])->name('index');
-        Route::get('/create', [AdminManagementController::class, 'create'])->name('create');
-        Route::post('/', [AdminManagementController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [AdminManagementController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [AdminManagementController::class, 'update'])->name('update');
-        Route::delete('/{id}', [AdminManagementController::class, 'destroy'])->name('destroy');
-    });
-
-    // 6. Profile Admin
+    // Profile Admin
     Route::get('/admin/profile', [AdminProfileController::class, 'show'])->name('admin.profile.show');
 });

@@ -64,10 +64,6 @@
                     <i class="fas fa-archive"></i>
                     <span>Arsip Surat</span>
                 </a>
-                <a href="{{ route('admin.manajemen-admin.index') }}" class="action-btn btn-warning">
-                    <i class="fas fa-users-cog"></i>
-                    <span>Kelola Admin</span>
-                </a>
             </div>
         </div>
 

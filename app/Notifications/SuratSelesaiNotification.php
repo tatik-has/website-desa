@@ -41,11 +41,10 @@ class SuratSelesaiNotification extends Notification implements ShouldQueue // Ta
         $jenisSurat = $this->getJenisSuratNama();
         $status = strtolower($this->permohonan->status);
 
-        return match ($status) {
+       return match ($status) {
             'selesai' => "Selamat! Surat $jenisSurat Anda telah Selesai.",
-            // === PERUBAHAN DI SINI ===
+            'diterima' => "Permohonan $jenisSurat Anda telah Diterima dan sedang diproses oleh admin.",
             'ditolak' => "Maaf, pengajuan $jenisSurat Anda Ditolak. Alasan: " . ($this->permohonan->keterangan_penolakan ?? 'Tidak ada detail.'),
-            // === AKHIR PERUBAHAN ===
             'diproses' => "Surat $jenisSurat Anda sedang Diproses oleh admin.",
             default => "Status $jenisSurat Anda telah diperbarui.",
         };

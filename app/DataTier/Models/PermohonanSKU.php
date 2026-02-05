@@ -31,7 +31,7 @@ class PermohonanSKU extends Model
         'archived_at', // Tambahkan ini
     ];
 
-    // ✅ Tambahkan casting untuk archived_at
+    // Tambahkan casting untuk archived_at
     protected $casts = [
         'archived_at' => 'datetime',
     ];

@@ -37,14 +37,14 @@ class AdminController extends BaseController
     }
 
     /**
-     * Memperbarui status permohonan (Diproses, Selesai, Ditolak)
+     * Memperbarui status permohonan (Diterima, Ditolak)
+     * === PERUBAHAN: Tambahkan "Diterima", hapus "Selesai" dari sini ===
      */
     public function updateStatusPermohonan(Request $request, string $type, int $id)
     {
         $request->validate([
-            'status' => 'required|in:Diproses,Selesai,Ditolak',
+            'status' => 'required|in:Diproses,Diterima,Ditolak',
             'keterangan_penolakan' => 'required_if:status,Ditolak|string|nullable',
-            'surat_jadi' => 'required_if:status,Selesai|file|mimes:pdf|max:2048',
         ]);
 
         // Teruskan ke Logic Tier (Service)
@@ -52,6 +52,23 @@ class AdminController extends BaseController
 
         return redirect()->route('admin.surat.index')->with('success', 'Status permohonan berhasil diperbarui!');
     }
+
+    // === TAMBAHAN: Method baru untuk mengirim surat yang sudah jadi ===
+    /**
+     * Admin upload PDF surat yang sudah jadi → status otomatis menjadi "Selesai"
+     * Notifikasi dikirim ke masyarakat dari method ini
+     */
+    public function kirimSurat(Request $request, string $type, int $id)
+    {
+        $request->validate([
+            'surat_jadi' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
+        $this->permohonanService->kirimSurat($request, $type, $id);
+
+        return redirect()->route('admin.surat.index')->with('success', 'Surat berhasil dikirim dan status telah diperbarui menjadi Selesai!');
+    }
+    // === AKHIR TAMBAHAN ===
 
     /**
      * Menampilkan detail surat (KTM, SKU, Domisili)

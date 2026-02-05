@@ -644,3 +644,33 @@ tr td[colspan] {
 .btn-arsip:active {
     transform: translateY(0);
 }
+/* ============================================================
+   TAMBAHKAN CSS INI ke file: presentation_tier/css/admin/admin-permohonan.css
+   ============================================================ */
+
+/* === Status Badge: Diterima === */
+.status-diterima {
+    background-color: #cce5ff;
+    color: #004085;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+/* === Tombol: Kirim Surat === */
+.btn-kirim-surat {
+    background-color: #0d6efd;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-kirim-surat:hover {
+    background-color: #0b5ed7;
+}

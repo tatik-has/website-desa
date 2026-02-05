@@ -29,12 +29,6 @@
                 </div>
 
                 <div class="notif-action">
-                    @if (!empty($notification->data['file_path']))
-                        <a href="{{ Storage::url($notification->data['file_path']) }}" class="btn-download" target="_blank">
-                            <i class="fas fa-download"></i> Unduh
-                        </a>
-                    @endif
-                    
                     <form action="{{ route('notifications.delete', $notification->id) }}" method="POST" style="display: inline;">
                         @csrf
                         @method('DELETE')

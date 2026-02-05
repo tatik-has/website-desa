@@ -56,6 +56,8 @@
                         <td>
                             @if($item->status == 'Diproses')
                                 <span class="status status-diproses">Diproses</span>
+                            @elseif($item->status == 'Diterima')
+                                <span class="status status-diterima">Diterima</span>
                             @elseif($item->status == 'Selesai')
                                 <span class="status status-selesai">Selesai</span>
                             @elseif($item->status == 'Ditolak')
@@ -66,13 +68,19 @@
                             <a href="{{ $detailUrl }}" class="btn btn-detail">Lihat Detail</a>
 
                             {{-- Tombol Terima: Hanya tampil jika status "Diproses" --}}
+                            {{-- === PERUBAHAN: Sekarang langsung POST status "Diterima", tanpa modal upload === --}}
                             @if($item->status == 'Diproses')
-                                <button type="button" 
-                                    class="btn btn-selesai" 
-                                    onclick="openSelesaiModal('{{ route('admin.surat.updateStatus', [$type, $item->id]) }}')">
-                                    Terima
-                                </button>
+                                <form action="{{ route('admin.surat.updateStatus', [$type, $item->id]) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <input type="hidden" name="status" value="Diterima">
+                                    <button type="submit"
+                                        class="btn btn-selesai"
+                                        onclick="return confirm('Apakah Anda yakin ingin menerima permohonan ini?')">
+                                        Terima
+                                    </button>
+                                </form>
                             @endif
+                            {{-- === AKHIR PERUBAHAN === --}}
 
                             {{-- Tombol Tolak: Hanya tampil jika status "Diproses" --}}
                             @if($item->status == 'Diproses')
@@ -82,6 +90,16 @@
                                     Tolak
                                 </button>
                             @endif
+
+                            {{-- === TAMBAHAN: Tombol Kirim Surat: Hanya tampil jika status "Diterima" === --}}
+                            @if($item->status == 'Diterima')
+                                <button type="button"
+                                    class="btn btn-kirim-surat"
+                                    onclick="openSelesaiModal('{{ route('admin.surat.kirimSurat', [$type, $item->id]) }}')">
+                                    Kirim Surat
+                                </button>
+                            @endif
+                            {{-- === AKHIR TAMBAHAN === --}}
 
                             {{-- Tombol Arsipkan: Hanya tampil jika status "Selesai" atau "Ditolak" --}}
                             @if($item->status == 'Selesai' || $item->status == 'Ditolak')

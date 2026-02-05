@@ -11,10 +11,20 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, #0e7490 0%, #0891b2 50%, #06b6d4 100%);
+    /* Overlay Biru untuk meningkatkan kontras teks */
+    background: linear-gradient(
+        rgba(15, 23, 42, 0.75), 
+        rgba(30, 58, 138, 0.6)
+    ), 
+    url('/images/image.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: white;
     min-height: 100vh;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Navbar */
@@ -28,17 +38,21 @@ body {
     align-items: center;
     padding: 28px 80px;
     z-index: 10;
+    /* Gradasi gelap tipis di atas agar menu lebih jelas */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
 }
 
 .navbar-left img {
     height: 70px;
     width: auto;
+    /* Bayangan agar logo lebih menonjol */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 25px; /* Disesuaikan agar lebih rapat dan rapi */
 }
 
 .navbar-right a {
@@ -46,31 +60,22 @@ body {
     color: white;
     font-weight: 500;
     font-size: 16px;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .navbar-right a:hover {
-    color: #67e8f9;
-}
-
-.navbar-right .bell-icon {
-    font-size: 22px;
+    color: #2e4e5b; /* Biru langit terang */
 }
 
 /* Hero Section */
 .hero-container {
-    /* --- PERUBAHAN UTAMA DI SINI --- */
-    position: absolute; /* Mengubah posisi agar bisa memenuhi layar */
-    top: 0;             /* Menempel ke bagian atas viewport */
-    left: 0;            /* Menempel ke bagian kiri viewport */
-    width: 100%;        /* Memastikan lebarnya 100% dari layar */
-
+    position: relative;
+    width: 100%;
     min-height: 100vh;
     display: flex;
     align-items: center;
     padding: 0 80px;
 }
-
 
 .hero-content {
     width: 100%;
@@ -88,13 +93,15 @@ body {
     font-weight: 400;
     margin-bottom: 16px;
     opacity: 0.9;
+    color: #bae6fd; /* Biru sangat muda */
 }
 
 .hero-title {
     font-size: 72px;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.1;
     letter-spacing: -1.5px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .hero-action {
@@ -103,7 +110,7 @@ body {
 
 .hero-button {
     display: inline-block;
-    background: #06b6d4;
+    background: #3d6d83; /* Biru solid yang lebih cerah */
     color: #fff;
     border: none;
     padding: 18px 48px;
@@ -111,15 +118,15 @@ body {
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
-    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+    box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
 }
 
 .hero-button:hover {
-    background: #22d3ee;
+    background: #38bdf8;
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(6, 182, 212, 0.5);
+    box-shadow: 0 15px 25px rgba(14, 165, 233, 0.4);
 }
 
 .hero-tagline {
@@ -127,8 +134,63 @@ body {
     bottom: 60px;
     left: 80px;
     font-size: 17px;
-    opacity: 0.9;
+    opacity: 0.8;
     font-weight: 400;
+    border-left: 3px solid #0ea5e9;
+    padding-left: 15px;
+}
+
+/* === Logout Button === */
+.logout-button {
+    background-color: #ef4444; /* Merah Tailwind */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* === Toast Notification === */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #1e293b;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    border-left: 6px solid #0ea5e9;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Footer */
+.main-footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    margin-top: auto;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(5px);
 }
 
 /* Responsive Design */
@@ -138,121 +200,36 @@ body {
     }
     .hero-tagline {
         left: 40px;
-        bottom: 40px;
     }
     .hero-title {
         font-size: 56px;
-    }
-    .hero-subtitle {
-        font-size: 20px;
     }
 }
 
 @media (max-width: 768px) {
     .hero-container {
-        position: static; /* Kembalikan ke normal di mobile */
         padding: 120px 24px 60px;
         min-height: auto;
-        align-items: flex-start;
     }
     .hero-content {
         flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-    }
-    .hero-text {
-        margin-bottom: 40px;
+        text-align: center;
     }
     .hero-action {
         margin-left: 0;
+        margin-top: 30px;
     }
     .hero-tagline {
         position: static;
-        margin-top: 60px;
+        margin-top: 40px;
+        border-left: none;
+        border-top: 2px solid #0ea5e9;
+        padding: 15px 0 0 0;
     }
     .navbar {
-        padding: 20px 24px;
+        padding: 20px;
     }
-    .hero-title {
-        font-size: 48px;
-    }
-    .hero-subtitle {
-        font-size: 18px;
+    .navbar-right {
+        display: none; /* Disarankan pakai burger menu untuk mobile */
     }
 }
-/* === CSS UNTUK TOAST NOTIFIKASI === */
-.toast-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #2a2a2a;
-    color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    border-left: 5px solid #00C4D8;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 1000;
-    font-family: 'Inter', sans-serif;
-    opacity: 0;
-    transform: translateX(100%);
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-.toast-notification.show {
-    opacity: 1;
-    transform: translateX(0);
-}
-/* === Logout Button === */
-.logout-button {
-    background-color: #e63946; /* merah lembut tapi tegas */
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    margin-left: 10px;
-}
-
-.logout-button:hover {
-    background-color: #c62828; /* warna lebih gelap saat hover */
-    transform: translateY(-2px);
-}
-
-.logout-button:active {
-    transform: scale(0.98);
-}
-
-/* Supaya tombol sejajar dengan link navbar */
-.navbar-right form {
-    display: inline;
-}
-
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Untuk menjaga tata letak tombol agar tidak nempel pada link */
-.navbar-right a, 
-.navbar-right form {
-    display: flex;
-    align-items: center;
-}
-  .main-footer {
-            text-align: center;
-            padding: 30px 20px;
-            color: rgba(255, 255, 255, 0.8);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            margin-top: auto;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-        }

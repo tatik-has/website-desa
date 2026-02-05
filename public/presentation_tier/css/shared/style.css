@@ -1,15 +1,13 @@
-/* Background halaman login dengan gambar desa */
+/* Background halaman login dengan tema surat desa yang elegan */
 body {
-    background-image: url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1920');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 50%, #64b5f6 100%);
     background-attachment: fixed;
     min-height: 100vh;
     position: relative;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
+/* Layer pattern halus */
 body::before {
     content: '';
     position: fixed;
@@ -17,20 +15,69 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 123, 255, 0.7);
-    z-index: -1;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(135, 206, 250, 0.04) 0%, transparent 50%);
+    z-index: 0;
+    pointer-events: none;
+    animation: breathe 8s ease-in-out infinite;
 }
 
-/* Dekorasi tambahan */
+/* Lingkaran dekoratif kiri atas */
 body::after {
     content: '';
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
-    z-index: -1;
+    top: -5%;
+    left: -3%;
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 50%;
+    z-index: 1;
+    animation: float1 12s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Animasi floating untuk elemen dekoratif */
+@keyframes float1 {
+    0%, 100% { 
+        transform: translate(0, 0) scale(1);
+    }
+    50% { 
+        transform: translate(20px, 30px) scale(1.1);
+    }
+}
+
+@keyframes float2 {
+    0%, 100% { 
+        transform: translate(0, 0) scale(1);
+    }
+    50% { 
+        transform: translate(-25px, -20px) scale(1.05);
+    }
+}
+
+@keyframes float3 {
+    0%, 100% { 
+        transform: translate(0, 0) rotate(0deg);
+    }
+    50% { 
+        transform: translate(15px, -25px) rotate(5deg);
+    }
+}
+
+@keyframes float4 {
+    0%, 100% { 
+        transform: translate(0, 0) rotate(0deg);
+    }
+    50% { 
+        transform: translate(-20px, 15px) rotate(-5deg);
+    }
 }
 
 /* halaman verifikasi */
@@ -41,12 +88,12 @@ body::after {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    border: 3px solid #007BFF;
+    border: 3px solid #1e88e5;
 }
 
 .verify-title {
     text-align: center;
-    color: #007BFF;
+    color: #1e88e5;
     margin-bottom: 20px;
 }
 
@@ -71,7 +118,7 @@ body::after {
 }
 
 .verify-button {
-    background: #007BFF;
+    background: #1e88e5;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -81,7 +128,7 @@ body::after {
 }
 
 .verify-button:hover {
-    background: #0056b3;
+    background: #1565c0;
 }
 
 .verify-footer {
@@ -90,7 +137,7 @@ body::after {
 }
 
 .verify-footer a {
-    color: #007BFF;
+    color: #1e88e5;
     font-weight: bold;
     text-decoration: none;
 }
@@ -101,22 +148,22 @@ body::after {
 
 /* halaman registrasi - PERBAIKAN TOTAL */
 .register-container {
-    width: 50% !important;   /* Memakai 95% lebar layar di HP */
-    max-width: 450px !important; /* Lebar maksimal 900px (Sangat Lebar) */
+    width: 50% !important;
+    max-width: 450px !important;
     margin: 40px auto !important;
     background: white;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    padding: 40px 60px !important; /* Padding dalam yang luas */
-    border: 3px solid #007BFF;
-    box-sizing: border-box; /* Wajib agar padding tidak merusak lebar */
+    padding: 40px 60px !important;
+    border: 3px solid #1e88e5;
+    box-sizing: border-box;
     position: relative;
     z-index: 10;
 }
 
 .register-title {
     text-align: center;
-    color: #007BFF;
+    color: #1e88e5;
     margin-bottom: 30px;
     font-size: 28px;
     font-weight: bold;
@@ -130,7 +177,7 @@ body::after {
     border-radius: 8px;
     margin-bottom: 15px;
     font-size: 16px;
-    box-sizing: border-box; /* Agar input tidak keluar jalur */
+    box-sizing: border-box;
 }
 
 .register-textarea {
@@ -139,7 +186,7 @@ body::after {
 }
 
 .register-button {
-    background: #007BFF;
+    background: #1e88e5;
     color: white;
     border: none;
     padding: 15px 40px;
@@ -147,12 +194,12 @@ body::after {
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
-    width: 100%; /* Tombol lebar penuh */
+    width: 100%;
     transition: background 0.3s ease;
 }
 
 .register-button:hover {
-    background: #0056b3;
+    background: #1565c0;
 }
 
 /* Perbaikan tombol Login agar seragam dengan tombol Daftar */
@@ -160,29 +207,29 @@ body::after {
     text-align: center;
     margin-top: 25px;
     padding-top: 15px;
-    border-top: 1px solid #eee; /* Memberi pembatas halus */
+    border-top: 1px solid #eee;
 }
 
 .register-footer a {
     display: inline-block;
     background: transparent;
-    color: #007BFF;
-    border: 2px solid #007BFF;
+    color: #1e88e5;
+    border: 2px solid #1e88e5;
     padding: 10px 30px;
     border-radius: 8px;
     font-weight: bold;
     text-decoration: none;
     transition: all 0.3s ease;
     margin-top: 10px;
-    width: 80%; /* Sedikit lebih kecil dari tombol utama agar proporsional */
+    width: 80%;
 }
 
 .register-footer a:hover {
-    background: #007BFF;
+    background: #1e88e5;
     color: white;
     text-decoration: none;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(30, 136, 229, 0.3);
 }
 
 /* halaman login css - DIPERCANTIK */
@@ -197,6 +244,7 @@ body::after {
     border: none;
     position: relative;
     overflow: hidden;
+    z-index: 10;
 }
 
 .login-container::before {
@@ -206,7 +254,7 @@ body::after {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #007BFF, #00D4FF, #007BFF);
+    background: linear-gradient(90deg, #1e88e5, #42a5f5, #1e88e5);
     background-size: 200% 100%;
     animation: gradientMove 3s ease infinite;
 }
@@ -225,8 +273,8 @@ body::after {
 .login-logo img {
     width: 90px;
     height: 90px;
-    border: 4px solid #007BFF;
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    border: 4px solid #1e88e5;
+    box-shadow: 0 8px 20px rgba(30, 136, 229, 0.3);
     background: white;
     padding: 8px;
     transition: transform 0.3s ease;
@@ -243,7 +291,7 @@ body::after {
 }
 
 .login-welcome h1 {
-    color: #007BFF;
+    color: #1e88e5;
     font-size: 26px;
     margin-bottom: 8px;
     font-weight: 700;
@@ -258,7 +306,7 @@ body::after {
 
 .login-title {
     text-align: center;
-    color: #007BFF;
+    color: #1e88e5;
     margin-bottom: 25px;
     font-size: 22px;
     font-weight: 600;
@@ -299,8 +347,8 @@ body::after {
 
 .login-input:focus {
     outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #1e88e5;
+    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
 }
 
 .login-input::placeholder {
@@ -308,7 +356,7 @@ body::after {
 }
 
 .login-button {
-    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
     color: white;
     border: none;
     padding: 14px 30px;
@@ -318,13 +366,13 @@ body::after {
     font-size: 16px;
     font-weight: 600;
     width: 100%;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(30, 136, 229, 0.3);
 }
 
 .login-button:hover {
-    background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 6px 20px rgba(30, 136, 229, 0.4);
 }
 
 .login-button:active {
@@ -339,14 +387,14 @@ body::after {
 }
 
 .login-footer a {
-    color: #007BFF;
+    color: #1e88e5;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .login-footer a:hover {
-    color: #0056b3;
+    color: #1565c0;
     text-decoration: underline;
 }
 
@@ -364,4 +412,220 @@ body::after {
 
 .login-container {
     animation: fadeInUp 0.6s ease;
+}
+
+/* Container Utama yang membungkus Info & Login */
+.main-wrapper {
+    display: flex;
+    max-width: 900px;
+    min-height: 550px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Bagian Informasi (Kiri) - Diperbaiki agar konten rata tengah */
+.info-section {
+    flex: 1;
+    background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efek dekoratif background */
+.info-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: rotateBackground 20s linear infinite;
+}
+
+@keyframes rotateBackground {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.info-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 25px;
+    background: white;
+    padding: 12px;
+    border-radius: 18px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 2;
+    animation: fadeInDown 0.8s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-content {
+    position: relative;
+    z-index: 2;
+}
+
+.info-content h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeInUp 0.8s ease 0.2s both;
+    line-height: 1.3;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-content p {
+    font-size: 15px;
+    max-width: 300px;
+    margin: 0 auto 25px auto;
+    line-height: 1.7;
+    opacity: 0.95;
+    font-weight: 300;
+    animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.feature-list li {
+    margin-bottom: 14px;
+    font-size: 15px;
+    padding-left: 10px;
+    position: relative;
+    animation: fadeInLeft 0.6s ease both;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Animasi stagger untuk setiap item list */
+.feature-list li:nth-child(1) {
+    animation-delay: 0.6s;
+}
+
+.feature-list li:nth-child(2) {
+    animation-delay: 0.8s;
+}
+
+.feature-list li:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Efek hover pada feature list */
+.feature-list li:hover {
+    transform: translateX(5px);
+    transition: transform 0.3s ease;
+}
+
+/* Style untuk emoji checkmark */
+.feature-list li::before {
+    content: '➜';
+    margin-right: 8px;
+    font-size: 16px;
+    animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Bagian Login (Kanan) */
+.login-section {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 320px;
+}
+
+/* === RESPONSIVE SETTINGS (HP & TABLET) === */
+@media (max-width: 768px) {
+    .main-wrapper {
+        flex-direction: column;
+        margin: 20px;
+        min-height: auto;
+    }
+
+    .info-section {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .feature-list {
+        display: none;
+    }
+
+    .login-section {
+        padding: 30px;
+    }
 }

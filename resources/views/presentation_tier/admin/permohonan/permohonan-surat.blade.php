@@ -40,6 +40,13 @@
                     'permohonans' => $domisiliGrouped['Diproses'] ?? collect(),
                     'type' => 'domisili'
                 ])
+                {{-- === TAMBAHAN: Tabel untuk status "Diterima" === --}}
+                @include('presentation_tier.admin.partials._tabel_permohonan', [
+                    'title' => 'Permohonan Diterima (Sedang Dibuat)',
+                    'permohonans' => $domisiliGrouped['Diterima'] ?? collect(),
+                    'type' => 'domisili'
+                ])
+                {{-- === AKHIR TAMBAHAN === --}}
                 @include('presentation_tier.admin.partials._tabel_permohonan', [
                     'title' => 'Permohonan Selesai',
                     'permohonans' => $domisiliGrouped['Selesai'] ?? collect(),
@@ -59,6 +66,13 @@
                     'permohonans' => $skuGrouped['Diproses'] ?? collect(),
                     'type' => 'sku'
                 ])
+                {{-- === TAMBAHAN: Tabel untuk status "Diterima" === --}}
+                @include('presentation_tier.admin.partials._tabel_permohonan', [
+                    'title' => 'Permohonan Diterima (Sedang Dibuat)',
+                    'permohonans' => $skuGrouped['Diterima'] ?? collect(),
+                    'type' => 'sku'
+                ])
+                {{-- === AKHIR TAMBAHAN === --}}
                 @include('presentation_tier.admin.partials._tabel_permohonan', [
                     'title' => 'Permohonan Selesai',
                     'permohonans' => $skuGrouped['Selesai'] ?? collect(),
@@ -72,13 +86,19 @@
             </div>
 
             {{-- TAB 3: KTM --}}
-
-                               <div id="ktm" class="tab-pane">
+            <div id="ktm" class="tab-pane">
                 @include('presentation_tier.admin.partials._tabel_permohonan', [
                     'title' => 'Permohonan Diproses',
                     'permohonans' => $ktmGrouped['Diproses'] ?? collect(),
                     'type' => 'ktm'
                 ])
+                {{-- === TAMBAHAN: Tabel untuk status "Diterima" === --}}
+                @include('presentation_tier.admin.partials._tabel_permohonan', [
+                    'title' => 'Permohonan Diterima (Sedang Dibuat)',
+                    'permohonans' => $ktmGrouped['Diterima'] ?? collect(),
+                    'type' => 'ktm'
+                ])
+                {{-- === AKHIR TAMBAHAN === --}}
                 @include('presentation_tier.admin.partials._tabel_permohonan', [
                     'title' => 'Permohonan Selesai',
                     'permohonans' => $ktmGrouped['Selesai'] ?? collect(),
@@ -118,17 +138,17 @@
         </div>
     </div>
 
-    {{-- MODAL UPLOAD SURAT SELESAI (PDF) --}}
+    {{-- === PERUBAHAN: MODAL INI SEKARANG DIGUNAKAN UNTUK "KIRIM SURAT" (bukan "Terima") === --}}
+    {{-- MODAL UPLOAD SURAT SELESAI (PDF) — Dipicu dari tombol "Kirim Surat" --}}
     <div id="selesaiModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Upload Surat Selesai</h3>
+                <h3>Kirim Surat yang Sudah Jadi</h3>
                 <span class="close-btn" onclick="closeSelesaiModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <form id="formSelesai" action="#" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="status" value="Selesai">
                     <div class="file-upload-area">
                         <input type="file" name="surat_jadi" id="surat_jadi_input" class="file-input" accept="application/pdf" required>
                         <label for="surat_jadi_input" class="file-drop-zone">
@@ -138,12 +158,13 @@
                         </label>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-submit-selesai">Upload dan Selesaikan</button>
+                        <button type="submit" class="btn btn-submit-selesai">Kirim Surat</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    {{-- === AKHIR PERUBAHAN === --}}
 @endsection
 
 @push('scripts')
@@ -181,7 +202,7 @@
             formTolak.reset();
         }
 
-        // === MODAL SELESAI ===
+        // === MODAL KIRIM SURAT (sebelumnya modal "Selesai") ===
         const selesaiModal = document.getElementById('selesaiModal');
         const formSelesai = document.getElementById('formSelesai');
         const fileInput = document.getElementById('surat_jadi_input');

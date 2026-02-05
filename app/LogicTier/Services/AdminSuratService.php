@@ -83,28 +83,62 @@ class AdminSuratService
         $newStatus = ucfirst(strtolower($request->status));
         $permohonan->status = $newStatus;
 
-        if ($newStatus == 'Ditolak') {
+        // === PERUBAHAN: Status "Diterima" sekarang hanya mengubah status, tanpa upload ===
+        if ($newStatus == 'Diterima') {
+            // Hanya ubah status, tidak ada aksi lain
+            $permohonan->keterangan_penolakan = null;
+        } elseif ($newStatus == 'Ditolak') {
             $permohonan->keterangan_penolakan = $request->keterangan_penolakan;
             if ($permohonan->path_surat_jadi) {
                 Storage::delete($permohonan->path_surat_jadi);
                 $permohonan->path_surat_jadi = null;
             }
-        } elseif ($newStatus == 'Selesai' && $request->hasFile('surat_jadi')) {
-            if ($permohonan->path_surat_jadi) { Storage::delete($permohonan->path_surat_jadi); }
-            $permohonan->path_surat_jadi = $request->file('surat_jadi')->store('public/surat_selesai');
-            $permohonan->keterangan_penolakan = null;
         } else {
             $permohonan->keterangan_penolakan = null;
         }
 
         $permohonan->save();
 
-        if (($permohonan->status == 'Selesai' || $permohonan->status == 'Ditolak') && $permohonan->user_id) {
+    
+        if (in_array($permohonan->status, ['Diterima', 'Ditolak']) && $permohonan->user_id) {
             $user = User::find($permohonan->user_id);
             if ($user) { $user->notify(new SuratSelesaiNotification($permohonan)); }
         }
+
         return true;
     }
+
+    // === TAMBAHAN: Method baru untuk mengirim surat yang sudah jadi ===
+    /**
+     * Diambil saat admin klik "Kirim Surat" — upload PDF lalu set status ke "Selesai"
+     */
+    public function kirimSurat(Request $request, string $type, int $id)
+    {
+        $modelClass = $this->getModelClass($type);
+        if (!$modelClass) { abort(404); }
+
+        $permohonan = $modelClass::findOrFail($id);
+
+        // Hapus file lama jika ada
+        if ($permohonan->path_surat_jadi) {
+            Storage::delete($permohonan->path_surat_jadi);
+        }
+
+        // Upload file PDF baru
+        $permohonan->path_surat_jadi = $request->file('surat_jadi')->store('public/surat_selesai');
+        $permohonan->status = 'Selesai';
+        $permohonan->keterangan_penolakan = null;
+        $permohonan->save();
+
+        // Kirim notifikasi ke masyarakat setelah surat berhasil dikirim
+        if ($permohonan->user_id) {
+            $user = User::find($permohonan->user_id);
+            if ($user) { $user->notify(new SuratSelesaiNotification($permohonan)); }
+        }
+
+        return true;
+    }
+    // === AKHIR TAMBAHAN ===
 
     public function getPermohonanDetail(string $jenis, int $id): ?array
     {

@@ -28,10 +28,9 @@ class PermohonanKtm extends Model
         'status',
         'keterangan_penolakan',
         'path_surat_jadi',
-        'archived_at', // ✅ Tambahkan ini
+        'archived_at',
     ];
 
-    // ✅ Tambahkan casting untuk archived_at
     protected $casts = [
         'archived_at' => 'datetime',
     ];

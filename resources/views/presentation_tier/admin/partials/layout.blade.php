@@ -46,15 +46,6 @@
                     <span>Arsip</span>
                 </a>
 
-                {{-- Menu Manajemen Admin hanya untuk superadmin --}}
-                @if(Auth::guard('admin')->user()->role == 'superadmin')
-                    <a href="{{ url('/admin/manajemen-admin') }}"
-                        class="{{ request()->is('admin/manajemen-admin*') ? 'active' : '' }}">
-                        <i class="fa-solid fa-users-cog"></i>
-                        <span>Manajemen Admin</span>
-                    </a>
-                @endif
-
                 {{-- Menu Profile untuk semua admin --}}
                 <a href="{{ route('admin.profile.show') }}" 
                     class="{{ request()->is('admin/profile*') ? 'active' : '' }}">
